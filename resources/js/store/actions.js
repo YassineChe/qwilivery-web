@@ -28,7 +28,7 @@ let actions = {
                 );
 
                 //Redirect
-                window.location.href = payload.redirect_to;
+                // window.location.href = payload.redirect_to;
             })
             .catch(err => {
                 dispatch("expected", {
@@ -40,7 +40,7 @@ let actions = {
     },
 
     //* Logout
-    async singout({}, payload) {
+    async singout({ }, payload) {
         //? Init action status.
         await axios
             .post(payload.path, payload.data, {
@@ -56,7 +56,7 @@ let actions = {
                 //redirect to home
                 window.location.href = "/";
             })
-            .catch(() => {});
+            .catch(() => { });
     },
 
     //* Fetch one or multiple records

@@ -46,6 +46,18 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+        'admin' => [
+            'driver' => 'sanctum',
+            'provider' => 'admins',
+        ],
+        'delivery' => [
+            'driver' => 'sanctum',
+            'provider' => 'deliveries',
+        ],
+        'restaurant' => [
+            'driver' => 'sanctum',
+            'provider' => 'restaurants',
+        ],
     ],
 
     /*
@@ -75,6 +87,18 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
+        'deliveries' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Delivery::class,
+        ],
+        'restaurants' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Restaurant::class,
+        ],
     ],
 
     /*
