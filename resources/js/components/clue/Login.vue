@@ -6,7 +6,14 @@
           <v-row align="center" justify="center">
             <v-col align="center">
               <v-img
+                v-if="!restPasword"
                 src="images/svg/fingerprint.svg"
+                height="450px"
+                width="550px"
+              />
+              <v-img
+                v-if="restPasword"
+                src="images/svg/forgot-password.svg"
                 height="450px"
                 width="550px"
               />
@@ -19,7 +26,8 @@
           <v-container fill-height fluid>
             <v-row align="center" justify="center" class="pa-10">
               <v-col align="center">
-                <v-layout column>
+                <!-- Login  -->
+                <v-layout column v-if="!restPasword">
                   <v-flex mt-5>
                     <!-- HeadLine -->
                     <Headline
@@ -47,7 +55,9 @@
                     ></v-text-field>
                   </v-flex>
                   <v-flex mt-3 align-self-end>
-                    <v-btn text small>Mot de passe oublié ?</v-btn>
+                    <v-btn text small @click="restPasword = !restPasword"
+                      >Mot de passe oublié ?</v-btn
+                    >
                   </v-flex>
                   <v-flex mt-1>
                     <v-text-field
@@ -79,6 +89,56 @@
                     </small>
                   </v-flex>
                 </v-layout>
+
+                <!-- Mot de passe oublié? -->
+                <v-layout column v-if="restPasword">
+                  <v-flex mt-5>
+                    <!-- HeadLine -->
+                    <Headline
+                      headline="Mot de passe oublié? 👋"
+                      :headline-classes="[
+                        'text-h5',
+                        'grey--text text--darken-2',
+                      ]"
+                    >
+                      <template #subheadline>
+                        <span class="grey--text text--darken-1">
+                          Entrez votre email et nous vous enverrons des
+                          instructions pour réinitialiser votre mot de passe
+                        </span>
+                      </template>
+                    </Headline>
+                  </v-flex>
+                  <v-flex mt-5>
+                    <v-text-field
+                      dense
+                      hide-details="auto"
+                      outlined
+                      label="E-mail"
+                      placeholder="your@email.com"
+                      v-model="emailRest"
+                    ></v-text-field>
+                  </v-flex>
+                  <v-flex mt-5>
+                    <v-btn color="primary" block elevation="0" @click="rest()"
+                      >Envoyer un lien de réinitialisation</v-btn
+                    >
+                  </v-flex>
+                  <v-flex mt-5>
+                    <v-divider />
+                  </v-flex>
+                  <v-flex mt-3>
+                    <small>
+                      <v-btn
+                        color="primary"
+                        text
+                        @click="restPasword = !restPasword"
+                      >
+                        {{ `< Retour connexion` }}</v-btn
+                      >
+                    </small>
+                  </v-flex>
+                </v-layout>
               </v-col>
             </v-row>
           </v-container>
@@ -98,6 +158,8 @@ export default {
         email: "admin@mail.com",
         password: "123456",
       },
+      restPasword: true,
+      emailRest: "",
     };
   },
   components: {
@@ -111,6 +173,16 @@ export default {
   },
   methods: {
     //* Login
+    doLogin: function () {
+      this.$store.dispatch("signin", {
+        path: "/api/login",
+        data: this.credentials,
+        related: "do-login",
+        // redirect_to: "/",
+      });
+    },
+
+    //* Forget password
     doLogin: function () {
       this.$store.dispatch("signin", {
         path: "/api/login",

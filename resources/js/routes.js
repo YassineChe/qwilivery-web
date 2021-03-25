@@ -9,6 +9,7 @@ import Login from "./components/clue/Login";
 
 //* Admin.
 import Dashboard from "./components/admin/Dashboard";
+import Livreurs from "./components/admin/Livreurs";
 
 Vue.use(VueRouter);
 
@@ -29,12 +30,12 @@ const adminRoutes = {
     name: "",
     meta: { requiresAuth: true, guard: "admin" },
     children: [
-        // {
-        //     path: "/",
-        //     name: "employees",
-        //     component: Employees,
-        //     meta: { guard: "admin", title: ' ' }
-        // }
+        {
+            path: "/livreurs",
+            name: "livreurs",
+            component: Livreurs,
+            meta: { guard: "admin", title: 'Livreurs' }
+        }
     ]
 };
 const employeeRoutes = {};

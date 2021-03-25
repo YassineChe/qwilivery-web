@@ -23,22 +23,19 @@
         </v-list-item>
       </v-list>
       <!-- Lisf of content -->
-      <v-list
-        nav
-        dense
-        color=" "
-        active-class="deep-purple--text text--accent-4"
-      >
-        <v-subheader>GESTION DES UTILISATEURS</v-subheader>
-        <v-divider />
+      <v-list nav dense>
+        <v-list-item-group>
+          <v-subheader>GESTION DES UTILISATEURS</v-subheader>
+          <v-divider />
 
-        <!-- Offers  -->
-        <v-list-item :to="{ name: 'livreurs' }">
-          <v-list-item-icon>
-            <v-icon>mdi-account</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Livreurs</v-list-item-title>
-        </v-list-item>
+          <!-- Offers  -->
+          <v-list-item v-for="(item, i) in nabItem" :key="i" :to="item.to">
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
     <!-- Dashboard Container -->
@@ -48,26 +45,40 @@
     <!-- Footer -->
     <v-footer padless height="50px" color="transparent">
       <v-col class="text-center" cols="12">
-        {{ new Date().getFullYear() }} — <strong>Dansmamaison</strong>
+        {{ new Date().getFullYear() }} — <strong>Delivery</strong>
       </v-col>
     </v-footer>
+    <preLoader></preLoader>
   </v-app>
 </template>
 
 <script>
+import preLoader from "../clue/preLoader";
 import AdminNavbar from "./AdminNavbar";
 export default {
-  components: { AdminNavbar },
+  components: { AdminNavbar, preLoader },
   data: () => ({
     drawer: true,
+    nabItem: [
+      {
+        title: "Livreurs",
+        icon: "mdi-account",
+        to: "livreurs",
+      },
+      {
+        title: "Livreurs",
+        icon: "mdi-account",
+        to: "/Sss",
+      },
+    ],
   }),
   beforeCreate() {
     //* fetchGuard
-    // this.$store.dispatch("fetchData", {
-    //   path: "/api/fetch/authenticated/guard",
-    //   mutation: "FETCH_GUARD",
-    //   related: "fetch-guard",
-    // });
+    this.$store.dispatch("fetchData", {
+      path: "/api/fetch/authenticated/guard",
+      mutation: "FETCH_GUARD",
+      related: "fetch-guard",
+    });
   },
 };
 </script>

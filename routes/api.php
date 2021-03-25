@@ -2,7 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommonController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,8 +19,10 @@ use App\Http\Controllers\AuthController;
 #####Login Route#####
 Route::POST("/login", [AuthController::class, "login"]);
 
-####################### 
-
+####### CommonController ########
+Route::middleware("auth:admin")->group(function () {
+    Route::get('/fetch/authenticated/guard', [CommonController::class, 'fetchAuthenticatedGuard']);
+});
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
