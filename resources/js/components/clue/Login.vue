@@ -95,7 +95,7 @@
                   <v-flex mt-5>
                     <!-- HeadLine -->
                     <Headline
-                      headline="Mot de passe oublié? 👋"
+                      headline="Mot de passe oublié? "
                       :headline-classes="[
                         'text-h5',
                         'grey--text text--darken-2',
@@ -120,7 +120,12 @@
                     ></v-text-field>
                   </v-flex>
                   <v-flex mt-5>
-                    <v-btn color="primary" block elevation="0" @click="rest()"
+                    <v-btn
+                      color="primary"
+                      block
+                      elevation="0"
+                      :loading="isBusy('reset')"
+                      @click="restPassword()"
                       >Envoyer un lien de réinitialisation</v-btn
                     >
                   </v-flex>
@@ -150,22 +155,24 @@
 
 <script>
 import Headline from "../pieces/Headline";
-
+//libs
+import { mapState } from "vuex";
 export default {
+  components: {
+    Headline,
+  },
   data() {
     return {
       credentials: {
         email: "admin@mail.com",
         password: "123456",
       },
-      restPasword: true,
+      restPasword: false,
       emailRest: "",
     };
   },
-  components: {
-    Headline,
-  },
   computed: {
+    ...mapState(["expected"]),
     //* Is mobile
     isMobile: function () {
       return this.$vuetify.breakpoint.smAndDown;
@@ -183,13 +190,58 @@ export default {
     },
 
     //* Forget password
-    doLogin: function () {
-      this.$store.dispatch("signin", {
-        path: "/api/login",
-        data: this.credentials,
-        related: "do-login",
+    restPassword: function () {
+      this.$store.dispatch("postData", {
+        path: "/api/reset/password",
+        data: { email: this.emailRest },
+        related: "reset",
         // redirect_to: "/",
       });
+    },
+    // Overlly
+    isBusy: function (fetcher) {
+      try {
+        return this.$store.getters.expected(fetcher).status == "busy"
+          ? true
+          : false;
+      } catch (error) {
+        return false;
+      }
+    },
+  },
+  watch: {
+    expected() {
+      {
+        let expected = this.$store.getters.expected("reset");
+        if (expected != undefined) {
+          if (expected.status === "success") {
+            this.$dialog.notify.success(
+              "Les étapes pour réinitialiser un mot de passe ont été envoyées à votre adresse e-mail.",
+              {
+                position: "top-right",
+                timeout: 5000,
+              }
+            );
+          }
+          if (expected.status === "error") {
+            this.$dialog.notify.warning(expected.result.subMessage, {
+              position: "top-right",
+              timeout: 5000,
+            });
+          }
+        }
+      }
+      {
+        let expected = this.$store.getters.expected("do-login");
+        if (expected != undefined) {
+          if (expected.status === "error") {
+            this.$dialog.notify.warning(expected.result.subMessage, {
+              position: "top-right",
+              timeout: 5000,
+            });
+          }
+        }
+      }
     },
   },
 };

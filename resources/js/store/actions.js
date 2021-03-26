@@ -26,9 +26,8 @@ let actions = {
                     response.data["token"],
                     response.data["guard"]
                 );
-
                 //Redirect
-                // window.location.href = payload.redirect_to;
+                window.location.href = "/";
             })
             .catch(err => {
                 dispatch("expected", {

@@ -15,3 +15,4 @@ use App\Http\Controllers\PublicController;
 */
 
 Route::get('/{any}', [PublicController::class, 'clue'])->where('any', '.*');;
+// Route::any('/{all}', [PublicController::class, 'clue'])->where('any', '.*');

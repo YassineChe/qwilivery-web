@@ -5,6 +5,7 @@ import Vue from "vue";
 //! Global routes
 import Clue from "./components/Clue";
 import Login from "./components/clue/Login";
+import ChangePassword from "./components/clue/ChangePassword";
 
 
 //* Admin.
@@ -18,8 +19,15 @@ const routes = [];
 //? Global routes
 const LoginRoutes = [
     //Clue (Control Index's)
-    { path: "/", name: "clue", component: Clue, meta: { requiresAuth: false } },
     { path: "/login", name: "login", component: Login },
+    {
+        path: "/", name: "clue", component: Clue, meta: { requiresAuth: false },
+        children: [
+            {
+                path: "/reset-password", name: "password-reset", component: ChangePassword
+            }]
+    },
+
 ];
 
 //? Admin Dashboard
@@ -50,7 +58,6 @@ const agencyRoutes = {};
 ********************************************************** */
 
 switch (localStorage.getItem("guard")) {
-
     case "admin":
         routes.push(adminRoutes);
         break;

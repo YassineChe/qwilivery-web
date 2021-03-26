@@ -16,10 +16,12 @@ use App\Http\Controllers\CommonController;
 |
 */
 
-#####Login Route#####
+############ Login Route #############
 Route::POST("/login", [AuthController::class, "login"]);
+// Reset password
+Route::POST('/reset/password', [AuthController::class, 'reset']);
 
-####### CommonController ########
+########### CommonController #########
 Route::middleware("auth:admin")->group(function () {
     Route::get('/fetch/authenticated/guard', [CommonController::class, 'fetchAuthenticatedGuard']);
 });
