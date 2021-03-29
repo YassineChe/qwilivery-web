@@ -19,7 +19,8 @@ use App\Http\Controllers\CommonController;
 ############ Login Route #############
 Route::POST("/login", [AuthController::class, "login"]);
 // Reset password
-Route::POST('/reset/password', [AuthController::class, 'reset']);
+Route::POST('/reset/password', [AuthController::class, 'createRestLink']);
+Route::POST('/reset-password', [AuthController::class, 'restPassword']);
 
 ########### CommonController #########
 Route::middleware("auth:admin")->group(function () {

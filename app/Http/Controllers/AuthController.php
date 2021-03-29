@@ -9,14 +9,13 @@ use App\Models\Delivery;
 use App\Models\Password_reset;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use DateTime;
+
 
 use App\Notifications\ResetEmail;
 
-
-
 class AuthController extends Controller
 {
-
     //* Login Admin
     public function login(Request $request)
     {
@@ -61,16 +60,15 @@ class AuthController extends Controller
     }
 
     // Send reset Code 
-    function reset(Request $request)
+    function createRestLink(Request $request)
     {
-
         // Check if email exist in data
         $admin = Admin::where('email', $request->email)->first();
         if ($admin) {
             if (Password_reset::Where('email', $request->email)->delete());
             $admin = Password_reset::create([
                 'email' => $request->email,
-                'token' => mt_rand(100000, 999999),
+                'token' => Str::random(60),
             ]);
             // Send email 
             $admin->notify(new ResetEmail($admin->email, $admin->token));
@@ -82,37 +80,32 @@ class AuthController extends Controller
         return dataToResponse('error', 'Erreur!', 'Ces identifiants ne correspondent pas à nos enregistrements', false, 422);
     }
 
-    //! Check if code exist
-    public function getCode($token)
+    //* Check if code exist
+    public function restPassword(Request $request)
     {
+        if ($request->password !== $request->confirm) {
+            return dataToResponse('error', 'Erreur!', 'le mot de passe ne correspond pas', false, 422);
+        }
+
         //Check if token exist
-        $t = DB::select('select * from password_resets where token = ?', [$token]);
+        $reset = Password_reset::Where('token', $request->token)->first();
 
-        //
-        if (count($t) > 0) {
-            if ($t[0]->created_at > Carbon::now()) {
-                return view('auth.password.reset', ['token' => $token]);
-            } else return redirect('/forget-password');
-        } else return redirect('/forget-password');
-    }
+        if (!$reset) {
+            return dataToResponse('error', 'Erreur!', ' votre URL a expiré', false, 422);
+        }
 
-    //! Update Password
-    public function updatePassword(Request $request)
-    {
-        $resetUser = DB::select('select * from password_resets where token = ?', [$request->token])[0];
+        $time = Carbon::parse($reset->created_at)->addMinutes(10);
 
-        $updatePassword = DB::table('password_resets')
-            ->where(['email' => $resetUser->email, 'token' => $resetUser->token])
-            ->first();
+        if (Carbon::now() <= $time) {
 
-        if (!$updatePassword)
-            return back()->withInput()->with('error', 'Invalid token!');
-
-        $user = User::where('email', $resetUser->email)
-            ->update(['password' => Hash::make($request->password)]);
-
-        DB::table('password_resets')->where(['email' => $resetUser->email])->delete();
-
-        return response()->json(['code' => 200, 'Message' => 'password update successfull']);
+            $admin = Admin::where('email', $reset->email)->first();
+            if ($admin) {
+                $admin->update([
+                    'password' => bcrypt($request->password)
+                ]);
+                $reset->delete();
+                return dataToResponse('success', 'success!', 'le mot de passe a été mis à jour avec succès', false, 200);
+            }
+        }
     }
 }

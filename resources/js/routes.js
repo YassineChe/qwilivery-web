@@ -22,11 +22,11 @@ const LoginRoutes = [
     { path: "/login", name: "login", component: Login },
     {
         path: "/", name: "clue", component: Clue, meta: { requiresAuth: false },
-        children: [
-            {
-                path: "/reset-password", name: "password-reset", component: ChangePassword
-            }]
+
     },
+    {
+        path: "/reset-password/:id", name: "password-reset", component: ChangePassword
+    }
 
 ];
 

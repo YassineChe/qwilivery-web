@@ -29,9 +29,6 @@ Vue.component("ValidationObserver", ValidationObserver);
 Vue.component("ValidationProvider", ValidationProvider);
 
 
-
-
-
 //* Vuetify Dialogs
 import VuetifyDialog from "vuetify-dialog";
 import "vuetify-dialog/dist/vuetify-dialog.css";

@@ -45,10 +45,17 @@ class ResetEmail extends Notification
      */
     public function toMail($notifiable)
     {
+
+        $url = url('/reset-password/' . $this->Token);
+        $why = "Cet e-mail vous a été envoyé suite à une demande de réinitialisation du mot de passe de votre compte.
+                   Pour réinitialiser votre mot de passe, cliquez sur le lien ci-dessous.
+                   Si vous n'avez pas effectué cette action,
+                   Veuillez ignorer cet email";
+
         return (new MailMessage)
-            ->line('Welcome .' . $this->Email)
-            ->line('this code of reset password : ' . $this->Token)
-            ->line('Thank you for using our application!');
+            ->line('Salut .' . $this->Email)
+            ->line($why)
+            ->action('Réinitialisez votre mot de passe', url($url));
     }
     /**
      * Get the array representation of the notification.

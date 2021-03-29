@@ -1,5 +1,5 @@
 <template>
-  <v-container fill-height fluid class="mt-16">
+  <v-container fluid class="mt-16">
     <v-row align="center" justify="center">
       <v-col align="center">
         <v-card max-width="600" class="mt-16 pa-3">
@@ -72,8 +72,8 @@
           </v-layout>
         </v-card>
       </v-col>
-    </v-row></v-container
-  >
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -87,7 +87,7 @@ export default {
   data() {
     return {
       credentials: {
-        email: "",
+        password: "",
         confirm: "",
       },
     };
@@ -102,11 +102,14 @@ export default {
   },
   methods: {
     //* Login
-    doLogin: function () {
-      this.$store.dispatch("signin", {
-        path: "/api/login",
-        data: this.credentials,
-        related: "do-login",
+    passwordRecovery: function () {
+      this.$store.dispatch("postData", {
+        path: "/api/reset-password",
+        data: {
+          ...this.credentials,
+          token: window.location.pathname.slice(16),
+        },
+        related: "reset-password",
         // redirect_to: "/",
       });
     },
@@ -124,11 +127,17 @@ export default {
   watch: {
     expected() {
       {
-        let expected = this.$store.getters.expected("reset");
+        let expected = this.$store.getters.expected("reset-password");
         if (expected != undefined) {
           if (expected.status === "success") {
-            this.$dialog.show(AlertCard, {
+            this.$dialog.notify.success(expected.result.subMessage, {
               email: expected.result.email,
+            });
+          }
+          if (expected.status === "error") {
+            this.$dialog.notify.warning(expected.result.subMessage, {
+              position: "top-right",
+              timeout: 5000,
             });
           }
         }
