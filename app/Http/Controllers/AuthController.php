@@ -9,7 +9,8 @@ use App\Models\Delivery;
 use App\Models\Password_reset;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-use DateTime;
+use Illuminate\Support\Facades\Hash;
+
 
 
 use App\Notifications\ResetEmail;
@@ -25,7 +26,7 @@ class AuthController extends Controller
 
         if ($admin) {
             // If login Success login
-            if (\Hash::check($request->password, $admin->password)) {
+            if (Hash::check($request->password, $admin->password)) {
                 return response([
                     'guard' => 'admin',
                     'token' => $admin->createToken('admin-api', ['admin-stuff'])->plainTextToken
@@ -35,7 +36,7 @@ class AuthController extends Controller
             return dataToResponse('error', 'Erreur!', 'Le mot de passe est erroné', false, 422);
         } else if ($delivery) {
             // If login Success login
-            if (\Hash::check($request->password, $admin->password)) {
+            if (Hash::check($request->password, $admin->password)) {
                 return response([
                     'guard' => 'delivery',
                     'token' => $delivery->createToken('admin-api', ['admin-stuff'])->plainTextToken
@@ -45,7 +46,7 @@ class AuthController extends Controller
             return dataToResponse('error', 'Erreur!', 'Le mot de passe est erroné', false, 422);
         } else if ($restaurant) {
             // If login Success login
-            if (\Hash::check($request->password, $admin->password)) {
+            if (Hash::check($request->password, $admin->password)) {
                 return response([
                     'guard' => 'restaurant',
                     'token' => $restaurant->createToken('admin-api', ['admin-stuff'])->plainTextToken
@@ -101,7 +102,7 @@ class AuthController extends Controller
             $admin = Admin::where('email', $reset->email)->first();
             if ($admin) {
                 $admin->update([
-                    'password' => bcrypt($request->password)
+                    'password' => Hash::make($request->password)
                 ]);
                 $reset->delete();
                 return dataToResponse('success', 'success!', 'le mot de passe a été mis à jour avec succès', false, 200);

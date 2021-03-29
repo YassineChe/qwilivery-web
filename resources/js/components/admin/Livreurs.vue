@@ -1,12 +1,23 @@
 <template>
   <div class="ma-6">
     <sheet title="List des livreurs"></sheet>
+    <v-spacer></v-spacer>
+    <v-card max-width="300" elevation="0" class="mb-2">
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        hide-details
+        solo
+        clearable
+      ></v-text-field>
+    </v-card>
 
     <v-data-table
       :headers="headers"
       :items="user"
       class="elevation-1"
-      click:row="tt()"
+      :search="search"
     >
       <template v-slot:item.avatar="{ item }">
         <v-avatar>
@@ -39,7 +50,7 @@ export default {
   },
   data() {
     return {
-      scrollInvoked: 0,
+      search: "",
       headers: [
         {
           value: "id",
@@ -66,7 +77,7 @@ export default {
           text: "EMAIL",
         },
         {
-          value: "tel",
+          value: "phone",
           text: "TÉLÉPHONE",
         },
       ],
@@ -78,7 +89,7 @@ export default {
           status: "Approvee",
           approuver: true,
           email: "99stive@mail.com",
-          tel: "+1-334-42323",
+          phone: "+1-334-42323",
         },
       ],
     };
