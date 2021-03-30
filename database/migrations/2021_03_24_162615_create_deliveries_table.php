@@ -20,6 +20,8 @@ class CreateDeliveriesTable extends Migration
             $table->string('avatar')->nullable();
             $table->string('email')->unique();
             $table->string('password');
+            $table->integer('experience');
+            $table->string('permit');
             $table->boolean('status');
             $table->string('phone')->nullable();
             $table->timestamp('blocked_at')->nullable();

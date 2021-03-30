@@ -17,11 +17,13 @@ use App\Http\Controllers\AdminController;
 |
 */
 
-############ Login Route #############
+############ Auth Route #############
 Route::POST("/login", [AuthController::class, "login"]);
 //* Reset password
 Route::POST('/reset/password', [AuthController::class, 'createRestLink']);
 Route::POST('/reset-password', [AuthController::class, 'restPassword']);
+//* register new user
+Route::POST('/register/delivery', [AuthController::class, 'create']); //create new Delivery
 
 ########### Admin Controller #########
 Route::middleware("auth:admin")->group(function () {
