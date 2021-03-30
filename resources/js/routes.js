@@ -7,7 +7,6 @@ import Clue from "./components/Clue";
 import Login from "./components/clue/Login";
 import ChangePassword from "./components/clue/ChangePassword";
 
-
 //* Admin.
 import Dashboard from "./components/admin/Dashboard";
 import Livreurs from "./components/admin/Livreurs";
@@ -21,13 +20,16 @@ const LoginRoutes = [
     //Clue (Control Index's)
     { path: "/login", name: "login", component: Login },
     {
-        path: "/", name: "clue", component: Clue, meta: { requiresAuth: false },
-
+        path: "/",
+        name: "clue",
+        component: Clue,
+        meta: { requiresAuth: false }
     },
     {
-        path: "/reset-password/:id", name: "password-reset", component: ChangePassword
+        path: "/reset-password/:id",
+        name: "password-reset",
+        component: ChangePassword
     }
-
 ];
 
 //? Admin Dashboard
@@ -42,7 +44,7 @@ const adminRoutes = {
             path: "/livreurs",
             name: "livreurs",
             component: Livreurs,
-            meta: { guard: "admin", title: 'Livreurs' }
+            meta: { guard: "admin", title: "Livreurs" }
         }
     ]
 };
@@ -66,16 +68,15 @@ switch (localStorage.getItem("guard")) {
         break;
 }
 
-
 const router = new VueRouter({
     routes,
     mode: "history",
     linkExactActiveClass: "",
-    linkActiveClass: "active",
+    linkActiveClass: "active"
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.matched.some((route) => route.meta.requiresAuth)) {
+    if (to.matched.some(route => route.meta.requiresAuth)) {
         if (Vue.auth.isAuthenticated(to.meta.guard)) {
             next();
         } else {
