@@ -196,6 +196,11 @@ let mutations = {
     //Service Google maps api
     service(state, service) {
         state.service = service;
+    },
+    //! ################################
+    FETCH_DELIVERIES(state, deliveries) {
+        return state.deliveries = deliveries;
     }
+
 };
 export default mutations;

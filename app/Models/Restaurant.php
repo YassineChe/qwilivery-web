@@ -13,11 +13,15 @@ class Restaurant extends Authenticatable
 
 
 
+    protected $guarded = [];
+
     /**
-     * The attributes that are mass assignable.
+     * The attributes that should be hidden for arrays.
      *
      * @var array
      */
-
-    protected $guarded = [];
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 }

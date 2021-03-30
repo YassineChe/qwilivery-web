@@ -32,7 +32,6 @@ class DeliveryRequest extends FormRequest
             'Permit'    => 'required|mimes:pdf|max:10000"',
             'email'      => 'required|email|unique:restaurants|unique:admins|unique:deliveries',
             'phone'      => 'required',
-
         ];
     }
 }
