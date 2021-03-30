@@ -35,8 +35,6 @@ Route::middleware("auth:admin")->group(function () {
     Route::post('/add/restaurant', [AdminController::class, 'addRestaurant']); //add restaurant
     Route::get('/fetch/deliveries', [AdminController::class, 'fetchDeliveries']); //  Fetch delivery men no blocked.
     Route::get('/fetch/deliveries/blocked', [AdminController::class, 'fetchDeliveriesBlocked']); //  Fetch delivery men blocked.
-
-
 });
 
 ########### CommonController #########

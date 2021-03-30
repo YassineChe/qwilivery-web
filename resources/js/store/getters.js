@@ -25,7 +25,10 @@ let getters = {
             return undefined;
         }
     },
-    /** EMPLOYERS **/
+    deliveries: state => {
+        return state.deliveries;
+    }
+
 
 };
 export default getters;
