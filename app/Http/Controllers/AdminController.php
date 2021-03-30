@@ -14,7 +14,7 @@ use App\Notifications\RestaurantAccountEmail;
 
 class AdminController extends Controller
 {
-    //* Approuve  
+    //* Approuve.  
     public function approvedDeliveryMan(Request $request)
     {
         $delivery =  Delivery::Where('id', $request->id);
@@ -25,7 +25,7 @@ class AdminController extends Controller
             return dataToResponse('success', 'Succès ', 'la mise à jour a réussi', false, 200);
         }
     }
-    //* Delete
+    //* Delete.
     public function deleteDeliveryMan(Request $request)
     {
         $delivery =  Delivery::Where('id', $request->id);
@@ -35,7 +35,7 @@ class AdminController extends Controller
         }
     }
 
-    //*Block
+    //*Block.
     public function blockDeliveryMan(Request $request)
     {
         $delivery =  Delivery::Where('id', $request->id);
@@ -55,7 +55,7 @@ class AdminController extends Controller
         }
     }
 
-    //* Add Restaurant 
+    //* Add Restaurant. 
     public function addRestaurant(StoreRestaurentRequest $request)
     {
         $restaurant = Restaurant::Create([
@@ -73,5 +73,21 @@ class AdminController extends Controller
             'Restaurent Ajouté avec succés',
             'Un couriel contenant le mot de passe du restaurateur son été envoye à son adresse'
         ], true, 200);
+    }
+
+
+    //* Fetch delivery men no blocked.
+    public function fetchDeliveries()
+    {
+        return Delivery::where('blocked_at', null)
+            ->select('id', "first_name", "last_name", "avatar", "email", "status", "phone")
+            ->get();
+    }
+    //* Fetch delivery men  blocked.
+    public function fetchDeliveriesBlocked()
+    {
+        return Delivery::whereNotNull('blocked_at')
+            ->select('id', "first_name", "last_name", "avatar", "email", "status", "phone")
+            ->get();
     }
 }
