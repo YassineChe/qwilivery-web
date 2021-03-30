@@ -33,9 +33,9 @@
                 :items="user"
                 :search="search"
                 disable-sort
-                :hide-default-header="isMobile"
+                item-key="id"
             >
-                <template v-slot:item.avatar="{ item }">
+                <template v-slot:[`item.avatar`]="{ item }">
                     <v-avatar size="40">
                         <img
                             src="https://cdn.vuetifyjs.com/images/john.jpg"
@@ -44,13 +44,140 @@
                     </v-avatar>
                 </template>
 
-                <template v-slot:item.approuver="{ item }">
+                <template v-slot:[`item.approuver`]="{ item }">
                     <v-chip>
                         <v-switch
                             v-model="item.approuver"
                             color="primary"
                         ></v-switch>
                     </v-chip>
+                </template>
+
+                <template v-slot:[`item.actions`]="{ item }">
+                    <v-speed-dial
+                        :v-model="true"
+                        direction="left"
+                        transition="slide-x-reverse-transition"
+                    >
+                        <template v-slot:activator>
+                            <v-btn small fab color="primary">
+                                <v-icon>
+                                    mdi-dots-horizontal
+                                </v-icon>
+                            </v-btn>
+                        </template>
+
+                        <!-- Delete -->
+                        <v-tooltip top>
+                            <template
+                                v-slot:activator="{
+                                    on,
+                                    attrs
+                                }"
+                            >
+                                <v-btn
+                                    v-on="on"
+                                    v-bind="attrs"
+                                    color="error"
+                                    fab
+                                    x-small
+                                >
+                                    <v-icon>
+                                        mdi-delete
+                                    </v-icon>
+                                </v-btn>
+                            </template>
+                            Supprimer
+                        </v-tooltip>
+                        <!-- Edit -->
+                        <v-tooltip top>
+                            <template
+                                v-slot:activator="{
+                                    on,
+                                    attrs
+                                }"
+                            >
+                                <v-btn
+                                    v-on="on"
+                                    v-bind="attrs"
+                                    color="info"
+                                    fab
+                                    x-small
+                                >
+                                    <v-icon>
+                                        mdi-pen
+                                    </v-icon>
+                                </v-btn>
+                            </template>
+                            Modifier
+                        </v-tooltip>
+                        <!-- Permis de conduire -->
+                        <v-tooltip top>
+                            <template
+                                v-slot:activator="{
+                                    on,
+                                    attrs
+                                }"
+                            >
+                                <v-btn
+                                    v-on="on"
+                                    v-bind="attrs"
+                                    color="warning"
+                                    fab
+                                    x-small
+                                >
+                                    <v-icon>
+                                        mdi-card-account-details
+                                    </v-icon>
+                                </v-btn>
+                            </template>
+                            Télécharger permis
+                        </v-tooltip>
+                        <!-- Block -->
+                        <v-tooltip top>
+                            <template
+                                v-slot:activator="{
+                                    on,
+                                    attrs
+                                }"
+                            >
+                                <v-btn
+                                    v-on="on"
+                                    v-bind="attrs"
+                                    color="error"
+                                    fab
+                                    x-small
+                                >
+                                    <v-icon>
+                                        mdi-cancel
+                                    </v-icon>
+                                </v-btn>
+                            </template>
+                            Bloquer
+                        </v-tooltip>
+                        <!-- Chatter -->
+                        <v-tooltip top>
+                            <template
+                                v-slot:activator="{
+                                    on,
+                                    attrs
+                                }"
+                            >
+                                <v-btn
+                                    v-on="on"
+                                    v-bind="attrs"
+                                    color="primary"
+                                    fab
+                                    x-small
+                                >
+                                    <v-icon>
+                                        mdi-chat
+                                    </v-icon>
+                                </v-btn>
+                            </template>
+                            Chatter
+                        </v-tooltip>
+                    </v-speed-dial>
                 </template>
             </v-data-table>
         </v-card>
@@ -70,7 +197,7 @@ export default {
             headers: [
                 {
                     value: "avatar",
-                    text: ""
+                    text: "Photo"
                 },
                 {
                     value: "name",
@@ -88,10 +215,14 @@ export default {
                 {
                     value: "phone",
                     text: "TÉLÉPHONE"
+                },
+                {
+                    value: "actions"
                 }
             ],
             user: [
                 {
+                    id: 1,
                     name: "Stive Jobs",
                     avatar: "wwww",
                     approuver: true,
@@ -99,18 +230,20 @@ export default {
                     phone: "+1-334-42323"
                 },
                 {
-                    name: "Stive Jobs",
-                    avatar: "wwww",
-                    approuver: true,
-                    email: "99stive@mail.com",
-                    phone: "+1-334-42323"
+                    id: 2,
+                    name: "Stive",
+                    avatar: "wwwsdw",
+                    approuver: false,
+                    email: "99stisve@mail.com",
+                    phone: "+1-834-42323"
                 },
                 {
-                    name: "Stive Jobs",
-                    avatar: "wwww",
+                    id: 3,
+                    name: "Stiven",
+                    avatar: "avv",
                     approuver: true,
-                    email: "99stive@mail.com",
-                    phone: "+1-334-42323"
+                    email: "98stive@mail.com",
+                    phone: "+2-334-42323"
                 }
             ]
         };
