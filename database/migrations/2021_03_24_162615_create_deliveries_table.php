@@ -25,6 +25,7 @@ class CreateDeliveriesTable extends Migration
             $table->boolean('status');
             $table->string('phone')->nullable();
             $table->timestamp('blocked_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

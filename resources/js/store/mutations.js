@@ -200,6 +200,14 @@ let mutations = {
     //! ################################
     FETCH_DELIVERIES(state, deliveries) {
         return state.deliveries = deliveries;
+    },
+    DELETE_DELIVERY(state, delivery_id) {
+        state.deliveries.splice(
+            state.deliveries.indexOf(
+                state.deliveries.find(delivery => delivery.id == delivery_id)
+            ),
+            1
+        );
     }
 
 };
