@@ -22,35 +22,38 @@ class AdminController extends Controller
             $delivery->update([
                 "status" => $request->status
             ]);
-            return dataToResponse('success', 'Succès ', 'la mise à jour a réussi', false, 200);
+            return dataToResponse('success', 'Succès ', 'La mise à jour a réussi', false, 200);
         }
     }
     //* Delete.
     public function deleteDeliveryMan(Request $request)
     {
-        $delivery =  Delivery::Where('id', $request->id);
+        $delivery =  Delivery::Where('id', $request->delivery_id)->first();
         if ($delivery) {
             $delivery->delete();
-            return dataToResponse('success', 'Succès ', 'la suppression est un succès', true, 200);
+            return dataToResponse('success', 'Succès ', 'La suppression est un succès', true, 200);
         }
     }
 
-    //*Block.
+    //* Block.
     public function blockDeliveryMan(Request $request)
     {
-        $delivery =  Delivery::Where('id', $request->id);
+        $delivery =  Delivery::Where('id', $request->delivery_id)->first();
+
         if ($delivery) {
-            if ($request->blocked_at == true) {
+            if ($delivery->blocked_at == null) {
+
                 $delivery->update([
                     "blocked_at" => Carbon::now()
                 ]);
-                return dataToResponse('success', 'Succès ', 'livreur a été bloqué', true, 200);
+
+                return dataToResponse('success', 'Succès ', 'Livreur a été bloqué', true, 200);
             }
-            if ($request->blocked_at == false) {
+            if ($delivery->blocked_at != null) {
                 $delivery->update([
                     "blocked_at" => null
                 ]);
-                return dataToResponse('success', 'Succès ', 'livreur a été débloqué', true, 200);
+                return dataToResponse('success', 'Succès ', 'Livreur a été débloqué', true, 200);
             }
         }
     }
