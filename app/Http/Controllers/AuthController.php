@@ -10,10 +10,11 @@ use App\Models\Password_reset;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-
-
+use App\Http\Requests\DeliveryRequest;
 
 use App\Notifications\ResetEmail;
+
+
 
 class AuthController extends Controller
 {
@@ -108,5 +109,39 @@ class AuthController extends Controller
                 return dataToResponse('success', 'success!', 'le mot de passe a été mis à jour avec succès', false, 200);
             }
         }
+    }
+
+    //* Create new Delivery
+    public function create(DeliveryRequest $request)
+    {
+        // Check if password is much
+        if ($request->password !== $request->confirm) {
+            return dataToResponse('error', 'Erreur!', 'le mot de passe ne correspond pas', false, 422);
+        }
+        // Avatar
+        $avatar = $request->avatar;
+        // Change name of image .
+        $avatarName = time() . '.' . $avatar->extension();
+        //Upload image to server.
+        $avatar->move(public_path() . '/Avatar', $avatarName);
+
+        // Permit
+        $permit = $request->permit;
+        $permitName = time() . '.' . $permit->extension();
+        // Upload Pdf to server.
+        $permit->move(public_path() . '/Pdf', $permitName);
+
+        Delivery::create([
+            "first_name" => $request->first_name,
+            "last_name"  => $request->last_name,
+            "avatar"     => $avatarName,
+            "email"      => $request->email,
+            "password"   => hash::make($request->password),
+            "experience" => $request->experience,
+            "permit"    => $permit,
+            "status"     => $request->status,
+            "phone"      => $request->phone
+        ]);
+        return $request;
     }
 }
