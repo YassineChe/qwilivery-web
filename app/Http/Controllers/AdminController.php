@@ -35,7 +35,7 @@ class AdminController extends Controller
         }
     }
 
-    //* block
+    //*Block
     public function blockDeliveryMan(Request $request)
     {
         $delivery =  Delivery::Where('id', $request->id);
