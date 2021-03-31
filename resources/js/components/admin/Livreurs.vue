@@ -29,6 +29,7 @@
       </v-toolbar>
 
       <v-data-table
+        :loading="isBusy('fetch-deliveries')"
         :headers="headers"
         :items="deliveries"
         :search="search"
@@ -140,52 +141,52 @@ export default {
   components: {
     Headline,
   },
-  data() {
-    return {
-      search: "",
-      headers: [
-        {
-          value: "avatar",
-          text: "Photo",
+  // * Edit approvement delivery man.
+  editApprovement(delivery) {
+    this.$store.commit("CLEAR_EXPECTED");
+    this.$store.dispatch("postData", {
+      path: `/api/approved/delivery-man`,
+      data: delivery,
+      related: `edit-approvement`,
+    });
+  },
+  //* Delete delivery
+  async deleteDelivery(delivery_id) {
+    this.$store.commit("CLEAR_EXPECTED");
+    this.$dialog.confirm({
+      text: "Êtes-vous sûr de supprimer cet livreur ?",
+      title: "Attention!",
+      actions: {
+        false: "Non!",
+        true: {
+          color: "red",
+          text: "Je confirme",
+          handle: () => {
+            this.$store.dispatch("deleteData", {
+              path: `/api/delete/delivery-man`,
+              data: { delivery_id: delivery_id },
+              related: `delete-delivery-man`,
+            });
+            this.dummy = delivery_id;
+          },
         },
-        {
-          value: "name",
-          text: "NOM ET PRÉNOM",
-        },
-
-        {
-          value: "status",
-          text: "APPROUVER",
-        },
-        {
-          value: "email",
-          text: "EMAIL",
-        },
-        {
-          value: "phone",
-          text: "TÉLÉPHONE",
-        },
-        {
-          value: "actions",
-        },
-      ],
-      dummy: null,
-    };
+      },
+    });
   },
   computed: {
     ...mapState(["expected"]),
-
+    //*Get no blocked delivery
+    deliveries: function () {
+      return this.$store.getters.deliveries;
+    },
     //* Is mobile
     isMobile() {
       return this.$vuetify.breakpoint.xsOnly;
     },
-    //*Get no blocked delivery
-    deliveries() {
-      return this.$store.getters.deliveries;
-    },
   },
   methods: {
-    initialize() {
+    //* Init
+    init() {
       //* Get all deliveries
       this.$store.dispatch("fetchData", {
         path: "/api/fetch/deliveries",
@@ -194,11 +195,11 @@ export default {
       });
     },
     // * Edit approvement delivery man.
-    editApprovement(delivery) {
+    editApprovement(delivery_id) {
       this.$store.commit("CLEAR_EXPECTED");
       this.$store.dispatch("postData", {
         path: `/api/approved/delivery-man`,
-        data: delivery,
+        data: { delivery_id: delivery_id },
         related: `edit-approvement`,
       });
     },
@@ -206,7 +207,7 @@ export default {
     async deleteDelivery(delivery_id) {
       this.$store.commit("CLEAR_EXPECTED");
       this.$dialog.confirm({
-        text: "Êtes-vous sûr de supprimer cet livreur ?",
+        text: "Êtes-vous sûr de supprimer ce livreur ?",
         title: "Attention!",
         actions: {
           false: "Non!",
@@ -229,7 +230,7 @@ export default {
     blockDelivery(delivery_id) {
       this.$store.commit("CLEAR_EXPECTED");
       this.$dialog.confirm({
-        text: "Êtes-vous sûr de bloquer cet livreur ?",
+        text: "Êtes-vous sûr de bloquer ce livreur ?",
         title: "Attention!",
         actions: {
           false: "Non!",
@@ -249,7 +250,7 @@ export default {
         },
       });
     },
-    // Overlly
+    //* The famous isBusy funtion haha
     isBusy: function (fetcher) {
       try {
         return this.$store.getters.expected(fetcher).status == "busy"
@@ -269,13 +270,13 @@ export default {
           if (expected.status === "success") {
             this.$dialog.notify.success(expected.result.subMessage, {
               position: "top-right",
-              timeout: 5000,
+              timeout: 3000,
             });
           }
           if (expected.status === "error") {
             this.$dialog.notify.warning(expected.result.subMessage, {
               position: "top-right",
-              timeout: 5000,
+              timeout: 3000,
             });
           }
         }
@@ -289,13 +290,13 @@ export default {
             this.$store.commit("DELETE_DELIVERY", this.dummy);
             this.$dialog.notify.success(expected.result.subMessage, {
               position: "top-right",
-              timeout: 5000,
+              timeout: 3000,
             });
           }
           if (expected.status === "error") {
             this.$dialog.notify.warning(expected.result.subMessage, {
               position: "top-right",
-              timeout: 5000,
+              timeout: 3000,
             });
           }
         }
@@ -309,13 +310,13 @@ export default {
             this.$store.commit("DELETE_DELIVERY", this.dummy);
             this.$dialog.notify.success(expected.result.subMessage, {
               position: "top-right",
-              timeout: 5000,
+              timeout: 3000,
             });
           }
           if (expected.status === "error") {
             this.$dialog.notify.warning(expected.result.subMessage, {
               position: "top-right",
-              timeout: 5000,
+              timeout: 3000,
             });
           }
         }
@@ -323,7 +324,8 @@ export default {
     },
   },
   created() {
-    this.initialize();
+    this.$store.commit("CLEAR_EXPECTED");
+    this.init();
   },
 };
 </script>

@@ -24,6 +24,8 @@ class CreateRestaurantsTable extends Migration
             $table->string('lng')->nullable();
             $table->string('logo')->default('restaurant.png');
             $table->double('rate');
+            $table->timestamp('blocked_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
