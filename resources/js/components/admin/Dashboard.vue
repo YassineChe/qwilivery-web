@@ -72,8 +72,8 @@ export default {
             },
             {
                 title: "Restaurants",
-                icon: "food-turkey",
-                to: "/Sss"
+                icon: "mdi-silverware-variant",
+                to: "restaurants"
             }
         ]
     }),
