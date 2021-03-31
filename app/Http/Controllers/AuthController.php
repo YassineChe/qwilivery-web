@@ -111,36 +111,34 @@ class AuthController extends Controller
         }
     }
 
-    //* Create new Delivery
-    public function create(DeliveryRequest $request)
+    //* Create new Delivery  (DeliveryRequest)
+    public function create(Request $request)
     {
+
         // Check if password is much
         if ($request->password !== $request->confirm) {
             return dataToResponse('error', 'Erreur!', 'le mot de passe ne correspond pas', false, 422);
         }
+        // dd($request);
+        /*
         // Avatar
         $avatar = $request->avatar;
         // Change name of image .
         $avatarName = time() . '.' . $avatar->extension();
         //Upload image to server.
         $avatar->move(public_path() . '/Avatar', $avatarName);
-
-        // Permit
-        $permit = $request->permit;
-        $permitName = time() . '.' . $permit->extension();
-        // Upload Pdf to server.
-        $permit->move(public_path() . '/Pdf', $permitName);
+        //################################*/
+        // $permit = storeUploaded($request->file, storage_path('upload/' . $request->folder));
 
         Delivery::create([
             "first_name" => $request->first_name,
             "last_name"  => $request->last_name,
-            "avatar"     => $avatarName,
+            "avatar"     => "avatar.png",
             "email"      => $request->email,
             "password"   => hash::make($request->password),
             "experience" => $request->experience,
-            "permit"    => $permit,
-            "status"     => $request->status,
-            "phone"      => $request->phone
+            "permit"    => "premit.pdf",
+            "phone"      => "+1223322322"
         ]);
         return $request;
     }

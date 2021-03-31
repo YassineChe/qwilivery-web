@@ -22,7 +22,7 @@ class CreateDeliveriesTable extends Migration
             $table->string('password');
             $table->integer('experience');
             $table->string('permit');
-            $table->boolean('status');
+            $table->boolean('status')->default(0);
             $table->string('phone')->nullable();
             $table->timestamp('blocked_at')->nullable();
             $table->softDeletes();
