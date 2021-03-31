@@ -114,21 +114,20 @@ class AuthController extends Controller
     //* Create new Delivery  (DeliveryRequest)
     public function create(Request $request)
     {
-
         // Check if password is much
         if ($request->password !== $request->confirm) {
             return dataToResponse('error', 'Erreur!', 'le mot de passe ne correspond pas', false, 422);
         }
-        // dd($request);
-        /*
-        // Avatar
-        $avatar = $request->avatar;
-        // Change name of image .
-        $avatarName = time() . '.' . $avatar->extension();
-        //Upload image to server.
-        $avatar->move(public_path() . '/Avatar', $avatarName);
-        //################################*/
-        // $permit = storeUploaded($request->file, storage_path('upload/' . $request->folder));
+        // Retrieving necessary data
+        return $file = $request->formData;
+        // Retruning response to the end user
+        return $file;
+        //image upload 
+        $to = time() . '.' . $file->extension();
+        // unlink(public_path() . '/Avatar/' . $student->avatar);
+        //Move picture to server
+        $file->move(public_path() . '/Avatar', $to);
+
 
         Delivery::create([
             "first_name" => $request->first_name,
@@ -137,7 +136,7 @@ class AuthController extends Controller
             "email"      => $request->email,
             "password"   => hash::make($request->password),
             "experience" => $request->experience,
-            "permit"    => "premit.pdf",
+            "permit"    => $to,
             "phone"      => "+1223322322"
         ]);
         return $request;

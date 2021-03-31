@@ -286,6 +286,45 @@ let actions = {
                     related: payload.related
                 });
             });
+    },
+
+
+    async uploadFile({ dispatch }, payload) {
+        //TODO 1 : Set the status progress, until axios finish
+        //? Init action status.
+        dispatch("expected", {
+            status: "busy",
+            result: [],
+            related: payload.related
+        });
+
+        //TODO 2 : Get Data from server.
+        return await axios
+            .post(payload.path, payload.data, {
+                headers: {
+                    // Accept: "application/json",
+                    "content-type": "multipart/form-data",
+                    Authorization: `Bearer ${token.getToken()}`
+                }
+            })
+            .then(response => {
+                dispatch("expected", {
+                    status: "success",
+                    result: response.data,
+                    related: payload.related
+                });
+                //Used in modal
+                if (payload.returned) return true;
+            })
+            .catch(err => {
+                dispatch("expected", {
+                    status: "error",
+                    result: err.response.data,
+                    related: payload.related
+                });
+                //Used in modal
+                if (payload.returned) return false;
+            });
     }
     //End of file
 };
