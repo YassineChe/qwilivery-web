@@ -13,13 +13,12 @@
     >
         <!-- This slot to bind drawer status on/off -->
         <slot v-if="isMobile" name="appBarNavIcon"></slot>
-
-        <v-badge color="primary" content="6" overlap class="mr-9">
-            <v-icon color="grey lighten-1" medium> mdi-message-outline</v-icon>
-        </v-badge>
         <!-- The Spacer -->
         <v-spacer></v-spacer>
-        <v-badge color="primary" content="6" overlap class="mr-9">
+        <v-badge color="error" content="6" overlap class="mr-9">
+            <v-icon color="grey lighten-1" medium> mdi-message-outline</v-icon>
+        </v-badge>
+        <v-badge color="error" content="6" overlap class="mr-9">
             <v-icon color="grey lighten-1" medium> mdi-bell-outline </v-icon>
         </v-badge>
         <!-- profil -->

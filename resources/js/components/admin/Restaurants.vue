@@ -4,7 +4,7 @@
             <v-col>
                 <!-- HeadLine -->
                 <Headline
-                    headline="Restaurants"
+                    :headline="`(${restaurants.length}) Restaurant(s)`"
                     subheadline="Gestion des restaurants"
                     :headline-classes="[
                         'text-h5',
@@ -37,7 +37,6 @@
                     append-icon="mdi-magnify"
                     label="Search"
                     hide-details
-                    dense
                     solo
                     clearable
                 >
@@ -52,6 +51,9 @@
                 item-key="id"
             >
                 <template v-slot:[`item.name`]="{ item }">
+                    <v-icon color="error" v-if="item.blocked_at != null"
+                        >mdi-cancel</v-icon
+                    >
                     <span>{{ item.name }}</span>
                 </template>
 
@@ -64,7 +66,7 @@
                     </v-chip>
                 </template>
 
-                <template v-slot:[`item.actions`]="{}">
+                <template v-slot:[`item.actions`]="{ item }">
                     <v-speed-dial
                         :v-model="true"
                         direction="left"
@@ -85,6 +87,7 @@
                                     color="error"
                                     fab
                                     x-small
+                                    @click="deleteRestaurant(item.id)"
                                 >
                                     <v-icon> mdi-delete </v-icon>
                                 </v-btn>
@@ -116,12 +119,33 @@
                                     color="error"
                                     fab
                                     x-small
+                                    @click="blockRestaurant(item.id)"
+                                    v-if="item.blocked_at == null"
                                 >
                                     <v-icon> mdi-cancel </v-icon>
                                 </v-btn>
                             </template>
                             Bloquer
                         </v-tooltip>
+
+                        <!-- Block -->
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                    v-on="on"
+                                    v-bind="attrs"
+                                    color="success"
+                                    fab
+                                    x-small
+                                    @click="unblockRestaurant(item.id)"
+                                    v-if="item.blocked_at != null"
+                                >
+                                    <v-icon> mdi-undo </v-icon>
+                                </v-btn>
+                            </template>
+                            Débloquer
+                        </v-tooltip>
+
                         <!-- Chatter -->
                         <v-tooltip top>
                             <template v-slot:activator="{ on, attrs }">
@@ -131,6 +155,7 @@
                                     color="primary"
                                     fab
                                     x-small
+                                    @click="unblockRestaurant(item.id)"
                                 >
                                     <v-icon> mdi-chat </v-icon>
                                 </v-btn>
@@ -159,7 +184,6 @@ export default {
         return {
             search: "",
             headers: [
-                // { value: "avatar", text: "Photo" },
                 { value: "name", text: "NOM DU RESTAURANT" },
                 { value: "status", text: "APPROUVER/NON-APPROUVER" },
                 { value: "email", text: "EMAIL" },
@@ -180,6 +204,58 @@ export default {
         }
     },
     methods: {
+        deleteRestaurant: function(restaurant_id) {
+            this.$dialog.confirm({
+                text: "Êtes-vous sûr de supprimer ce restaurant ?",
+                title: "Attention!",
+                actions: {
+                    false: "Non!",
+                    true: {
+                        color: "error",
+                        text: "Je confirme",
+                        handle: () => {
+                            if (restaurant_id) {
+                                //Delete form store
+                                this.$store.commit(
+                                    "DELETE_RESTAURANT",
+                                    restaurant_id
+                                );
+                                //Delete it form backend
+                                this.$store.dispatch("deleteData", {
+                                    path: "/api/delete/restaurant",
+                                    data: { restaurant_id: restaurant_id },
+                                    related: "delete-restaurant"
+                                });
+                            }
+                        }
+                    }
+                }
+            });
+        },
+        blockRestaurant: function(restaurant_id) {
+            if (restaurant_id) {
+                //Change it in front
+                this.$store.commit("BLOCK_RESTAURANT", restaurant_id);
+                // Change it in backend
+                this.$store.dispatch("patchData", {
+                    path: "/api/block/restaurant",
+                    data: { restaurant_id: restaurant_id },
+                    related: "block-restaurant"
+                });
+            }
+        },
+        unblockRestaurant: function(restaurant_id) {
+            if (restaurant_id) {
+                //Change it in front
+                this.$store.commit("UNBLOCK_RESTAURANT", restaurant_id);
+                // Change it in backend
+                this.$store.dispatch("patchData", {
+                    path: "/api/unblock/restaurant",
+                    data: { restaurant_id: restaurant_id },
+                    related: "unblock-restaurant"
+                });
+            }
+        },
         //* Init
         init: function() {
             this.$store.dispatch("fetchData", {
@@ -197,6 +273,7 @@ export default {
     },
     watch: {
         expected() {
+            // Add Restaurant
             {
                 let expected = this.$store.getters.expected("add-restaurant");
 
@@ -220,6 +297,50 @@ export default {
                                 });
                             });
                     }
+                    this.$store.commit("CLEAR_EXPECTED");
+                }
+            }
+
+            //Block Restaurant
+            {
+                let expected = this.$store.getters.expected(
+                    "delete-restaurant"
+                );
+                if (expected != undefined && expected.status === "success") {
+                    this.$dialog.notify.success(expected.result.subMessage, {
+                        position: "top-right",
+                        timeout: 3000
+                    });
+                    //Clear expected
+                    this.$store.commit("CLEAR_EXPECTED");
+                }
+            }
+
+            //Block Restaurant
+            {
+                let expected = this.$store.getters.expected("block-restaurant");
+                if (expected != undefined && expected.status === "success") {
+                    this.$dialog.notify.success(expected.result.subMessage, {
+                        position: "top-right",
+                        timeout: 3000
+                    });
+                    //Clear expected
+                    this.$store.commit("CLEAR_EXPECTED");
+                }
+            }
+
+            //Block Restaurant
+            {
+                let expected = this.$store.getters.expected(
+                    "unblock-restaurant"
+                );
+                if (expected != undefined && expected.status === "success") {
+                    this.$dialog.notify.success(expected.result.subMessage, {
+                        position: "top-right",
+                        timeout: 3000
+                    });
+                    //Clear expected
+                    this.$store.commit("CLEAR_EXPECTED");
                 }
             }
         }

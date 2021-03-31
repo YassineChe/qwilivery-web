@@ -5,37 +5,28 @@ namespace App\Http\Controllers;
 //Models
 use App\Models\Delivery;
 use App\Models\Restaurant;
-//Request
+//Requests
 use Illuminate\Http\Request;
 use App\Http\Requests\RequestRestaurant;
-
-
-use App\Notifications\RestaurantAccountEmail;
+//Notifications
+use App\Notifications\NotifyRestaurantAccount;
 
 class AdminController extends Controller
 {
     //* Approuve.  
     public function approvedDeliveryMan(Request $request)
     {
-        $delivery =  Delivery::Where('id', $request->id)->first();
+        $delivery =  Delivery::where('id', $request->id)->first();
         if ($delivery) {
-<<<<<<< HEAD
-
-            $delivery->update([
-                "status" => $request->status
-            ]);
-
-=======
             $delivery->update(['status' => 1,]);
             //Return data to front
->>>>>>> 2eaabaaa0ee86736c04b3b1712719297521caa2c
             return dataToResponse('success', 'Succès ', 'La mise à jour a réussi', false, 200);
         }
     }
     //* Delete.
     public function deleteDeliveryMan(Request $request)
     {
-        $delivery =  Delivery::Where('id', $request->delivery_id)->first();
+        $delivery =  Delivery::where('id', $request->delivery_id)->first();
         if ($delivery) {
             $delivery->delete();
             return dataToResponse('success', 'Succès ', 'La suppression est un succès', true, 200);
@@ -45,7 +36,7 @@ class AdminController extends Controller
     //* Block.
     public function blockDeliveryMan(Request $request)
     {
-        $delivery =  Delivery::Where('id', $request->delivery_id)->first();
+        $delivery =  Delivery::where('id', $request->delivery_id)->first();
 
         if ($delivery) {
             if ($delivery->blocked_at == null) {
@@ -69,9 +60,7 @@ class AdminController extends Controller
     public function fetchRestaurants(){
         return 
             response(
-                Restaurant::whereNull('blocked_at')
-                    ->orderBy('id', 'DESC')
-                    ->get()
+                Restaurant::orderBy('id', 'DESC')->get()
                 , 200
             );
     }
@@ -96,7 +85,7 @@ class AdminController extends Controller
             
             //Notify Restau
             if ($restaurant)
-                $restaurant->notify(new RestaurantAccountEmail(["password" => $generetedPassword, "email" => $request->email]));
+                $restaurant->notify(new NotifyRestaurantAccount(["password" => $generetedPassword, "email" => $request->email]));
 
             return dataToResponse('success', 'Succès ', 'Un E-mail a été envoyé au restaurant avec les informations d\'identification 👍', true, 200);
         }
