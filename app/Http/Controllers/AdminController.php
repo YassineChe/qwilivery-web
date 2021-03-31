@@ -17,11 +17,13 @@ class AdminController extends Controller
     //* Approuve.  
     public function approvedDeliveryMan(Request $request)
     {
-        $delivery =  Delivery::Where('id', $request->id);
+        $delivery =  Delivery::Where('id', $request->id)->first();
         if ($delivery) {
+
             $delivery->update([
                 "status" => $request->status
             ]);
+
             return dataToResponse('success', 'Succès ', 'La mise à jour a réussi', false, 200);
         }
     }

@@ -48,7 +48,7 @@
           <v-chip>
             <v-switch
               v-model="item.status"
-              @change="editApprovement(item.id)"
+              @change="editApprovement(item)"
               color="primary"
             ></v-switch>
           </v-chip>
@@ -193,11 +193,11 @@ export default {
       });
     },
     // * Edit approvement delivery man.
-    editApprovement(delivery_id) {
+    editApprovement(delivery) {
       this.$store.commit("CLEAR_EXPECTED");
       this.$store.dispatch("postData", {
         path: `/api/approved/delivery-man`,
-        data: { delivery_id: delivery_id },
+        data: delivery,
         related: `edit-approvement`,
       });
     },
