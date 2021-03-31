@@ -67,13 +67,13 @@ export default {
         nabItem: [
             {
                 title: "Livreurs",
-                icon: "mdi-account",
+                icon: " mdi-truck-delivery",
                 to: "livreurs"
             },
             {
-                title: "Livreurs",
-                icon: "mdi-account",
-                to: "/Sss"
+                title: "Restaurants",
+                icon: "mdi-silverware-variant",
+                to: "restaurants"
             }
         ]
     }),
