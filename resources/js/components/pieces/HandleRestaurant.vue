@@ -18,6 +18,7 @@
             <v-col cols="12">
                 <v-text-field
                     v-model="restaurant.email"
+                    type="email"
                     prepend-inner-icon="mdi-email"
                     placeholder="Email"
                     hide-details
@@ -134,7 +135,15 @@ export default {
                 add: {
                     text: "Ajouter",
                     color: "primary",
-                    rounded: true
+                    rounded: true,
+                    handle: () => {
+                        return this.$store.dispatch("postData", {
+                            path: "/api/add/restaurant",
+                            data: this.restaurant,
+                            related: "add-restaurant",
+                            returned: true
+                        });
+                    }
                 }
             };
         }

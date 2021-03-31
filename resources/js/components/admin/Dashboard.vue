@@ -31,7 +31,7 @@
 
                     <!-- Offers  -->
                     <v-list-item
-                        v-for="(item, i) in nabItem"
+                        v-for="(item, i) in navItem"
                         :key="i"
                         :to="item.to"
                     >
@@ -60,11 +60,12 @@
 <script>
 import preLoader from "../clue/preLoader";
 import AdminNavbar from "./AdminNavbar";
+
 export default {
     components: { AdminNavbar, preLoader },
     data: () => ({
         drawer: true,
-        nabItem: [
+        navItem: [
             {
                 title: "Livreurs",
                 icon: " mdi-truck-delivery",

@@ -46,21 +46,13 @@
 
             <v-data-table
                 :headers="headers"
-                :items="user"
+                :items="restaurants"
                 :search="search"
                 disable-sort
                 item-key="id"
             >
                 <template v-slot:[`item.name`]="{ item }">
-                    <p>{{ item.first_name + " " + item.last_name }}</p>
-                </template>
-                <template v-slot:[`item.avatar`]="{ item }">
-                    <v-avatar size="40">
-                        <img
-                            src="https://cdn.vuetifyjs.com/images/john.jpg"
-                            alt="John"
-                        />
-                    </v-avatar>
+                    <span>{{ item.name }}</span>
                 </template>
 
                 <template v-slot:[`item.status`]="{ item }">
@@ -72,7 +64,7 @@
                     </v-chip>
                 </template>
 
-                <template v-slot:[`item.actions`]="{ item }">
+                <template v-slot:[`item.actions`]="{}">
                     <v-speed-dial
                         :v-model="true"
                         direction="left"
@@ -114,21 +106,7 @@
                             </template>
                             Modifier
                         </v-tooltip>
-                        <!-- Permis de conduire -->
-                        <v-tooltip top>
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-btn
-                                    v-on="on"
-                                    v-bind="attrs"
-                                    color="warning"
-                                    fab
-                                    x-small
-                                >
-                                    <v-icon> mdi-card-account-details </v-icon>
-                                </v-btn>
-                            </template>
-                            Télécharger permis
-                        </v-tooltip>
+
                         <!-- Block -->
                         <v-tooltip top>
                             <template v-slot:activator="{ on, attrs }">
@@ -170,6 +148,8 @@
 //Components
 import Headline from "../pieces/Headline";
 import HandleRestaurant from "../pieces/HandleRestaurant";
+//libs
+import { mapState } from "vuex";
 
 export default {
     components: {
@@ -179,72 +159,74 @@ export default {
         return {
             search: "",
             headers: [
-                {
-                    value: "avatar",
-                    text: "Photo"
-                },
-                {
-                    value: "name",
-                    text: "NOM ET PRÉNOM"
-                },
-
-                {
-                    value: "status",
-                    text: "APPROUVER"
-                },
-                {
-                    value: "email",
-                    text: "EMAIL"
-                },
-                {
-                    value: "phone",
-                    text: "TÉLÉPHONE"
-                },
-                {
-                    value: "actions"
-                }
-            ],
-            user: [
-                {
-                    id: 1,
-                    name: "Stive Jobs",
-                    avatar: "wwww",
-                    approuver: true,
-                    email: "99stive@mail.com",
-                    phone: "+1-334-42323"
-                },
-                {
-                    id: 2,
-                    name: "Stive",
-                    avatar: "wwwsdw",
-                    approuver: false,
-                    email: "99stisve@mail.com",
-                    phone: "+1-834-42323"
-                },
-                {
-                    id: 3,
-                    name: "Stiven",
-                    avatar: "avv",
-                    approuver: true,
-                    email: "98stive@mail.com",
-                    phone: "+2-334-42323"
-                }
+                // { value: "avatar", text: "Photo" },
+                { value: "name", text: "NOM DU RESTAURANT" },
+                { value: "status", text: "APPROUVER/NON-APPROUVER" },
+                { value: "email", text: "EMAIL" },
+                { value: "phone", text: "TÉLÉPHONE" },
+                { value: "actions" }
             ]
         };
     },
     computed: {
+        ...mapState(["expected"]),
+        //* Restaurants
+        restaurants: function() {
+            return this.$store.getters.restaurants;
+        },
         //* Is mobile
         isMobile() {
             return this.$vuetify.breakpoint.xsOnly;
         }
     },
     methods: {
+        //* Init
+        init: function() {
+            this.$store.dispatch("fetchData", {
+                path: "/api/fetch/restaurants",
+                mutation: "FETCH_RESTAURANTS",
+                related: "fetch-restaurants"
+            });
+        },
         //* Add Restaurant
         handleRestaurant: function() {
             this.$dialog.show(HandleRestaurant, {
                 width: "40%"
             });
         }
+    },
+    watch: {
+        expected() {
+            {
+                let expected = this.$store.getters.expected("add-restaurant");
+
+                if (expected != undefined) {
+                    if (expected.status === "success") {
+                        this.$dialog.notify.success(
+                            expected.result.subMessage,
+                            {
+                                position: "top-right",
+                                timeout: 3000
+                            }
+                        );
+                    }
+                    if (expected.status === "error") {
+                        this.$store.getters
+                            .callback(expected.result.subMessage)
+                            .forEach(error => {
+                                this.$dialog.notify.warning(error, {
+                                    position: "top-right",
+                                    timeout: 3000
+                                });
+                            });
+                    }
+                }
+            }
+        }
+    },
+    created() {
+        this.$store.commit("CLEAR_EXPECTED");
+        this.init();
     }
 };
 </script>

@@ -1,10 +1,9 @@
 import state from "./state";
 let getters = {
+    /************** guard ************* */
     guard: state => {
         return state.guard;
     },
-    /************** offer ************* */
-
     /************** expected ************* */
     expected: state => related => {
         try {
@@ -25,10 +24,19 @@ let getters = {
             return undefined;
         }
     },
+    /************** deliveries ************* */
     deliveries: state => {
         return state.deliveries;
+    },
+    /************** restaurant ************* */
+    restaurants: state => {
+        return state.restaurants;
+    },
+    //handle result
+    callback: state => result => {
+        return typeof result === "object"
+            ? Object.values(result).flat()
+            : result;
     }
-
-
 };
 export default getters;
