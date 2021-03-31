@@ -16,9 +16,9 @@ class AdminController extends Controller
     //* Approuve.  
     public function approvedDeliveryMan(Request $request)
     {
-        $delivery =  Delivery::where('id', $request->id)->first();
+        $delivery =  Delivery::where('id', $request->delivery_id)->first();
         if ($delivery) {
-            $delivery->update(['status' => 1,]);
+            $delivery->update(['status' => 1]);
             //Return data to front
             return dataToResponse('success', 'Succès ', 'La mise à jour a réussi', false, 200);
         }
@@ -57,18 +57,19 @@ class AdminController extends Controller
     }
 
     //* Fetch Restaurants
-    public function fetchRestaurants(){
-        return 
+    public function fetchRestaurants()
+    {
+        return
             response(
-                Restaurant::orderBy('id', 'DESC')->get()
-                , 200
+                Restaurant::orderBy('id', 'DESC')->get(),
+                200
             );
     }
 
     //* Add Restaurant. 
-    public function addRestaurant(RequestRestaurant $request) 
+    public function addRestaurant(RequestRestaurant $request)
     {
-        try{
+        try {
             //Generate random password
             $generetedPassword = \Str::random(6);
             //Store data
@@ -82,14 +83,13 @@ class AdminController extends Controller
                 'lat'          => $request->location['lat'],
                 'lng'          => $request->location['lng'],
             ]);
-            
+
             //Notify Restau
             if ($restaurant)
                 $restaurant->notify(new NotifyRestaurantAccount(["password" => $generetedPassword, "email" => $request->email]));
 
             return dataToResponse('success', 'Succès ', 'Un E-mail a été envoyé au restaurant avec les informations d\'identification 👍', true, 200);
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             handleLogs($e);
         }
     }
@@ -97,12 +97,12 @@ class AdminController extends Controller
     //* Fetch delivery men no blocked.
     public function fetchDeliveries()
     {
-        return 
+        return
             response(
                 Delivery::whereNull('blocked_at')
                     ->orderBy('id', 'DESC')
-                    ->get()
-                , 200
+                    ->get(),
+                200
             );
     }
     //* Fetch delivery men  blocked.
