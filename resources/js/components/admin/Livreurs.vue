@@ -16,6 +16,19 @@
       </v-col>
     </v-row>
 
+    <v-row class="mt-5" flat>
+      <v-col :align="!isMobile ? 'right' : ''">
+        <v-btn
+          color="primary"
+          outlined
+          :block="isMobile"
+          @click="handleDeliveryMan()"
+        >
+          <v-icon left>mdi-truck-delivery</v-icon>
+          {{ `Ajouter Livreurs` }}
+        </v-btn>
+      </v-col>
+    </v-row>
     <v-card class="mt-5">
       <v-toolbar flat>
         <v-text-field
@@ -136,6 +149,8 @@
 
 <script>
 import Headline from "../pieces/Headline";
+import HandleDelivery from "../pieces/HandleDelivery";
+
 import { mapState } from "vuex";
 export default {
   components: {
@@ -170,38 +185,6 @@ export default {
         },
       ],
     };
-  },
-  // * Edit approvement delivery man.
-  editApprovement(delivery_id) {
-    this.$store.commit("CLEAR_EXPECTED");
-    this.$store.dispatch("postData", {
-      path: `/api/approved/delivery-man`,
-      data: delivery_id,
-      related: `edit-approvement`,
-    });
-  },
-  //* Delete delivery
-  async deleteDelivery(delivery_id) {
-    this.$store.commit("CLEAR_EXPECTED");
-    this.$dialog.confirm({
-      text: "Êtes-vous sûr de supprimer cet livreur ?",
-      title: "Attention!",
-      actions: {
-        false: "Non!",
-        true: {
-          color: "red",
-          text: "Je confirme",
-          handle: () => {
-            this.$store.dispatch("deleteData", {
-              path: `/api/delete/delivery-man`,
-              data: { delivery_id: delivery_id },
-              related: `delete-delivery-man`,
-            });
-            this.dummy = delivery_id;
-          },
-        },
-      },
-    });
   },
   computed: {
     ...mapState(["expected"]),
@@ -278,6 +261,12 @@ export default {
             },
           },
         },
+      });
+    },
+    //* Add delivery man.
+    handleDeliveryMan: function () {
+      this.$dialog.show(HandleDelivery, {
+        width: "30%",
       });
     },
     //* The famous isBusy funtion haha
