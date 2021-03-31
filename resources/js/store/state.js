@@ -4,7 +4,8 @@ let state = {
     expected: [],
     /* Vars */
     dummies: [],
-    deliveries: []
+    deliveries: [],
+    restaurants: []
 };
 
 export default state;

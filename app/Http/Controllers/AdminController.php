@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreRestaurentRequest;
-use Illuminate\Http\Request;
+//Models
 use App\Models\Delivery;
 use App\Models\Restaurant;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
+//Request
+use Illuminate\Http\Request;
+use App\Http\Requests\RequestRestaurant;
 
 
 use App\Notifications\RestaurantAccountEmail;
@@ -19,9 +19,8 @@ class AdminController extends Controller
     {
         $delivery =  Delivery::Where('id', $request->id);
         if ($delivery) {
-            $delivery->update([
-                "status" => $request->status
-            ]);
+            $delivery->update(['status' => 1,]);
+            //Return data to front
             return dataToResponse('success', 'Succès ', 'La mise à jour a réussi', false, 200);
         }
     }
@@ -44,7 +43,7 @@ class AdminController extends Controller
             if ($delivery->blocked_at == null) {
 
                 $delivery->update([
-                    "blocked_at" => Carbon::now()
+                    "blocked_at" => \Carbon\Carbon::now()
                 ]);
 
                 return dataToResponse('success', 'Succès ', 'Livreur a été bloqué', true, 200);
@@ -58,38 +57,61 @@ class AdminController extends Controller
         }
     }
 
-    //* Add Restaurant. 
-    public function addRestaurant(StoreRestaurentRequest $request)
-    {
-        $restaurant = Restaurant::Create([
-            'restaurant_name' => $request->restaurant_name,
-            'email'           => $request->email,
-            'password'        => Hash::make($request->password),
-            'phone'           => $request->phone,
-            'address'         => $request->address,
-            'tarif'           => $request->tarif,
-        ]);
-
-        $restaurant->notify(new RestaurantAccountEmail(["password" => $request->password, "email" => $request->email]));
-
-        return dataToResponse('success', 'Succès ', [
-            'Restaurent Ajouté avec succés',
-            'Un couriel contenant le mot de passe du restaurateur son été envoye à son adresse'
-        ], true, 200);
+    //* Fetch Restaurants
+    public function fetchRestaurants(){
+        return 
+            response(
+                Restaurant::whereNull('blocked_at')
+                    ->orderBy('id', 'DESC')
+                    ->get()
+                , 200
+            );
     }
 
+    //* Add Restaurant. 
+    public function addRestaurant(RequestRestaurant $request) 
+    {
+        try{
+            //Generate random password
+            $generetedPassword = \Str::random(6);
+            //Store data
+            $restaurant = Restaurant::Create([
+                'name'         => $request->name,
+                'email'        => $request->email,
+                'password'     => \Hash::make($generetedPassword),
+                'phone_number' => $request->phone_number,
+                'address'      => $request->address,
+                'rate'         => $request->rate,
+                'lat'          => $request->location['lat'],
+                'lng'          => $request->location['lng'],
+            ]);
+            
+            //Notify Restau
+            if ($restaurant)
+                $restaurant->notify(new RestaurantAccountEmail(["password" => $generetedPassword, "email" => $request->email]));
+
+            return dataToResponse('success', 'Succès ', 'Un E-mail a été envoyé au restaurant avec les informations d\'identification 👍', true, 200);
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
 
     //* Fetch delivery men no blocked.
     public function fetchDeliveries()
     {
-        return Delivery::where('blocked_at', null)
-            ->select('id', "first_name", "last_name", "avatar", "email", "status", "phone")
-            ->get();
+        return 
+            response(
+                Delivery::whereNull('blocked_at')
+                    ->orderBy('id', 'DESC')
+                    ->get()
+                , 200
+            );
     }
     //* Fetch delivery men  blocked.
     public function fetchDeliveriesBlocked()
     {
-        return Delivery::whereNotNull('blocked_at')
+        return Delivery::whereNull('blocked_at')
             ->select('id', "first_name", "last_name", "avatar", "email", "status", "phone")
             ->get();
     }

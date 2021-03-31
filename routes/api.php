@@ -31,11 +31,14 @@ Route::middleware("auth:admin")->group(function () {
     Route::post('/approved/delivery-man', [AdminController::class, 'approvedDeliveryMan']); //approuve delivery man
     Route::delete('/delete/delivery-man', [AdminController::class, 'deleteDeliveryMan']); //delete delivery man
     Route::patch('/block/delivery-man', [AdminController::class, 'blockDeliveryMan']); //block delivery man
-    //* Restaurant stuff
-    Route::post('/add/restaurant', [AdminController::class, 'addRestaurant']); //add restaurant
     Route::get('/fetch/deliveries', [AdminController::class, 'fetchDeliveries']); //  Fetch delivery men no blocked.
     Route::get('/fetch/deliveries/blocked', [AdminController::class, 'fetchDeliveriesBlocked']); //  Fetch delivery men blocked.
+    //* Restaurant stuff
+    Route::get('/fetch/restaurants', [AdminController::class, 'fetchRestaurants']);
+    Route::post('/add/restaurant', [AdminController::class, 'addRestaurant']); //Add restaurant
 });
+
+########### Admin Controller #########
 
 ########### CommonController #########
 Route::middleware("auth:admin")->group(function () {
