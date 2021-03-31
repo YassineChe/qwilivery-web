@@ -80,8 +80,8 @@ class AdminController extends Controller
                 'phone_number' => $request->phone_number,
                 'address'      => $request->address,
                 'rate'         => $request->rate,
-                'lat'          => $request->location['lat'],
-                'lng'          => $request->location['lng'],
+                'lat'          => $request->lat,
+                'lng'          => $request->lng,
             ]);
 
             //Notify Restau

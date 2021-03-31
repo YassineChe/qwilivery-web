@@ -9,6 +9,22 @@ use App\Models\Restaurant;
 class RestaurantController extends Controller
 {
 
+    //* Edit Restaurant
+    public function editRestaurant(Request $request){
+        if(
+            Restaurant::where('id', (int)$request->id)->update([
+                'name'         => $request->name,
+                'email'        => $request->email,
+                'phone_number' => $request->phone_number,
+                'address' => $request->address,
+                'rate'    => $request->rate,
+                'lat'     => $request->lat,
+                'lng'     => $request->lng,
+            ])
+        )
+        return dataToResponse('success', 'Succès ', 'Modifié avec succès 👍', true, 200);
+    }
+
     //* Delete Restaurant
     public function deleteRestaurant(Request $request){
         try{
