@@ -45,13 +45,14 @@
         </template>
 
         <template v-slot:[`item.status`]="{ item }">
-          <v-chip>
+          <v-chip v-if="item.status">
             <v-switch
               v-model="item.status"
               @change="editApprovement(item)"
               color="primary"
             ></v-switch>
           </v-chip>
+          <v-chip color="green" text-color="white" v-else> approuvé(e) </v-chip>
         </template>
 
         <template v-slot:[`item.actions`]="{ item }">

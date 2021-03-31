@@ -14,6 +14,23 @@ function dataToResponse($type, $message, $subMessage, $complete, $status)
     );
 }
 
+
+//? Store uploaded file
+function storeUploaded($file, $path)
+{
+    try {
+        //Generate a random file name with extension.
+        $filename = time() . '.' . $file->getClientOriginalExtension();
+        //Move the file to the selected path
+        $file->move($path, $filename);
+        //Return the filename so we can store it in the database
+        return $filename;
+    } catch (\Exception $e) {
+        \Log::error($e);
+        return null;
+    }
+}
+
 //? ID of authenticated guard
 function authIdFromGuard($guard)
 {

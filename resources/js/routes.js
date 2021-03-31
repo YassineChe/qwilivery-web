@@ -5,6 +5,7 @@ import Vue from "vue";
 //! Global routes
 import Clue from "./components/Clue";
 import Login from "./components/clue/Login";
+import Register from "./components/clue/Register";
 import ChangePassword from "./components/clue/ChangePassword";
 
 //* Admin.
@@ -20,6 +21,7 @@ const routes = [];
 const LoginRoutes = [
     //Clue (Control Index's)
     { path: "/login", name: "login", component: Login },
+    { path: "/register", name: "register", component: Register },
     {
         path: "/",
         name: "clue",
