@@ -58,6 +58,27 @@ let mutations = {
     /*********** Guard *********** */
     FETCH_RESTAURANTS(state, restaurants) {
         return (state.restaurants = restaurants);
+    },
+    DELETE_RESTAURANT(state, restaurant_id) {
+        state.restaurants.splice(
+            state.restaurants.indexOf(
+                state.restaurants.find(
+                    restaurant => restaurant.id == restaurant_id
+                )
+            ),
+            1
+        );
+    },
+    BLOCK_RESTAURANT(state, restaurant_id) {
+        state.restaurants.find(restaurant => {
+            if (restaurant.id == restaurant_id)
+                restaurant.blocked_at = Date.now();
+        });
+    },
+    UNBLOCK_RESTAURANT(state, restaurant_id) {
+        state.restaurants.find(restaurant => {
+            if (restaurant.id == restaurant_id) restaurant.blocked_at = null;
+        });
     }
 };
 export default mutations;

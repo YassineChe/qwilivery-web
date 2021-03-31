@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\RestaurantController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -34,8 +35,11 @@ Route::middleware("auth:admin")->group(function () {
     Route::get('/fetch/deliveries', [AdminController::class, 'fetchDeliveries']); //  Fetch delivery men no blocked.
     Route::get('/fetch/deliveries/blocked', [AdminController::class, 'fetchDeliveriesBlocked']); //  Fetch delivery men blocked.
     //* Restaurant stuff
-    Route::get('/fetch/restaurants', [AdminController::class, 'fetchRestaurants']);
+    Route::get('/fetch/restaurants', [AdminController::class, 'fetchRestaurants']); // Fetch Restaurants
     Route::post('/add/restaurant', [AdminController::class, 'addRestaurant']); //Add restaurant
+    Route::delete('/delete/restaurant', [RestaurantController::class, 'deleteRestaurant']); // Delete Restaurant
+    Route::patch('/block/restaurant', [RestaurantController::class, 'blockRestaurant']);
+    Route::patch('/unblock/restaurant', [RestaurantController::class, 'unblockRestaurant']);
 });
 
 ########### Admin Controller #########

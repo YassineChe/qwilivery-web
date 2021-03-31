@@ -28,17 +28,29 @@
             <v-list nav dense>
                 <v-list-item-group color="primary">
                     <v-subheader>Utilisateurs</v-subheader>
-
-                    <!-- Offers  -->
-                    <v-list-item
-                        v-for="(item, i) in navItem"
-                        :key="i"
-                        :to="item.to"
-                    >
+                    <!-- Restaurants  -->
+                    <v-list-item to="restaurants">
                         <v-list-item-icon>
-                            <v-icon>{{ item.icon }}</v-icon>
+                            <v-icon>mdi-silverware-variant</v-icon>
                         </v-list-item-icon>
-                        <v-list-item-title>{{ item.title }}</v-list-item-title>
+                        <v-list-item-title>Restaurants</v-list-item-title>
+                    </v-list-item>
+                    <!-- Delivery man -->
+                    <v-list-item to="livreurs">
+                        <v-list-item-icon>
+                            <v-icon>mdi-truck-delivery</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Livreurs</v-list-item-title>
+                    </v-list-item>
+
+                    <v-subheader>Chat</v-subheader>
+                    <v-list-item>
+                        <v-list-item-icon>
+                            <v-icon>mdi-chat</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>
+                            Boite de messagrie
+                        </v-list-item-title>
                     </v-list-item>
                 </v-list-item-group>
             </v-list>
@@ -64,19 +76,7 @@ import AdminNavbar from "./AdminNavbar";
 export default {
     components: { AdminNavbar, preLoader },
     data: () => ({
-        drawer: true,
-        navItem: [
-            {
-                title: "Livreurs",
-                icon: " mdi-truck-delivery",
-                to: "livreurs"
-            },
-            {
-                title: "Restaurants",
-                icon: "mdi-silverware-variant",
-                to: "restaurants"
-            }
-        ]
+        drawer: true
     }),
     beforeCreate() {
         //* fetchGuard

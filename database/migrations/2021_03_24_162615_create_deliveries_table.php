@@ -17,12 +17,12 @@ class CreateDeliveriesTable extends Migration
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('avatar')->nullable();
             $table->string('email')->unique();
             $table->string('password');
             $table->integer('experience');
             $table->string('permit');
             $table->boolean('status')->default(0);
+            $table->string('avatar')->default('avatar.png');
             $table->string('phone')->nullable();
             $table->timestamp('blocked_at')->nullable();
             $table->softDeletes();
