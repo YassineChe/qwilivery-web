@@ -106,8 +106,9 @@
                       x-large
                     >
                       <v-icon left>mdi-cloud-upload</v-icon>
-                      joindre votre permis
+                      joindre votre permis (PDF)
                     </v-btn>
+                    <input hidden type="file" id="pdf-file" />
                   </v-flex>
                   <v-flex mt-5>
                     <v-btn
@@ -160,6 +161,7 @@ export default {
       },
       folder: {},
       field: {},
+      file: "",
       restPasword: false,
       emailRest: "",
     };
@@ -174,21 +176,26 @@ export default {
   methods: {
     //* register
     register: function () {
+      // Empty the images so that we upload new ones
+      const file = document.querySelector("#pdf-file");
+      // Make sure the file input is not null
+      if (!file.files) return;
+
+      // The file is a valid file.
       const formData = new FormData();
-      //   formData.append(`file`, this.file, this.file.name);
-      //   formData.append(`folder`, this.folder);
-      //   formData.append(`field`, this.field);
-      formData.append(`data`, this.credentials);
-      this.$store.dispatch("postData", {
+      formData.append("file", file.files[0]);
+
+      this.$store.dispatch("uploadFile", {
         path: "/api/register/delivery",
-        data: this.credentials,
+        data: { formData: formData },
+
         related: "do-register",
         // redirect_to: "/",
       });
     },
     //* Rander input
     rander() {
-      document.getElementById("pirmet").click();
+      document.getElementById("pdf-file").click();
     },
     // Overlly
     isBusy: function (fetcher) {
