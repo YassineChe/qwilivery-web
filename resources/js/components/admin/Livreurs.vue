@@ -46,7 +46,11 @@
 
         <template v-slot:[`item.status`]="{ item }">
           <v-chip>
-            <v-switch v-model="item.status" color="primary"></v-switch>
+            <v-switch
+              v-model="item.status"
+              @change="editApprovement(item.id)"
+              color="primary"
+            ></v-switch>
           </v-chip>
         </template>
 
@@ -65,7 +69,14 @@
             <!-- Delete -->
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn v-on="on" v-bind="attrs" color="error" fab x-small>
+                <v-btn
+                  v-on="on"
+                  v-bind="attrs"
+                  color="error"
+                  @click="deleteDelivery(item.id)"
+                  fab
+                  x-small
+                >
                   <v-icon> mdi-delete </v-icon>
                 </v-btn>
               </template>
@@ -92,7 +103,14 @@
             <!-- Block -->
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn v-on="on" v-bind="attrs" color="error" fab x-small>
+                <v-btn
+                  v-on="on"
+                  v-bind="attrs"
+                  @click="blockDelivery(item.id)"
+                  color="error"
+                  fab
+                  x-small
+                >
                   <v-icon> mdi-cancel </v-icon>
                 </v-btn>
               </template>
@@ -116,7 +134,7 @@
 
 <script>
 import Headline from "../pieces/Headline";
-
+import { mapState } from "vuex";
 export default {
   components: {
     Headline,
@@ -150,35 +168,12 @@ export default {
           value: "actions",
         },
       ],
-      user: [
-        {
-          id: 1,
-          name: "Stive Jobs",
-          avatar: "wwww",
-          approuver: true,
-          email: "99stive@mail.com",
-          phone: "+1-334-42323",
-        },
-        {
-          id: 2,
-          name: "Stive",
-          avatar: "wwwsdw",
-          approuver: false,
-          email: "99stisve@mail.com",
-          phone: "+1-834-42323",
-        },
-        {
-          id: 3,
-          name: "Stiven",
-          avatar: "avv",
-          approuver: true,
-          email: "98stive@mail.com",
-          phone: "+2-334-42323",
-        },
-      ],
+      dummy: null,
     };
   },
   computed: {
+    ...mapState(["expected"]),
+
     //* Is mobile
     isMobile() {
       return this.$vuetify.breakpoint.xsOnly;
@@ -196,6 +191,134 @@ export default {
         mutation: "FETCH_DELIVERIES",
         related: "fetch-deliveries",
       });
+    },
+    // * Edit approvement delivery man.
+    editApprovement(delivery_id) {
+      this.$store.commit("CLEAR_EXPECTED");
+      this.$store.dispatch("postData", {
+        path: `/api/approved/delivery-man`,
+        data: { delivery_id: delivery_id },
+        related: `edit-approvement`,
+      });
+    },
+    //* Delete delivery
+    async deleteDelivery(delivery_id) {
+      this.$store.commit("CLEAR_EXPECTED");
+      this.$dialog.confirm({
+        text: "Êtes-vous sûr de supprimer cet livreur ?",
+        title: "Attention!",
+        actions: {
+          false: "Non!",
+          true: {
+            color: "red",
+            text: "Je confirme",
+            handle: () => {
+              this.$store.dispatch("deleteData", {
+                path: `/api/delete/delivery-man`,
+                data: { delivery_id: delivery_id },
+                related: `delete-delivery-man`,
+              });
+              this.dummy = delivery_id;
+            },
+          },
+        },
+      });
+    },
+    //* Block delivery
+    blockDelivery(delivery_id) {
+      this.$store.commit("CLEAR_EXPECTED");
+      this.$dialog.confirm({
+        text: "Êtes-vous sûr de bloquer cet livreur ?",
+        title: "Attention!",
+        actions: {
+          false: "Non!",
+          true: {
+            color: "red",
+            text: "Je confirme",
+            handle: () => {
+              this.$store.dispatch("patchData", {
+                path: `/api/block/delivery-man`,
+                data: { delivery_id: delivery_id },
+                related: `block-delivery-man`,
+                returned: true,
+              });
+              this.dummy = delivery_id;
+            },
+          },
+        },
+      });
+    },
+    // Overlly
+    isBusy: function (fetcher) {
+      try {
+        return this.$store.getters.expected(fetcher).status == "busy"
+          ? true
+          : false;
+      } catch (error) {
+        return false;
+      }
+    },
+  },
+  watch: {
+    expected() {
+      //* Approuve delivery
+      {
+        let expected = this.$store.getters.expected("edit-approvement");
+        if (expected != undefined) {
+          if (expected.status === "success") {
+            this.$dialog.notify.success(expected.result.subMessage, {
+              position: "top-right",
+              timeout: 5000,
+            });
+          }
+          if (expected.status === "error") {
+            this.$dialog.notify.warning(expected.result.subMessage, {
+              position: "top-right",
+              timeout: 5000,
+            });
+          }
+        }
+      }
+      //* Delete delivery
+      {
+        let expected = this.$store.getters.expected("delete-delivery-man");
+        if (expected != undefined) {
+          if (expected.status === "success") {
+            //?  DELETE DELIVERY
+            this.$store.commit("DELETE_DELIVERY", this.dummy);
+            this.$dialog.notify.success(expected.result.subMessage, {
+              position: "top-right",
+              timeout: 5000,
+            });
+          }
+          if (expected.status === "error") {
+            this.$dialog.notify.warning(expected.result.subMessage, {
+              position: "top-right",
+              timeout: 5000,
+            });
+          }
+        }
+      }
+      //* block delivery
+      {
+        let expected = this.$store.getters.expected("block-delivery-man");
+        if (expected != undefined) {
+          if (expected.status === "success") {
+            //?  DELETE DELIVERY
+            this.$store.commit("DELETE_DELIVERY", this.dummy);
+            this.$dialog.notify.success(expected.result.subMessage, {
+              position: "top-right",
+              timeout: 5000,
+            });
+          }
+          if (expected.status === "error") {
+            this.$dialog.notify.warning(expected.result.subMessage, {
+              position: "top-right",
+              timeout: 5000,
+            });
+          }
+        }
+      }
     },
   },
   created() {
