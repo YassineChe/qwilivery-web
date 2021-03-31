@@ -10,6 +10,7 @@ import ChangePassword from "./components/clue/ChangePassword";
 //* Admin.
 import Dashboard from "./components/admin/Dashboard";
 import Livreurs from "./components/admin/Livreurs";
+import Restaurants from "./components/admin/Restaurants";
 
 Vue.use(VueRouter);
 
@@ -44,7 +45,13 @@ const adminRoutes = {
             path: "/livreurs",
             name: "livreurs",
             component: Livreurs,
-            meta: { guard: "admin", title: "Livreurs" }
+            meta: { guard: "admin" }
+        },
+        {
+            path: "/restaurants",
+            name: "restaurants",
+            component: Restaurants,
+            meta: { guard: "admin" }
         }
     ]
 };
