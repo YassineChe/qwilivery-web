@@ -22,7 +22,7 @@
                     color="primary"
                     outlined
                     :block="isMobile"
-                    @click="handleRestaurant()"
+                    @click="addRestaurant()"
                 >
                     <v-icon left>mdi-silverware-variant</v-icon>
                     Ajouter Restaurant
@@ -35,7 +35,7 @@
                 <v-text-field
                     v-model="search"
                     append-icon="mdi-magnify"
-                    label="Search"
+                    label="Rechercher e.g: Nom, E-mail, Téléphone..."
                     hide-details
                     solo
                     clearable
@@ -57,13 +57,8 @@
                     <span>{{ item.name }}</span>
                 </template>
 
-                <template v-slot:[`item.status`]="{ item }">
-                    <v-chip>
-                        <v-switch
-                            v-model="item.status"
-                            color="primary"
-                        ></v-switch>
-                    </v-chip>
+                <template v-slot:[`item.rate`]="{ item }">
+                    <span>{{ item.rate }}$</span>
                 </template>
 
                 <template v-slot:[`item.actions`]="{ item }">
@@ -103,6 +98,7 @@
                                     color="info"
                                     fab
                                     x-small
+                                    @click="editRestaurant(item)"
                                 >
                                     <v-icon> mdi-pen </v-icon>
                                 </v-btn>
@@ -185,9 +181,10 @@ export default {
             search: "",
             headers: [
                 { value: "name", text: "NOM DU RESTAURANT" },
-                { value: "status", text: "APPROUVER/NON-APPROUVER" },
                 { value: "email", text: "EMAIL" },
-                { value: "phone", text: "TÉLÉPHONE" },
+                { value: "phone_number", text: "TÉLÉPHONE" },
+                { value: "address", text: "ADRESSE" },
+                { value: "rate", text: "TARIF" },
                 { value: "actions" }
             ]
         };
@@ -204,6 +201,7 @@ export default {
         }
     },
     methods: {
+        //* Delete Restaurant
         deleteRestaurant: function(restaurant_id) {
             this.$dialog.confirm({
                 text: "Êtes-vous sûr de supprimer ce restaurant ?",
@@ -232,6 +230,7 @@ export default {
                 }
             });
         },
+        //* Block Restaurant
         blockRestaurant: function(restaurant_id) {
             if (restaurant_id) {
                 //Change it in front
@@ -244,6 +243,7 @@ export default {
                 });
             }
         },
+        //* unBlock Restaurant
         unblockRestaurant: function(restaurant_id) {
             if (restaurant_id) {
                 //Change it in front
@@ -265,8 +265,16 @@ export default {
             });
         },
         //* Add Restaurant
-        handleRestaurant: function() {
+        addRestaurant: function() {
             this.$dialog.show(HandleRestaurant, {
+                title: "Ajouter nouveau restaurant",
+                width: "40%"
+            });
+        },
+        editRestaurant: function(restaurant) {
+            this.$dialog.show(HandleRestaurant, {
+                dataToEdit: restaurant, // Props
+                title: "Modifier le restaurant",
                 width: "40%"
             });
         }

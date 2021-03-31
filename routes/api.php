@@ -38,11 +38,10 @@ Route::middleware("auth:admin")->group(function () {
     Route::get('/fetch/restaurants', [AdminController::class, 'fetchRestaurants']); // Fetch Restaurants
     Route::post('/add/restaurant', [AdminController::class, 'addRestaurant']); //Add restaurant
     Route::delete('/delete/restaurant', [RestaurantController::class, 'deleteRestaurant']); // Delete Restaurant
-    Route::patch('/block/restaurant', [RestaurantController::class, 'blockRestaurant']);
-    Route::patch('/unblock/restaurant', [RestaurantController::class, 'unblockRestaurant']);
+    Route::patch('/block/restaurant', [RestaurantController::class, 'blockRestaurant']); // block Restaurant
+    Route::patch('/unblock/restaurant', [RestaurantController::class, 'unblockRestaurant']); // Unblock Restaurant
+    Route::put('/edit/restaurant', [RestaurantController::class, 'editRestaurant']);
 });
-
-########### Admin Controller #########
 
 ########### CommonController #########
 Route::middleware("auth:admin")->group(function () {
