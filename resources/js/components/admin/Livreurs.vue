@@ -16,19 +16,6 @@
       </v-col>
     </v-row>
 
-    <v-row class="mt-5" flat>
-      <v-col :align="!isMobile ? 'right' : ''">
-        <v-btn
-          color="primary"
-          outlined
-          :block="isMobile"
-          @click="handleDeliveryMan()"
-        >
-          <v-icon left>mdi-truck-delivery</v-icon>
-          {{ `Ajouter Livreurs` }}
-        </v-btn>
-      </v-col>
-    </v-row>
     <v-card class="mt-5">
       <v-toolbar flat>
         <v-text-field
@@ -177,7 +164,7 @@ export default {
           text: "EMAIL",
         },
         {
-          value: "phone",
+          value: "phone_number",
           text: "TÉLÉPHONE",
         },
         {
@@ -263,12 +250,6 @@ export default {
         },
       });
     },
-    //* Add delivery man.
-    handleDeliveryMan: function () {
-      this.$dialog.show(HandleDelivery, {
-        width: "30%",
-      });
-    },
     //* The famous isBusy funtion haha
     isBusy: function (fetcher) {
       try {
@@ -348,5 +329,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

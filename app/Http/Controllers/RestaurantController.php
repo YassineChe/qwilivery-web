@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Http\Requests\RequestRestaurant;
+//Models
 use App\Models\Restaurant;
 
 class RestaurantController extends Controller
 {
 
     //* Edit Restaurant
-    public function editRestaurant(Request $request)
+    public function editRestaurant(RequestRestaurant $request)
     {
         if (
             Restaurant::where('id', (int)$request->id)->update([
