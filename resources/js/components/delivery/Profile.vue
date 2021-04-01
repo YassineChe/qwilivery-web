@@ -15,8 +15,7 @@
 
       <v-tab-item>
         <v-card flat>
-          <v-card-text>
-            <UserProfile></UserProfile> </v-card-text
+          <v-card-text> <DeliveryProfile /> </v-card-text
         ></v-card>
       </v-tab-item>
       <v-tab-item>
@@ -32,30 +31,12 @@
 
 <script>
 import SecurityProfile from "./SecurityProfile";
-import UserProfile from "./UserProfile";
+import DeliveryProfile from "./DeliveryProfile";
 export default {
   components: {
     SecurityProfile,
-    UserProfile,
-  },
-  data() {
-    return {
-      hasSaved: false,
-      isEditing: null,
-      model: null,
-      credentials: {
-        first_name: "",
-        last_name: "",
-        experience: "",
-        email: "admin@mail.com",
-        password: "123456",
-        avatar: "avatar.png",
-        number_phone: "",
-      },
-    };
+    DeliveryProfile,
   },
 };
 </script>
-
-<style lang="scss" scoped>
-</style>
+ 

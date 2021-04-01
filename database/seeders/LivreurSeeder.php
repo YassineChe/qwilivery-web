@@ -29,8 +29,9 @@ class LivreurSeeder extends Seeder
                 'status' => true,
                 'experience' => 1,
                 'permit' => "permit.pdf",
+                'avatar' => 'avatar.png',
                 'blocked_at' => null,
-                'phone' =>  "+1" . rand(1000000000, 1999999999),
+                'phone_number' =>  "+1" . rand(1000000000, 1999999999),
                 'email' => "L-" . Str::random(5) . '@gmail.com',
                 'password' => Hash::make('password'),
             ]);
@@ -40,9 +41,11 @@ class LivreurSeeder extends Seeder
                 'last_name' => Str::random(6),
                 'status' => false,
                 'experience' => 0,
+                'avatar' => 'avatar.png',
+
                 'permit' => "permit.pdf",
                 'blocked_at' => null,
-                'phone' =>  "+1" . rand(1000000000, 1999999999),
+                'phone_number' =>  "+1" . rand(1000000000, 1999999999),
                 'email' => "L-" . Str::random(5) . '@gmail.com',
                 'password' => Hash::make('password'),
             ]);
@@ -53,8 +56,10 @@ class LivreurSeeder extends Seeder
                 'status' => false,
                 'experience' => 10,
                 'permit' => "permit.pdf",
+                'avatar' => 'avatar.png',
+
                 'blocked_at' => Carbon::now(),
-                'phone' =>  "+1" . rand(1000000000, 1999999999),
+                'phone_number' =>  "+1" . rand(1000000000, 1999999999),
                 'email' => "L-" . Str::random(5) . '@gmail.com',
                 'password' => Hash::make('password'),
             ]);

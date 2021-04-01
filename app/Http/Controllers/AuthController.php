@@ -136,11 +136,11 @@ class AuthController extends Controller
             "password"   => hash::make($request->password),
             "experience" => $request->experience,
             "permit"    => $to,
-            "phone"      => "+1223322322"
+            "phone_number"      => $request->phone_number,
         ]);
         // send email.
         $delivery->notify(new ConfirmAccountMail($delivery->email, $delivery->token));
 
-        return $request;
+        return dataToResponse('success', 'success!', 'Votre compte a été créé avec succès', false, 200);
     }
 }
