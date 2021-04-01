@@ -1,7 +1,7 @@
 <template>
   <v-container fluid fill-height class="background ma-0 pa-0">
     <v-row class="fill-height">
-      <v-col cols="12" sm="8" md="8" lg="8" v-if="!isMobile">
+      <v-col cols="12" sm="1" md="7" lg="8" v-if="!isMobile">
         <v-container fill-height fluid>
           <v-row align="center" justify="center">
             <v-col align="center">
@@ -14,7 +14,7 @@
           </v-row>
         </v-container>
       </v-col>
-      <v-col cols="12" sm="12" md="4" lg="4" class="my-0 py-0">
+      <v-col cols="12" sm="12" md="5" lg="4" class="my-0 py-0">
         <v-card tile class="fill-height" flat>
           <v-container fill-height fluid>
             <v-row align="center" justify="center" class="pa-10">
@@ -24,7 +24,7 @@
                   <v-flex mt-5>
                     <!-- HeadLine -->
                     <Headline
-                      headline="Pour créer votre compte sur Ready2Go👋"
+                      headline="Pour créer votre compte surs Ready2Go👋"
                       :headline-classes="[
                         'text-h5',
                         'grey--text text--darken-2',
@@ -103,7 +103,9 @@
                       color="primary"
                       @click="rander()"
                       outlined
-                      x-large
+                      :large="!isMobile"
+                      :small="isMobile"
+                      class=""
                     >
                       <v-icon left>mdi-cloud-upload</v-icon>
                       joindre votre permis (PDF)
@@ -116,6 +118,7 @@
                       block
                       elevation="0"
                       @click="register()"
+                      :loading="isBusy('do-register')"
                     >
                       s'inscrire
                     </v-btn>
@@ -152,9 +155,7 @@ export default {
       credentials: {
         first_name: "",
         last_name: "",
-        phone: "",
         experience: "",
-        permit: "",
         email: "admin@mail.com",
         password: "123456",
         avatar: "avatar.png",
@@ -183,12 +184,15 @@ export default {
 
       // The file is a valid file.
       const formData = new FormData();
-      formData.append("file", file.files[0]);
+      formData.append("Permit", file.files[0]);
+
+      for (const [key, value] of Object.entries(this.credentials)) {
+        formData.append(key, value);
+      }
 
       this.$store.dispatch("uploadFile", {
         path: "/api/register/delivery",
-        data: { formData: formData },
-
+        data: formData,
         related: "do-register",
         // redirect_to: "/",
       });
@@ -220,10 +224,14 @@ export default {
             });
           }
           if (expected.status === "error") {
-            this.$dialog.notify.warning(expected.result.subMessage, {
-              position: "top-right",
-              timeout: 5000,
-            });
+            for (const [key, value] of Object.entries(
+              expected.result.subMessage
+            )) {
+              this.$dialog.notify.warning(value[0], {
+                position: "top-right",
+                timeout: 5000,
+              });
+            }
           }
         }
       }

@@ -12,6 +12,10 @@ import ChangePassword from "./components/clue/ChangePassword";
 import Dashboard from "./components/admin/Dashboard";
 import Livreurs from "./components/admin/Livreurs";
 import Restaurants from "./components/admin/Restaurants";
+//* delivery
+import DeliveryDashboard from "./components/delivery/DeliveryDashboard";
+import Profile from "./components/delivery/Profile";
+
 
 Vue.use(VueRouter);
 
@@ -57,8 +61,22 @@ const adminRoutes = {
         }
     ]
 };
-const employeeRoutes = {};
-const agencyRoutes = {};
+
+
+const deliveryRoutes = {
+    path: "/",
+    name: "dashboard",
+    component: DeliveryDashboard,
+    name: "Dashboard",
+    meta: { requiresAuth: true, guard: "delivery" },
+    children: [
+        {
+            path: "/profile",
+            name: "profile",
+            component: Profile,
+            meta: { guard: "delivery", title: ' -Profil' }
+        },]
+}
 
 /* **********************************************************
 # For avoiding duplicated routes 
@@ -71,6 +89,9 @@ const agencyRoutes = {};
 switch (localStorage.getItem("guard")) {
     case "admin":
         routes.push(adminRoutes);
+        break;
+    case "delivery":
+        routes.push(deliveryRoutes);
         break;
     case null:
         routes.push(...LoginRoutes);

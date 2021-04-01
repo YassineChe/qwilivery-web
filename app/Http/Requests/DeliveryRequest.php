@@ -26,12 +26,12 @@ class DeliveryRequest extends FormRequest
         return [
             'first_name' => 'required',
             'last_name'  => 'required',
-            'avatar'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // 'avatar'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'password'   => 'required',
             'experience' => 'required',
             'Permit'    => 'required|mimes:pdf|max:10000"',
             'email'      => 'required|email|unique:restaurants|unique:admins|unique:deliveries',
-            'phone'      => 'required',
+
         ];
     }
 }
