@@ -309,6 +309,36 @@ export default {
                 }
             }
 
+            // Edit Restaurant
+            {
+                let expected = this.$store.getters.expected("edit-restaurant");
+
+                if (expected != undefined) {
+                    if (expected.status === "success") {
+                        this.$dialog.notify.success(
+                            expected.result.subMessage,
+                            {
+                                position: "top-right",
+                                timeout: 3000
+                            }
+                        );
+                    }
+                    if (expected.status === "error") {
+                        console.log(expected.result);
+                        this.$store.getters
+                            .callback(expected.result.subMessage)
+                            .forEach(error => {
+                                this.$dialog.notify.warning(error, {
+                                    position: "top-right",
+                                    timeout: 3000
+                                });
+                            });
+                    }
+                    //Clear expected
+                    this.$store.commit("CLEAR_EXPECTED");
+                }
+            }
+
             //Block Restaurant
             {
                 let expected = this.$store.getters.expected(

@@ -25,10 +25,15 @@ class RequestRestaurant extends FormRequest
      */
     public function rules()
     {
+
+        //Try to get ID
+        try{$id = $this->request->get('id');
+        }catch(\Exception $e){ $id = ''; }
+        
         return [
             'name'    => 'required',
-            'email'   => 'required|email|unique:restaurants|unique:admins|unique:deliveries',
-            // 'phone_number' => 'required|max:10|min:10|integer',
+            'email'   => "required|email|unique:admins|unique:deliveries|unique:restaurants,email,{$this->request->get('id')}",
+            'phone_number'  => "required|regex:/[0-9]{10}/|unique:deliveries|unique:restaurants,phone_number,{$this->request->get('id')}",
             'address' => 'required|max:200',
             'rate'    => 'required|integer',
         ];
