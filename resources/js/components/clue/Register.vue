@@ -44,7 +44,7 @@
                       dense
                       hide-details="auto"
                       outlined
-                      label="nom"
+                      label="Nom"
                       v-model="credentials.first_name"
                     ></v-text-field>
                   </v-flex>
@@ -53,7 +53,7 @@
                       dense
                       hide-details="auto"
                       outlined
-                      label="prénom"
+                      label="Prénom"
                       v-model="credentials.last_name"
                     ></v-text-field>
                   </v-flex>
@@ -68,6 +68,14 @@
                     ></v-text-field>
                   </v-flex>
                   <v-flex mt-5>
+                    <v-text-field
+                      dense
+                      hide-details="auto"
+                      outlined
+                      label="numéro de téléphone"
+                      v-model="credentials.phone_number"
+                    ></v-text-field> </v-flex
+                  ><v-flex mt-5>
                     <v-text-field
                       dense
                       hide-details="auto"
@@ -128,8 +136,9 @@
                   </v-flex>
                   <v-flex mt-3>
                     <small>
-                      Vous n'avez pas un compte?
-                      <router-link to="register">Créer un compte</router-link>
+                      <router-link to="login"
+                        >se connecter à un compte existant</router-link
+                      >
                     </small>
                   </v-flex>
                 </v-layout>
@@ -159,6 +168,7 @@ export default {
         email: "admin@mail.com",
         password: "123456",
         avatar: "avatar.png",
+        phone_number: "",
       },
       folder: {},
       field: {},
@@ -222,6 +232,14 @@ export default {
               position: "top-right",
               timeout: 5000,
             });
+            this.$router.push("login");
+            this.$dialog.notify.warning(
+              "Vous devez attendre que l'administration Ready2Go vous approuve",
+              {
+                position: "top-right",
+                timeout: 9000,
+              }
+            );
           }
           if (expected.status === "error") {
             for (const [key, value] of Object.entries(

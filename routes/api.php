@@ -48,7 +48,9 @@ Route::middleware("auth:admin")->group(function () {
 ######### API Routes Delivery  #########
 Route::middleware("auth:delivery")->group(
     function () {
-        Route::put('/edit/delivery/password', [DeliveryController::class, "updatePassword"]);
+        Route::put('/edit/delivery/password', [DeliveryController::class, "updatePassword"]); // Update password
+        Route::get('/download/file', [DeliveryController::class, "downloadFile"]); // Download permit
+        Route::put('/update/delivery', [DeliveryController::class, "updateDelivery"]); // update info of delivery man
     }
 );
 

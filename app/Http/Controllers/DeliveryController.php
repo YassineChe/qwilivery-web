@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\DeliveryRequest;
 
 
 use App\Models\Delivery;
@@ -33,5 +34,36 @@ class DeliveryController extends Controller
         } catch (\Exception $e) {
             handleLogs($e);
         }
+    }
+    //* Download permit
+    public function downloadFile()
+    {
+        $guard = Delivery::where('id', authIdFromGuard('delivery'))->first();
+        return response()->json('files/' . $guard->permit);
+    }
+
+    //*  updateDelivery
+    public function updateDelivery(Request $request)
+    {
+        return $request;
+        $delivery = Delivery::where('id', authIdFromGuard('delivery'))->first();
+        // Retrieving necessary data
+        $file = $request->Permit;
+        //file upload 
+        $to = time() . '.' . $file->extension();
+        // Move picture to server
+        $file->move(public_path() . '/files', $to);
+        unlink("/files/" . $delivery->permit);
+
+        $delivery->update([
+            "first_name" => $request->first_name,
+            "last_name"  => $request->last_name,
+            "avatar"     => "avatar.png",
+            "email"      => $request->email,
+            "experience" => $request->experience,
+            "permit"    => $to,
+            "phone_number"      => $request->phone_number,
+        ]);
+        return $request;
     }
 }
