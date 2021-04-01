@@ -16,6 +16,26 @@ class Restaurant extends Authenticatable
 
     protected $guarded = [];
 
+    //? Getter (Name)
+    public function getNameAttribute($value){
+        return ucfirst($value);
+    }
+
+    //? Setter (Name)
+    public function setNameAttribute($value){
+        $this->attributes['name'] = strtolower(trim($value));
+    }
+
+    //? Setter (Email)
+    public function setEmailAttribute($value){
+        $this->attributes['email'] = strtolower(trim($value));
+    }
+
+    //? Setter (Address)
+    public function setAddressAttribute($value){
+        $this->attributes['address'] = strtoupper($value);
+    }
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -23,6 +43,7 @@ class Restaurant extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
+
+    
 }

@@ -39,7 +39,7 @@ let actions = {
     },
 
     //* Logout
-    async singout({ }, payload) {
+    async singout({}, payload) {
         //? Init action status.
         await axios
             .post(payload.path, payload.data, {
@@ -55,7 +55,7 @@ let actions = {
                 //redirect to home
                 window.location.href = "/";
             })
-            .catch(() => { });
+            .catch(() => {});
     },
 
     //* Fetch one or multiple records
@@ -265,7 +265,7 @@ let actions = {
         });
 
         //TODO 2 : Get Data from server.
-        await axios
+        return await axios
             .put(payload.path, payload.data, {
                 headers: {
                     Accept: "application/json",
@@ -278,6 +278,7 @@ let actions = {
                     result: response.data,
                     related: payload.related
                 });
+                if (payload.returned) return true;
             })
             .catch(err => {
                 dispatch("expected", {
@@ -285,6 +286,7 @@ let actions = {
                     result: err.response.data,
                     related: payload.related
                 });
+                if (payload.returned) return false;
             });
     }
     //End of file

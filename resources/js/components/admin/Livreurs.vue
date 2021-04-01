@@ -185,7 +185,7 @@ export default {
                     text: "EMAIL"
                 },
                 {
-                    value: "phone",
+                    value: "phone_number",
                     text: "TÉLÉPHONE"
                 },
                 {
