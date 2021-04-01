@@ -49,16 +49,14 @@
                 </template>
 
                 <template v-slot:[`item.status`]="{ item }">
-                    <v-chip v-if="item.status">
+                    <v-chip v-if="!item.status">
                         <v-switch
                             v-model="item.status"
-                            @change="editApprovement(item)"
+                            @change="editApprovement(item.id)"
                             color="primary"
                         ></v-switch>
                     </v-chip>
-                    <v-chip color="success" v-else>
-                        approuvé(e)
-                    </v-chip>
+                    <v-chip color="success" v-else> approuvé(e) </v-chip>
                 </template>
 
                 <template v-slot:[`item.actions`]="{ item }">
@@ -185,7 +183,7 @@ export default {
                     text: "EMAIL"
                 },
                 {
-                    value: "phone_number",
+                    value: "phone",
                     text: "TÉLÉPHONE"
                 },
                 {
@@ -195,11 +193,11 @@ export default {
         };
     },
     // * Edit approvement delivery man.
-    editApprovement(delivery) {
+    editApprovement(delivery_id) {
         this.$store.commit("CLEAR_EXPECTED");
         this.$store.dispatch("postData", {
             path: `/api/approved/delivery-man`,
-            data: delivery,
+            data: delivery_id,
             related: `edit-approvement`
         });
     },
