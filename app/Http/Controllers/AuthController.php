@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\DeliveryRequest;
 
 use App\Notifications\ResetEmail;
+use App\Notifications\ConfirmAccountMail;
 
 
 
@@ -21,9 +22,10 @@ class AuthController extends Controller
     //* Login Admin
     public function login(Request $request)
     {
+
+        $delivery = Delivery::where('email', $request->email)->first();
         $admin = Admin::where('email', $request->email)->first();
         $restaurant = Restaurant::where('email', $request->email)->first();
-        $delivery = Delivery::where('email', $request->email)->first();
 
         if ($admin) {
             // If login Success login
@@ -37,7 +39,7 @@ class AuthController extends Controller
             return dataToResponse('error', 'Erreur!', 'Le mot de passe est erroné', false, 422);
         } else if ($delivery) {
             // If login Success login
-            if (Hash::check($request->password, $admin->password)) {
+            if (Hash::check($request->password, $delivery->password)) {
                 return response([
                     'guard' => 'delivery',
                     'token' => $delivery->createToken('admin-api', ['admin-stuff'])->plainTextToken
@@ -47,7 +49,7 @@ class AuthController extends Controller
             return dataToResponse('error', 'Erreur!', 'Le mot de passe est erroné', false, 422);
         } else if ($restaurant) {
             // If login Success login
-            if (Hash::check($request->password, $admin->password)) {
+            if (Hash::check($request->password, $restaurant->password)) {
                 return response([
                     'guard' => 'restaurant',
                     'token' => $restaurant->createToken('admin-api', ['admin-stuff'])->plainTextToken
@@ -112,24 +114,21 @@ class AuthController extends Controller
     }
 
     //* Create new Delivery  (DeliveryRequest)
-    public function create(Request $request)
+    public function create(DeliveryRequest $request)
     {
+
         // Check if password is much
         if ($request->password !== $request->confirm) {
-            return dataToResponse('error', 'Erreur!', 'le mot de passe ne correspond pas', false, 422);
+            return dataToResponse('error', 'Erreur!', [['le mot de passe ne correspond pas']], false, 422);
         }
         // Retrieving necessary data
-        return $file = $request->formData;
-        // Retruning response to the end user
-        return $file;
-        //image upload 
+        $file = $request->Permit;
+        //file upload 
         $to = time() . '.' . $file->extension();
-        // unlink(public_path() . '/Avatar/' . $student->avatar);
-        //Move picture to server
-        $file->move(public_path() . '/Avatar', $to);
+        // Move picture to server
+        $file->move(public_path() . '/files', $to);
 
-
-        Delivery::create([
+        $delivery =  Delivery::create([
             "first_name" => $request->first_name,
             "last_name"  => $request->last_name,
             "avatar"     => "avatar.png",
@@ -139,6 +138,9 @@ class AuthController extends Controller
             "permit"    => $to,
             "phone"      => "+1223322322"
         ]);
+        // send email.
+        $delivery->notify(new ConfirmAccountMail($delivery->email, $delivery->token));
+
         return $request;
     }
 }

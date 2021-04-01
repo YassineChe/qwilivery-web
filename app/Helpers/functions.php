@@ -65,10 +65,10 @@ function getConnectedGuard()
 {
     if (Auth::guard('admin')->check()) {
         return 'admin';
-    } elseif (Auth::guard('shipper')->check()) {
-        return 'shipper';
-    } elseif (Auth::guard('commercial')->check()) {
-        return 'commercial';
+    } elseif (Auth::guard('delivery')->check()) {
+        return 'delivery';
+    } elseif (Auth::guard('restaurant')->check()) {
+        return 'restaurant';
     } else
         return null;
 }

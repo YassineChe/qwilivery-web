@@ -7,6 +7,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\DeliveryController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,7 +28,7 @@ Route::POST('/reset-password', [AuthController::class, 'restPassword']);
 //* register new user
 Route::POST('/register/delivery', [AuthController::class, 'create']); //create new Delivery
 
-########### Admin Controller #########
+######### API Routes Admin  #########
 Route::middleware("auth:admin")->group(function () {
     //* Delivery Man stuff
     Route::post('/approved/delivery-man', [AdminController::class, 'approvedDeliveryMan']); //approuve delivery man
@@ -43,11 +45,14 @@ Route::middleware("auth:admin")->group(function () {
     Route::put('/edit/restaurant', [RestaurantController::class, 'editRestaurant']);
 });
 
-########### CommonController #########
-Route::middleware("auth:admin")->group(function () {
-    Route::get('/fetch/authenticated/guard', [CommonController::class, 'fetchAuthenticatedGuard']);
-});
+######### API Routes Delivery  #########
+Route::middleware("auth:delivery")->group(
+    function () {
+        Route::put('/edit/delivery/password', [DeliveryController::class, "updatePassword"]);
+    }
+);
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+########### CommonController #########
+Route::middleware("auth:admin,delivery")->group(function () {
+    Route::get('/fetch/authenticated/guard', [CommonController::class, 'fetchAuthenticatedGuard']);
 });

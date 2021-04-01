@@ -94,22 +94,14 @@ class AdminController extends Controller
         }
     }
 
-    //* Fetch delivery men no blocked.
+    //* Fetch delivery men.
     public function fetchDeliveries()
     {
         return
             response(
-                Delivery::whereNull('blocked_at')
-                    ->orderBy('id', 'DESC')
+                Delivery::orderBy('id', 'DESC')
                     ->get(),
                 200
             );
-    }
-    //* Fetch delivery men  blocked.
-    public function fetchDeliveriesBlocked()
-    {
-        return Delivery::whereNull('blocked_at')
-            ->select('id', "first_name", "last_name", "avatar", "email", "status", "phone")
-            ->get();
     }
 }

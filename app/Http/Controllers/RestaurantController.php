@@ -11,8 +11,9 @@ class RestaurantController extends Controller
 {
 
     //* Edit Restaurant
-    public function editRestaurant(RequestRestaurant $request){
-        if(
+    public function editRestaurant(RequestRestaurant $request)
+    {
+        if (
             Restaurant::where('id', (int)$request->id)->update([
                 'name'         => $request->name,
                 'email'        => $request->email,
@@ -23,43 +24,42 @@ class RestaurantController extends Controller
                 'lng'     => $request->lng,
             ])
         )
-        return dataToResponse('success', 'Succès ', 'Modifié avec succès 👍', true, 200);
+            return dataToResponse('success', 'Succès ', 'Modifié avec succès 👍', true, 200);
     }
 
     //* Delete Restaurant
-    public function deleteRestaurant(Request $request){
-        try{
+    public function deleteRestaurant(Request $request)
+    {
+        try {
             $restaurant = Restaurant::where('id', $request->restaurant_id)->first();
-            if ($restaurant){
-                if( $restaurant->delete() )
+            if ($restaurant) {
+                if ($restaurant->delete())
                     return dataToResponse('success', 'Succès ', 'Supprimé avec succès 👍', true, 200);
             }
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             handleLogs($e);
         }
     }
 
     //* Block Restaurant
-    public function blockRestaurant(Request $request){
-        try{
-            if( Restaurant::where('id', $request->restaurant_id)->update(['blocked_at' => \Carbon\Carbon::now()]) )
+    public function blockRestaurant(Request $request)
+    {
+        try {
+            if (Restaurant::where('id', $request->restaurant_id)->update(['blocked_at' => \Carbon\Carbon::now()]))
                 return dataToResponse('success', 'Succès ', 'Bloquer avec succès ❌', true, 200);
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             handleLogs($e);
         }
     }
 
     //* unBlock Restaurant
-    public function unblockRestaurant(Request $request){
-        try{
-            if( Restaurant::where('id', $request->restaurant_id)->update(['blocked_at' => null]) )
+    public function unblockRestaurant(Request $request)
+    {
+        try {
+            if (Restaurant::where('id', $request->restaurant_id)->update(['blocked_at' => null]))
                 return dataToResponse('success', 'Succès ', 'Débloquer avec succès ✅', true, 200);
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             handleLogs($e);
         }
     }
-
 }
