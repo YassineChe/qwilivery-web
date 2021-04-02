@@ -45,25 +45,43 @@ class DeliveryController extends Controller
     //*  updateDelivery
     public function updateDelivery(Request $request)
     {
-        return $request;
+
+        // return $request;
         $delivery = Delivery::where('id', authIdFromGuard('delivery'))->first();
-        // Retrieving necessary data
-        $file = $request->Permit;
-        //file upload 
-        $to = time() . '.' . $file->extension();
-        // Move picture to server
-        $file->move(public_path() . '/files', $to);
-        unlink("/files/" . $delivery->permit);
+        $avatar = "";
+        // return $request->avatar;
+        if ($request->avatar !== $delivery->avatar && $request->avatar) {
+            try {
+                // Upload Image
+                $avatar = storeUploaded(public_path() . '/Avatar', $request->avatar);
+                unlink("Avatar/" . $delivery->avatar);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        } else $avatar = $delivery->avatar;
+
+        // Check if pdf exist
+        $fileName = "";
+        if ($request->permit) {
+            try {
+                $fileName =  storeUploaded(public_path() . '/files', $request->permit);
+                // delete old permit 
+                unlink("files/" . $delivery->permit);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        } else $fileName = $delivery->permit;
 
         $delivery->update([
-            "first_name" => $request->first_name,
-            "last_name"  => $request->last_name,
-            "avatar"     => "avatar.png",
-            "email"      => $request->email,
-            "experience" => $request->experience,
-            "permit"    => $to,
-            "phone_number"      => $request->phone_number,
+            "first_name"    => $request->first_name,
+            "last_name"     => $request->last_name,
+            "avatar"        => $avatar,
+            "email"         => $request->email,
+            "experience"    => $request->experience,
+            "permit"        => $fileName,
+            "phone_number"  => $request->phone_number,
         ]);
-        return $request;
+
+        return dataToResponse('success', 'Succès ', $delivery, true, 200);
     }
 }

@@ -16,15 +16,13 @@ function dataToResponse($type, $message, $subMessage, $complete, $status)
 
 
 //? Store uploaded file
-function storeUploaded($file, $path)
+function storeUploaded($path, $file)
 {
     try {
-        //Generate a random file name with extension.
-        $filename = time() . '.' . $file->getClientOriginalExtension();
-        //Move the file to the selected path
-        $file->move($path, $filename);
-        //Return the filename so we can store it in the database
-        return $filename;
+        $to = time() . '.' . $file->extension();
+        // Move picture to server
+        $file->move($path, $to);
+        return  $to;
     } catch (\Exception $e) {
         \Log::error($e);
         return null;
