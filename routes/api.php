@@ -53,8 +53,13 @@ Route::middleware("auth:delivery")->group(
         Route::post('/update/delivery', [DeliveryController::class, "updateDelivery"]); // update info of delivery man
     }
 );
+######### API Routes Restaurant  #########
+Route::middleware("auth:restaurant")->group(
+    function () {
+    }
+);
 
 ########### CommonController #########
-Route::middleware("auth:admin,delivery")->group(function () {
+Route::middleware("auth:admin,delivery,restaurant")->group(function () {
     Route::get('/fetch/authenticated/guard', [CommonController::class, 'fetchAuthenticatedGuard']);
 });
