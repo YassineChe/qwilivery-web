@@ -42,7 +42,6 @@ class LivreurSeeder extends Seeder
                 'status' => false,
                 'experience' => 0,
                 'avatar' => 'avatar.png',
-
                 'permit' => "permit.pdf",
                 'blocked_at' => null,
                 'phone_number' =>  "+1" . rand(1000000000, 1999999999),

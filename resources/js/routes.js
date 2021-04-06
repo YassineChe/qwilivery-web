@@ -16,6 +16,8 @@ import Restaurants from "./components/admin/Restaurants";
 import DeliveryDashboard from "./components/delivery/DeliveryDashboard";
 import Profile from "./components/delivery/Profile";
 
+//* Restaurant  
+import RestaurantDashboard from "./components/restaurant/RestuarantDashboard";
 
 Vue.use(VueRouter);
 
@@ -61,7 +63,18 @@ const adminRoutes = {
         }
     ]
 };
+//? Restaurant Dashboard
 
+const restaurantRoutes = {
+    path: "/",
+    name: "dashboard",
+    component: RestaurantDashboard,
+    name: "Dashboard",
+    meta: { requiresAuth: true, guard: "restaurant" },
+
+}
+
+//? Delivery Dashboard
 
 const deliveryRoutes = {
     path: "/",
@@ -89,6 +102,9 @@ const deliveryRoutes = {
 switch (localStorage.getItem("guard")) {
     case "admin":
         routes.push(adminRoutes);
+        break;
+    case "restaurant":
+        routes.push(restaurantRoutes);
         break;
     case "delivery":
         routes.push(deliveryRoutes);
