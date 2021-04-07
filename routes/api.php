@@ -8,6 +8,7 @@ use App\Http\Controllers\CommonController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\DeliveryController;
+use App\Http\Controllers\MenuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +57,14 @@ Route::middleware("auth:delivery")->group(
 ######### API Routes Restaurant  #########
 Route::middleware("auth:restaurant")->group(
     function () {
+        Route::get('/fetch/restaurant/menu',         [MenuController::class, 'fetchMenu']);      // Fetch menu
+        Route::post('/add/restaurant/category',      [MenuController::class, 'createCategory']); // Create category
+        Route::post('/add/restaurant/variant',       [MenuController::class, 'createVariant']);  // Create variant
+        Route::put('/update/restaurant/category',    [MenuController::class, 'updateCategory']); // Update  category
+        Route::put('/update/restaurant/variant',     [MenuController::class, 'updateVariant']);  // Update variant
+        Route::delete('/delete/restaurant/variant',  [MenuController::class, 'deleteVariant']);  // Delete variant
+        Route::delete('/delete/restaurant/category', [MenuController::class, 'deleteCategory']); // Delete category
+
     }
 );
 
