@@ -205,15 +205,12 @@ export default {
       const file = document.querySelector("#pdf-file");
       // Make sure the file input is not null
       if (!file.files) return;
-
       // The file is a valid file.
       const formData = new FormData();
       formData.append("permit", file.files[0]);
-
       for (const [key, value] of Object.entries(this.credentials)) {
         formData.append(key, value);
       }
-
       this.$store.dispatch("uploadFile", {
         path: "/api/register/delivery",
         data: formData,
