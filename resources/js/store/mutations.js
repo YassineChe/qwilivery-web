@@ -47,6 +47,9 @@ let mutations = {
     FETCH_DELIVERIES(state, deliveries) {
         return (state.deliveries = deliveries);
     },
+    ADD_DELIVERY(state, deliveries) {
+        return state.deliveries.push(deliveries);
+    },
     DELETE_DELIVERY(state, delivery_id) {
         state.deliveries.splice(
             state.deliveries.indexOf(
@@ -54,6 +57,17 @@ let mutations = {
             ),
             1
         );
+    },
+    BLOCK_DELIVERY(state, delivery_id) {
+        state.deliveries.find(delivery => {
+            if (delivery.id == delivery_id)
+                delivery.blocked_at = Date.now();
+        });
+    },
+    UNBLOCK_DELIVERY(state, delivery_id) {
+        state.deliveries.find(delivery => {
+            if (delivery.id == delivery_id) delivery.blocked_at = null;
+        });
     },
     /*********** Guard *********** */
     FETCH_RESTAURANTS(state, restaurants) {

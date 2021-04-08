@@ -116,9 +116,17 @@
                       class=""
                     >
                       <v-icon left>mdi-cloud-upload</v-icon>
-                      joindre votre permis (PDF)
+                      <span v-if="file"
+                        >{{ file.slice(file.length - 20, file.length) }}
+                      </span>
+                      <span v-else> joindre votre permis (PDF) </span>
                     </v-btn>
-                    <input hidden type="file" id="pdf-file" />
+                    <input
+                      hidden
+                      @change="changeName()"
+                      type="file"
+                      id="pdf-file"
+                    />
                   </v-flex>
                   <v-flex mt-5>
                     <v-btn
@@ -181,10 +189,16 @@ export default {
     ...mapState(["expected"]),
     //* Is mobile
     isMobile: function () {
+      console.log(this.file);
       return this.$vuetify.breakpoint.smAndDown;
     },
   },
   methods: {
+    changeName() {
+      const file = document.querySelector("#pdf-file");
+      // Make sure the file input is not null
+      this.file = file.files[0].name;
+    },
     //* register
     register: function () {
       // Empty the images so that we upload new ones
@@ -194,7 +208,7 @@ export default {
 
       // The file is a valid file.
       const formData = new FormData();
-      formData.append("Permit", file.files[0]);
+      formData.append("permit", file.files[0]);
 
       for (const [key, value] of Object.entries(this.credentials)) {
         formData.append(key, value);
