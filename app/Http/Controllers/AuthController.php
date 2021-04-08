@@ -117,16 +117,15 @@ class AuthController extends Controller
     public function create(DeliveryRequest $request)
     {
 
+        $request->validate([
+            'password'   => 'required|min:6',
+        ]);
         // Check if password is much
         if ($request->password !== $request->confirm) {
             return dataToResponse('error', 'Erreur!', [['le mot de passe ne correspond pas']], false, 422);
         }
         // Retrieving necessary data
-        $file = $request->Permit;
-        //file upload 
-        $to = time() . '.' . $file->extension();
-        // Move picture to server
-        $file->move(public_path() . '/files', $to);
+        $fileName =  storeUploaded(public_path() . '/files', $request->permit);
 
         $delivery =  Delivery::create([
             "first_name" => $request->first_name,
@@ -135,7 +134,7 @@ class AuthController extends Controller
             "email"      => $request->email,
             "password"   => hash::make($request->password),
             "experience" => $request->experience,
-            "permit"    => $to,
+            "permit"    => $fileName,
             "phone_number"      => $request->phone_number,
         ]);
         // send email.

@@ -36,10 +36,14 @@ Route::middleware("auth:admin")->group(function () {
     Route::delete('/delete/delivery-man', [AdminController::class, 'deleteDeliveryMan']); //delete delivery man
     Route::patch('/block/delivery-man', [AdminController::class, 'blockDeliveryMan']); //block delivery man
     Route::get('/fetch/deliveries', [AdminController::class, 'fetchDeliveries']); //  Fetch delivery men no blocked.
-    Route::get('/fetch/deliveries/blocked', [AdminController::class, 'fetchDeliveriesBlocked']); //  Fetch delivery men blocked.
+    Route::patch('/unblock/delivery-man', [AdminController::class, 'unblockDeliveryMan']); // Unblock DeliveryMan
+    Route::post('/add/delivery-man', [AdminController::class, 'addDeliveryMan']); //Add DeliveryMan
+    Route::put('/edit/delivery-man', [AdminController::class, 'editDeliveryMan']); //Edit DeliveryMan
+
+    // Route::get('/fetch/deliveries/blocked', [AdminController::class, 'fetchDeliveriesBlocked']); //  Fetch delivery men blocked.
     //* Restaurant stuff
-    Route::get('/fetch/restaurants', [AdminController::class, 'fetchRestaurants']); // Fetch Restaurants
-    Route::post('/add/restaurant', [AdminController::class, 'addRestaurant']); //Add restaurant
+    Route::get('/fetch/restaurants', [RestaurantController::class, 'fetchRestaurants']); // Fetch Restaurants
+    Route::post('/add/restaurant', [RestaurantController::class, 'addRestaurant']); //Add restaurant
     Route::delete('/delete/restaurant', [RestaurantController::class, 'deleteRestaurant']); // Delete Restaurant
     Route::patch('/block/restaurant', [RestaurantController::class, 'blockRestaurant']); // block Restaurant
     Route::patch('/unblock/restaurant', [RestaurantController::class, 'unblockRestaurant']); // Unblock Restaurant
