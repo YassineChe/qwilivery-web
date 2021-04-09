@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 //Models
 use App\Models\Delivery;
-use App\Models\Restaurant;
 //Requests
 use Illuminate\Http\Request;
 use App\Http\Requests\DeliveryRequest;
@@ -94,6 +93,43 @@ class AdminController extends Controller
 
         return dataToResponse('success', 'Succès ', [
             "msg" => 'Un E-mail a été envoyé au livreur avec les informations d\'identification 👍',
+            "data" => $delivery
+        ], true, 200);
+    }
+
+    //* Add delivery men.
+    public function editDeliveryMan(Request $request)
+    {
+        // return $request;
+
+        $delivery = Delivery::where('id', $request->id)->first();
+
+        if ($request->permit != $delivery->permit) {
+            try {
+                $fileName =  storeUploaded(public_path() . '/files', $request->permit);
+                // delete old permit 
+                unlink("files/" . $delivery->permit);
+            } catch (\Exception $e) {
+                handleLogs($e);
+            }
+        } else $fileName = $delivery->permit;
+
+        //Generate random password.
+        $generetedPassword = \Str::random(6);
+        //Store data
+        $delivery = Delivery::where('id', $request->id)->update([
+            'first_name'   => $request->first_name,
+            'last_name'    => $request->last_name,
+            'email'        => $request->email,
+            'password'     => \Hash::make($generetedPassword),
+            'experience'   => $request->experience,
+            'permit'       => $fileName,
+            'phone_number' => $request->phone_number,
+        ]);
+        //Notify Delivery
+
+        return dataToResponse('success', 'Succès ', [
+            "msg" => 'La modification a réussi ',
             "data" => $delivery
         ], true, 200);
     }

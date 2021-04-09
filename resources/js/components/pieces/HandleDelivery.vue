@@ -64,7 +64,10 @@
           :small="isMobile"
         >
           <v-icon left>mdi-cloud-upload</v-icon>
-          <span v-if="!isMobile">joindre votre permis (PDF)</span>
+          <span v-if="!isMobile && !delivery.permit"
+            >joindre votre permis (PDF)</span
+          >
+          <span v-if="delivery.permit">{{ delivery.permit }}</span>
         </v-btn>
         <input hidden type="file" id="pdf-file" />
       </v-col>
@@ -130,9 +133,9 @@ export default {
                 returned: true,
               });
             else
-              return this.$store.dispatch("editData", {
-                path: "/api/edit/delivery",
-                data: this.delivery,
+              return this.$store.dispatch("postData", {
+                path: "/api/edit/delivery-man",
+                data: formData,
                 related: "edit-delivery",
                 returned: true,
               });
