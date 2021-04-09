@@ -38,7 +38,7 @@ Route::middleware("auth:admin")->group(function () {
     Route::get('/fetch/deliveries', [AdminController::class, 'fetchDeliveries']); //  Fetch delivery men no blocked.
     Route::patch('/unblock/delivery-man', [AdminController::class, 'unblockDeliveryMan']); // Unblock DeliveryMan
     Route::post('/add/delivery-man', [AdminController::class, 'addDeliveryMan']); //Add DeliveryMan
-    Route::put('/edit/delivery-man', [AdminController::class, 'editDeliveryMan']); //Edit DeliveryMan
+    Route::post('/edit/delivery-man', [AdminController::class, 'editDeliveryMan']); //Edit DeliveryMan
 
     // Route::get('/fetch/deliveries/blocked', [AdminController::class, 'fetchDeliveriesBlocked']); //  Fetch delivery men blocked.
     //* Restaurant stuff

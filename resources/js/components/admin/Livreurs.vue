@@ -454,6 +454,33 @@ export default {
           }
         }
       }
+
+      // Edit delivery
+      {
+        let expected = this.$store.getters.expected("edit-delivery");
+        if (expected != undefined) {
+          if (expected.status === "success") {
+            this.$dialog.notify.success(expected.result.subMessage["msg"], {
+              position: "top-right",
+              timeout: 3000,
+            });
+            this.$store.commit(
+              "ADD_DELIVERY",
+              expected.result.subMessage["data"]
+            );
+          }
+          if (expected.status === "error") {
+            for (const [key, value] of Object.entries(
+              expected.result.subMessage
+            )) {
+              this.$dialog.notify.warning(value[0], {
+                position: "top-right",
+                timeout: 5000,
+              });
+            }
+          }
+        }
+      }
     },
   },
   created() {
