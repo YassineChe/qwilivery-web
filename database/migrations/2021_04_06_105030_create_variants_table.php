@@ -17,6 +17,7 @@ class CreateVariantsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('size')->nullable();
+            $table->string('ingredients')->nullable();
             $table->integer('price');
             $table->foreignId('category_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();

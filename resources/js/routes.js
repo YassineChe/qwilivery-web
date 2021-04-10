@@ -18,6 +18,7 @@ import Profile from "./components/delivery/Profile";
 
 //* Restaurant  
 import RestaurantDashboard from "./components/restaurant/RestuarantDashboard";
+import Menu from "./components/restaurant/Menu";
 
 Vue.use(VueRouter);
 
@@ -71,6 +72,13 @@ const restaurantRoutes = {
     component: RestaurantDashboard,
     name: "Dashboard",
     meta: { requiresAuth: true, guard: "restaurant" },
+    children: [
+        {
+            path: "/menu",
+            name: "menu",
+            component: Menu,
+            meta: { guard: "restaurant", title: ' -menu' }
+        },]
 
 }
 

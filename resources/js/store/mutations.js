@@ -69,6 +69,10 @@ let mutations = {
             if (delivery.id == delivery_id) delivery.blocked_at = null;
         });
     },
+    /************************** */
+    FETCH_CATEGORIES(state, categories) {
+        return (state.categories = categories);
+    },
     /*********** Guard *********** */
     FETCH_RESTAURANTS(state, restaurants) {
         return (state.restaurants = restaurants);

@@ -7,21 +7,47 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Variant;
 
-
 class MenuController extends Controller
 {
-    //* Fetch menu of restarant
-    public function fetchMenu(Request $request)
+    //* Fetch Categories of restarant
+    public function fetchCategories(Request $request)
     {
-        return Category::with(['variant'])->Where('id', authIdFromGuard(getConnectedGuard()))->get();
+        return Category::Where('id', authIdFromGuard(getConnectedGuard()))->get();
     }
+
+    //* Fetch Variants of restarant
+    public function fetchVariants(Request $request)
+    {
+        return Variant::Where('id', authIdFromGuard(getConnectedGuard()))->get();
+    }
+
     //* Create Category 
     public function createCategory(Request $request)
     {
-        Category::Create([
-            'restaurant_id' => authIdFromGuard(getConnectedGuard()),
-            'name'          => $request->name
+        $request->validate([
+            'type' => "required",
+            'name' => 'required|unique:categories|min:2|max:255',
+            'description' => 'required|unique:categories|min:20|max:2550',
         ]);
+
+        $category =  Category::Create([
+            'restaurant_id' => authIdFromGuard(getConnectedGuard()),
+            'name'          => $request->name,
+            'description'   => $request->description,
+            'type'          => $request->type,
+
+        ]);
+
+        return dataToResponse(
+            'success',
+            'Succès ',
+            [
+                "msg" => 'La catégorie a été ajoutée avec succès 👍',
+                "data" => $category
+            ],
+            true,
+            200
+        );
     }
 
     //* Create Variant 
