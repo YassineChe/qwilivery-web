@@ -46,11 +46,11 @@
           <v-list-item-title>Accueil</v-list-item-title>
         </v-list-item>
         <!--  -->
-        <v-list-item to="profile">
+        <v-list-item to="menu">
           <v-list-item-icon>
             <v-icon>mdi-face</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>Profile</v-list-item-title>
+          <v-list-item-title>Menu</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>

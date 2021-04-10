@@ -428,7 +428,7 @@ export default {
           }
         }
       }
-      // add-delivery
+      //* Add delivery
       {
         let expected = this.$store.getters.expected("add-delivery");
         if (expected != undefined) {

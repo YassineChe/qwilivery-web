@@ -16,7 +16,6 @@ class CreateGalleriesTable extends Migration
         Schema::create('galleries', function (Blueprint $table) {
             $table->id();
             $table->string('avatar');
-            $table->foreignId('category_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('variant_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });

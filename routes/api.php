@@ -61,9 +61,11 @@ Route::middleware("auth:delivery")->group(
 ######### API Routes Restaurant  #########
 Route::middleware("auth:restaurant")->group(
     function () {
-        Route::get('/fetch/restaurant/menu',         [MenuController::class, 'fetchMenu']);      // Fetch menu
+        Route::get('/fetch/restaurant/categories',         [MenuController::class, 'fetchCategories']);      // Fetch menu
         Route::post('/add/restaurant/category',      [MenuController::class, 'createCategory']); // Create category
         Route::post('/add/restaurant/variant',       [MenuController::class, 'createVariant']);  // Create variant
+        Route::get('/fetch/restaurant/variants',         [MenuController::class, 'fetchVariants']);      // Fetch menu
+      
         Route::put('/update/restaurant/category',    [MenuController::class, 'updateCategory']); // Update  category
         Route::put('/update/restaurant/variant',     [MenuController::class, 'updateVariant']);  // Update variant
         Route::delete('/delete/restaurant/variant',  [MenuController::class, 'deleteVariant']);  // Delete variant
