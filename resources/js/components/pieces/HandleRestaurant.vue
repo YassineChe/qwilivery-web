@@ -90,15 +90,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-import * as VueGoogleMaps from "vue2-google-maps";
-
-Vue.use(VueGoogleMaps, {
-    load: {
-        key: "AIzaSyBriQ2VfQyXzswFnsiLB8NkjmOejl77FmA"
-    }
-});
-
 export default {
     props: {
         dataToEdit: { required: false },
@@ -121,8 +112,8 @@ export default {
     methods: {
         //* Coordinate Changed
         updateCoordinates: function(location) {
-            this.restaurant.lat = location.lat();
-            this.restaurant.lng = location.lng();
+            this.restaurant.lat = location.latLng.lat();
+            this.restaurant.lng = location.latLng.lng();
         },
         //* Actions
         actions: function() {
