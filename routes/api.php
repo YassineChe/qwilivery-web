@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\MealController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +71,8 @@ Route::middleware("auth:restaurant")->group(
         Route::put('/edit/restaurant/variant', [MenuController::class, 'editVariant']);  // Update variant
         Route::delete('/delete/restaurant/variant', [MenuController::class, 'deleteVariant']);  // Delete variant
         Route::delete('/delete/restaurant/category', [MenuController::class, 'deleteCategory']); // Delete category
+        //Meals Stuff
+        Route::get('/fetch/meals', [MealController::class, 'fetchMeals']);
     }
 );
 
