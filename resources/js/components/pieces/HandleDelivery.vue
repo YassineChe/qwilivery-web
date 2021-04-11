@@ -45,16 +45,29 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12">
+        <v-text-field
+          dense
+          hide-details="auto"
+          outlined
+          label="numéro de téléphone"
+          v-model="delivery.phone_number"
+        ></v-text-field
+      ></v-col>
+      <v-col cols="12">
         <v-btn
           block
           elevation="5"
           color="primary"
           @click="rander()"
           outlined
-          v-if="isMobile ? 'small' : 'x-large'"
+          :large="!isMobile"
+          :small="isMobile"
         >
           <v-icon left>mdi-cloud-upload</v-icon>
-          joindre votre permis (PDF)
+          <span v-if="!isMobile && !delivery.permit"
+            >joindre votre permis (PDF)</span
+          >
+          <span v-if="delivery.permit">{{ delivery.permit }}</span>
         </v-btn>
         <input hidden type="file" id="pdf-file" />
       </v-col>
@@ -64,12 +77,17 @@
 
 <script>
 export default {
+  props: {
+    deliveryToEdit: { required: false },
+    title: { required: true, type: String },
+  },
   data() {
     return {
       delivery: {
         first_name: "",
         last_name: "",
         experience: "",
+        phone_number: "",
         email: "",
       },
     };
@@ -90,20 +108,50 @@ export default {
           rounded: true,
         },
         add: {
-          text: "Ajouter",
+          text: "Enregistrer",
           color: "primary",
           rounded: true,
           handle: () => {
-            return this.$store.dispatch("postData", {
-              path: "/api/add/restaurant",
-              data: this.delivery,
-              related: "add-restaurant",
-              returned: true,
-            });
+            // Empty the images so that we upload new ones
+            const file = document.querySelector("#pdf-file");
+            // Make sure the file input is not null
+            if (!file.files) return;
+
+            // The file is a valid file.
+            const formData = new FormData();
+            formData.append("permit", file.files[0]);
+
+            for (const [key, value] of Object.entries(this.delivery)) {
+              formData.append(key, value);
+            }
+
+            if (!this.deliveryToEdit)
+              return this.$store.dispatch("postData", {
+                path: "/api/add/delivery-man",
+                data: formData,
+                related: "add-delivery",
+                returned: true,
+              });
+            else
+              return this.$store.dispatch("postData", {
+                path: "/api/edit/delivery-man",
+                data: formData,
+                related: "edit-delivery",
+                returned: true,
+              });
           },
         },
       };
     },
+    //* Rander input
+    rander() {
+      document.getElementById("pdf-file").click();
+    },
+  },
+  created() {
+    if (this.deliveryToEdit) {
+      this.delivery = this.deliveryToEdit;
+    }
   },
 };
 </script>

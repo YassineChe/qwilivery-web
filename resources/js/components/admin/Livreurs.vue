@@ -4,7 +4,7 @@
       <v-col>
         <!-- HeadLine -->
         <Headline
-          headline="Livreur(s)"
+          :headline="`(${deliveries.length}) Livreur(s)`"
           subheadline="Gestion des offres publiées"
           :headline-classes="[
             'text-h5',
@@ -15,7 +15,19 @@
         />
       </v-col>
     </v-row>
-
+    <v-row class="mt-5" flat>
+      <v-col :align="!isMobile ? 'right' : ''">
+        <v-btn
+          color="primary"
+          outlined
+          :block="isMobile"
+          @click="addDelivery()"
+        >
+          <v-icon left>mdi-truck-delivery</v-icon>
+          Ajouter Livreur
+        </v-btn>
+      </v-col>
+    </v-row>
     <v-card class="mt-5">
       <v-toolbar flat>
         <v-text-field
@@ -37,8 +49,12 @@
         item-key="id"
       >
         <template v-slot:[`item.name`]="{ item }">
+          <v-icon color="error" v-if="item.blocked_at != null"
+            >mdi-cancel</v-icon
+          >
           <span>{{ item.first_name + " " + item.last_name }}</span>
         </template>
+
         <template v-slot:[`item.avatar`]="{ item }">
           <v-avatar size="40">
             <img :src="`/images/avatars/${item.avatar}`" alt="John" />
@@ -87,7 +103,14 @@
             <!-- Edit -->
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn v-on="on" v-bind="attrs" color="info" fab x-small>
+                <v-btn
+                  v-on="on"
+                  v-bind="attrs"
+                  color="info"
+                  fab
+                  x-small
+                  @click="editDelivery(item)"
+                >
                   <v-icon> mdi-pen </v-icon>
                 </v-btn>
               </template>
@@ -103,20 +126,40 @@
               Télécharger permis
             </v-tooltip>
             <!-- Block -->
+            <!-- Block -->
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   v-on="on"
                   v-bind="attrs"
-                  @click="blockDelivery(item.id)"
                   color="error"
                   fab
                   x-small
+                  @click="blockDelivery(item.id)"
+                  v-if="item.blocked_at == null"
                 >
                   <v-icon> mdi-cancel </v-icon>
                 </v-btn>
               </template>
               Bloquer
+            </v-tooltip>
+
+            <!-- Block -->
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-on="on"
+                  v-bind="attrs"
+                  color="success"
+                  fab
+                  x-small
+                  @click="unblockDelivery(item.id)"
+                  v-if="item.blocked_at != null"
+                >
+                  <v-icon> mdi-undo </v-icon>
+                </v-btn>
+              </template>
+              Débloquer
             </v-tooltip>
             <!-- Chatter -->
             <v-tooltip top>
@@ -194,6 +237,25 @@ export default {
         related: "fetch-deliveries",
       });
     },
+    //* Add delivery
+    addDelivery: function () {
+      this.$store.commit("CLEAR_EXPECTED");
+
+      this.$dialog.show(HandleDelivery, {
+        title: "Ajouter nouveau Livreur",
+        width: "40%",
+      });
+    },
+    //* Edit delivery
+    editDelivery: function (Delivery) {
+      this.$store.commit("CLEAR_EXPECTED");
+
+      this.$dialog.show(HandleDelivery, {
+        deliveryToEdit: Delivery, // Props
+        title: "Modifier le Livreur",
+        width: "40%",
+      });
+    },
     // * Edit approvement delivery man.
     editApprovement(delivery_id) {
       this.$store.commit("CLEAR_EXPECTED");
@@ -229,6 +291,7 @@ export default {
     //* Block delivery
     blockDelivery(delivery_id) {
       this.$store.commit("CLEAR_EXPECTED");
+
       this.$dialog.confirm({
         text: "Êtes-vous sûr de bloquer ce livreur ?",
         title: "Attention!",
@@ -244,11 +307,39 @@ export default {
                 related: `block-delivery-man`,
                 returned: true,
               });
-              this.dummy = delivery_id;
+              this.$store.commit("BLOCK_DELIVERY", delivery_id);
             },
           },
         },
       });
+    },
+    //* unBlock delivery
+    unblockDelivery: function (delivery_id) {
+      this.$store.commit("CLEAR_EXPECTED");
+
+      if (delivery_id) {
+        this.$dialog.confirm({
+          text: "Êtes-vous sûr de débloquer ce livreur ?",
+          title: "Attention!",
+          actions: {
+            false: "Non!",
+            true: {
+              color: "red",
+              text: "Je confirme",
+              handle: () => {
+                // Change it in backend
+                this.$store.dispatch("patchData", {
+                  path: "/api/unblock/delivery-man",
+                  data: { delivery_id: delivery_id },
+                  related: "unblock-delivery",
+                });
+                //Change it in front
+                this.$store.commit("UNBLOCK_DELIVERY", delivery_id);
+              },
+            },
+          },
+        });
+      }
     },
     //* The famous isBusy funtion haha
     isBusy: function (fetcher) {
@@ -301,13 +392,11 @@ export default {
           }
         }
       }
-      //* block delivery
+      //* Block delivery
       {
         let expected = this.$store.getters.expected("block-delivery-man");
         if (expected != undefined) {
           if (expected.status === "success") {
-            //?  DELETE DELIVERY
-            this.$store.commit("DELETE_DELIVERY", this.dummy);
             this.$dialog.notify.success(expected.result.subMessage, {
               position: "top-right",
               timeout: 3000,
@@ -318,6 +407,77 @@ export default {
               position: "top-right",
               timeout: 3000,
             });
+          }
+        }
+      }
+      //* Unblock delivery
+      {
+        let expected = this.$store.getters.expected("unblock-delivery");
+        if (expected != undefined) {
+          if (expected.status === "success") {
+            this.$dialog.notify.success(expected.result.subMessage, {
+              position: "top-right",
+              timeout: 3000,
+            });
+          }
+          if (expected.status === "error") {
+            this.$dialog.notify.warning(expected.result.subMessage, {
+              position: "top-right",
+              timeout: 3000,
+            });
+          }
+        }
+      }
+      //* Add delivery
+      {
+        let expected = this.$store.getters.expected("add-delivery");
+        if (expected != undefined) {
+          if (expected.status === "success") {
+            this.$dialog.notify.success(expected.result.subMessage["msg"], {
+              position: "top-right",
+              timeout: 3000,
+            });
+            this.$store.commit(
+              "ADD_DELIVERY",
+              expected.result.subMessage["data"]
+            );
+          }
+          if (expected.status === "error") {
+            for (const [key, value] of Object.entries(
+              expected.result.subMessage
+            )) {
+              this.$dialog.notify.warning(value[0], {
+                position: "top-right",
+                timeout: 5000,
+              });
+            }
+          }
+        }
+      }
+
+      // Edit delivery
+      {
+        let expected = this.$store.getters.expected("edit-delivery");
+        if (expected != undefined) {
+          if (expected.status === "success") {
+            this.$dialog.notify.success(expected.result.subMessage["msg"], {
+              position: "top-right",
+              timeout: 3000,
+            });
+            this.$store.commit(
+              "ADD_DELIVERY",
+              expected.result.subMessage["data"]
+            );
+          }
+          if (expected.status === "error") {
+            for (const [key, value] of Object.entries(
+              expected.result.subMessage
+            )) {
+              this.$dialog.notify.warning(value[0], {
+                position: "top-right",
+                timeout: 5000,
+              });
+            }
           }
         }
       }

@@ -67,8 +67,8 @@ class DeliveryController extends Controller
                 $fileName =  storeUploaded(public_path() . '/files', $request->permit);
                 // delete old permit 
                 unlink("files/" . $delivery->permit);
-            } catch (\Throwable $th) {
-                //throw $th;
+            } catch (\Exception $e) {
+                handleLogs($e);
             }
         } else $fileName = $delivery->permit;
 
