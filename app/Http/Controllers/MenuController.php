@@ -25,9 +25,7 @@ class MenuController extends Controller
     public function createCategory(Request $request)
     {
         $request->validate([
-            'type' => "required",
-            'name' => 'required|unique:categories|min:2|max:255',
-            'description' => 'required|unique:categories|min:20|max:2550',
+
         ]);
 
         $category =  Category::Create([
@@ -71,7 +69,7 @@ class MenuController extends Controller
             'price'       => $request->price,
         ]);
     }
-    
+
     //* Update Variant 
     public function updateVariant(Request $request)
     {
