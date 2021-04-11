@@ -124,6 +124,12 @@ export default {
       this.restaurant.lat = location.lat();
       this.restaurant.lng = location.lng();
     },
+    methods: {
+        //* Coordinate Changed
+        updateCoordinates: function(location) {
+            this.restaurant.lat = location.latLng.lat();
+            this.restaurant.lng = location.latLng.lng();
+
     //* Actions
     actions: function () {
       return {
