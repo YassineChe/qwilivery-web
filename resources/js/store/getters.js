@@ -28,6 +28,10 @@ let getters = {
     deliveries: state => {
         return state.deliveries;
     },
+    /************** Categories ************* */
+    categories: state => {
+        return state.categories;
+    },
     /************** restaurant ************* */
     restaurants: state => {
         return state.restaurants;

@@ -5,7 +5,9 @@ let state = {
     /* Vars */
     dummies: [],
     deliveries: [],
-    restaurants: []
+    restaurants: [],
+    categories: [],
+
 };
 
 export default state;

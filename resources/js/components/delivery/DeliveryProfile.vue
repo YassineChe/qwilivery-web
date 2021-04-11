@@ -123,7 +123,12 @@
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn :disabled="!isEditing" color="success" @click="save()">
+        <v-btn
+          :disabled="!isEditing"
+          :loading="isBusy('do-edit')"
+          color="success"
+          @click="save()"
+        >
           <v-icon left> mdi-update </v-icon>
           Mettre à jour
         </v-btn>
@@ -206,6 +211,16 @@ export default {
 
         fileLink.click();
       });
+    },
+    // Overlly
+    isBusy: function (fetcher) {
+      try {
+        return this.$store.getters.expected(fetcher).status == "busy"
+          ? true
+          : false;
+      } catch (error) {
+        return false;
+      }
     },
   },
   watch: {

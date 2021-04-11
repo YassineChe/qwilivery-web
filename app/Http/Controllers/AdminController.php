@@ -4,91 +4,56 @@ namespace App\Http\Controllers;
 
 //Models
 use App\Models\Delivery;
-use App\Models\Restaurant;
 //Requests
 use Illuminate\Http\Request;
-use App\Http\Requests\RequestRestaurant;
+use App\Http\Requests\DeliveryRequest;
 //Notifications
-use App\Notifications\NotifyRestaurantAccount;
+use App\Notifications\NotifyDeliveryAccount;
 
 class AdminController extends Controller
 {
     //* Approuve.  
     public function approvedDeliveryMan(Request $request)
     {
-        $delivery =  Delivery::where('id', $request->delivery_id)->first();
-        if ($delivery) {
-            $delivery->update(['status' => 1]);
-            //Return data to front
-            return dataToResponse('success', 'Succès ', 'La mise à jour a réussi', false, 200);
+        try {
+            if (Delivery::where('id', $request->delivery_id)->update(['status' => 1])) {
+                //Return data to front
+                return dataToResponse('success', 'Succès ', 'La mise à jour a réussi', false, 200);
+            }
+        } catch (\Exception $e) {
+            handleLogs($e);
         }
     }
     //* Delete.
     public function deleteDeliveryMan(Request $request)
     {
-        $delivery =  Delivery::where('id', $request->delivery_id)->first();
-        if ($delivery) {
-            $delivery->delete();
-            return dataToResponse('success', 'Succès ', 'La suppression est un succès', true, 200);
+        try {
+            if (Delivery::where('id', $request->delivery_id)->delete()) {
+                return dataToResponse('success', 'Succès ', 'La suppression est un succès 👍', true, 200);
+            }
+        } catch (\Exception $e) {
+            handleLogs($e);
         }
     }
 
     //* Block.
     public function blockDeliveryMan(Request $request)
     {
-        $delivery =  Delivery::where('id', $request->delivery_id)->first();
-
-        if ($delivery) {
-            if ($delivery->blocked_at == null) {
-
-                $delivery->update([
-                    "blocked_at" => \Carbon\Carbon::now()
-                ]);
-
-                return dataToResponse('success', 'Succès ', 'Livreur a été bloqué', true, 200);
+        try {
+            if (Delivery::where('id', $request->delivery_id)->update(["blocked_at" => \Carbon\Carbon::now()])) {
+                return dataToResponse('success', 'Succès ', 'Livreur a été bloqué ❌', true, 200);
             }
-            if ($delivery->blocked_at != null) {
-                $delivery->update([
-                    "blocked_at" => null
-                ]);
-                return dataToResponse('success', 'Succès ', 'Livreur a été débloqué', true, 200);
-            }
+        } catch (\Exception $e) {
+            handleLogs($e);
         }
     }
 
-    //* Fetch Restaurants
-    public function fetchRestaurants()
-    {
-        return
-            response(
-                Restaurant::orderBy('id', 'DESC')->get(),
-                200
-            );
-    }
-
-    //* Add Restaurant. 
-    public function addRestaurant(RequestRestaurant $request)
+    // *Unblock DeliveryMan
+    public function unblockDeliveryMan(Request $request)
     {
         try {
-            //Generate random password
-            $generetedPassword = \Str::random(6);
-            //Store data
-            $restaurant = Restaurant::Create([
-                'name'         => $request->name,
-                'email'        => $request->email,
-                'password'     => \Hash::make($generetedPassword),
-                'phone_number' => $request->phone_number,
-                'address'      => $request->address,
-                'rate'         => $request->rate,
-                'lat'          => $request->lat,
-                'lng'          => $request->lng,
-            ]);
-
-            //Notify Restau
-            if ($restaurant)
-                $restaurant->notify(new NotifyRestaurantAccount(["password" => $generetedPassword, "email" => $request->email]));
-
-            return dataToResponse('success', 'Succès ', 'Un E-mail a été envoyé au restaurant avec les informations d\'identification 👍', true, 200);
+            if (Delivery::where('id', $request->delivery_id)->update(['blocked_at' => null]))
+                return dataToResponse('success', 'Succès ', 'Débloquer avec succès ✅', true, 200);
         } catch (\Exception $e) {
             handleLogs($e);
         }
@@ -99,9 +64,73 @@ class AdminController extends Controller
     {
         return
             response(
-                Delivery::orderBy('id', 'DESC')
+                Delivery::orderByRaw('created_at DESC')
                     ->get(),
                 200
             );
+    }
+    //* Add delivery men.
+    public function addDeliveryMan(DeliveryRequest $request)
+    {
+
+        //Generate random password.
+        $generetedPassword = \Str::random(6);
+        //Upload data to server.
+        $fileName =  storeUploaded(public_path() . '/files', $request->permit);
+        //Store data
+        $delivery = Delivery::Create([
+            'first_name'   => $request->first_name,
+            'last_name'    => $request->last_name,
+            'email'        => $request->email,
+            'password'     => \Hash::make($generetedPassword),
+            'experience'   => $request->experience,
+            'permit'       => $fileName,
+            'phone_number' => $request->phone_number,
+        ]);
+        //Notify Delivery
+        if ($delivery)
+            $delivery->notify(new NotifyDeliveryAccount(["password" => $generetedPassword, "email" => $request->email]));
+
+        return dataToResponse('success', 'Succès ', [
+            "msg" => 'Un E-mail a été envoyé au livreur avec les informations d\'identification 👍',
+            "data" => $delivery
+        ], true, 200);
+    }
+
+    //* Add delivery men.
+    public function editDeliveryMan(Request $request)
+    {
+        // return $request;
+
+        $delivery = Delivery::where('id', $request->id)->first();
+
+        if ($request->permit != $delivery->permit) {
+            try {
+                $fileName =  storeUploaded(public_path() . '/files', $request->permit);
+                // delete old permit 
+                unlink("files/" . $delivery->permit);
+            } catch (\Exception $e) {
+                handleLogs($e);
+            }
+        } else $fileName = $delivery->permit;
+
+        //Generate random password.
+        $generetedPassword = \Str::random(6);
+        //Store data
+        $delivery = Delivery::where('id', $request->id)->update([
+            'first_name'   => $request->first_name,
+            'last_name'    => $request->last_name,
+            'email'        => $request->email,
+            'password'     => \Hash::make($generetedPassword),
+            'experience'   => $request->experience,
+            'permit'       => $fileName,
+            'phone_number' => $request->phone_number,
+        ]);
+        //Notify Delivery
+
+        return dataToResponse('success', 'Succès ', [
+            "msg" => 'La modification a réussi ',
+            "data" => $delivery
+        ], true, 200);
     }
 }
