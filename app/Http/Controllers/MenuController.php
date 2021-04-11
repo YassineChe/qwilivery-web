@@ -71,7 +71,7 @@ class MenuController extends Controller
             'price'       => $request->price,
         ]);
     }
-
+    
     //* Update Variant 
     public function updateVariant(Request $request)
     {
