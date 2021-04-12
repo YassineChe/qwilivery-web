@@ -17,7 +17,6 @@ class CreateCategoriesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->string('type');
             $table->foreignId('restaurant_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });

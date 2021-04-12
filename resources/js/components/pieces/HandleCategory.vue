@@ -1,20 +1,6 @@
 <template>
     <dialogCard title="Ajouter nouveau catégorie" :actions="actions()">
         <v-row>
-            <!--  Type of meal -->
-            <v-col cols="12">
-                <v-select
-                    label="Type de repas"
-                    v-model="category.meal_id"
-                    dense
-                    :items="meals"
-                    hide-details="auto"
-                    outlined
-                    item-text="name"
-                    item-value="id"
-                >
-                </v-select>
-            </v-col>
             <!--  category name -->
             <v-col cols="12">
                 <v-text-field
@@ -49,16 +35,10 @@ export default {
     data() {
         return {
             category: {
-                meal_id: "",
                 name: "",
                 description: ""
             }
         };
-    },
-    computed: {
-        meals: function() {
-            return this.$store.getters.meals;
-        }
     },
     methods: {
         //* Actions
@@ -70,17 +50,17 @@ export default {
                     rounded: true
                 },
                 add: {
-                    text: "Enregistrer",
+                    text: "Valider",
                     color: "primary",
                     rounded: true,
                     handle: () => {
-                        if (!this.categoryToEdit)
-                            return this.$store.dispatch("postData", {
-                                path: "/api/add/restaurant/category",
-                                data: this.category,
-                                related: "add-category",
-                                returned: true
-                            });
+                        // if (!this.categoryToEdit)
+                        return this.$store.dispatch("postData", {
+                            path: "/api/add/category",
+                            data: this.category,
+                            related: "add-category",
+                            returned: true
+                        });
                     }
                 }
             };
