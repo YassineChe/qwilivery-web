@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\MealController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,16 +62,17 @@ Route::middleware("auth:delivery")->group(
 ######### API Routes Restaurant  #########
 Route::middleware("auth:restaurant")->group(
     function () {
-        Route::get('/fetch/restaurant/categories',         [MenuController::class, 'fetchCategories']);      // Fetch menu
-        Route::post('/add/restaurant/category',      [MenuController::class, 'createCategory']); // Create category
-        Route::post('/add/restaurant/variant',       [MenuController::class, 'createVariant']);  // Create variant
-        Route::get('/fetch/restaurant/variants',         [MenuController::class, 'fetchVariants']);      // Fetch menu
-      
-        Route::put('/update/restaurant/category',    [MenuController::class, 'updateCategory']); // Update  category
-        Route::put('/update/restaurant/variant',     [MenuController::class, 'updateVariant']);  // Update variant
-        Route::delete('/delete/restaurant/variant',  [MenuController::class, 'deleteVariant']);  // Delete variant
+        //Category & Variant Stuff
+        Route::get('/fetch/restaurant/categories', [MenuController::class, 'fetchCategories']);      // Fetch menu
+        Route::post('/add/restaurant/category', [MenuController::class, 'addCategory']); // Create category
+        Route::post('/add/restaurant/variant', [MenuController::class, 'addVariant']);  // Create variant
+        Route::get('/fetch/restaurant/variants', [MenuController::class, 'fetchVariants']);      // Fetch menu
+        Route::put('/edit/restaurant/category', [MenuController::class, 'editCategory']); // Update  category
+        Route::put('/edit/restaurant/variant', [MenuController::class, 'editVariant']);  // Update variant
+        Route::delete('/delete/restaurant/variant', [MenuController::class, 'deleteVariant']);  // Delete variant
         Route::delete('/delete/restaurant/category', [MenuController::class, 'deleteCategory']); // Delete category
-
+        //Meals Stuff
+        Route::get('/fetch/meals', [MealController::class, 'fetchMeals']);
     }
 );
 

@@ -15,16 +15,30 @@
         />
       </v-col>
     </v-row>
+
+    <v-row class="mt-5" flat>
+      <v-col :align="!isMobile ? 'right' : ''">
+        <v-btn
+          color="primary"
+          outlined
+          :block="isMobile"
+          @click="addCategory()"
+        >
+          <v-icon left>mdi-plus</v-icon>
+          Ajouter une catégorie
+        </v-btn>
+      </v-col>
+    </v-row>
+
     <v-row>
-      <v-col cols="12">
+      <v-col>
         <v-card>
           <v-card-title>
-            <p>Catégories</p>
-            <v-spacer></v-spacer>
-            <v-btn @click="addCategory()">
-              <v-icon left> mdi-plus </v-icon>
-              Ajouter une catégorie
-            </v-btn>
+            <v-chip-group show-arrows>
+              <v-chip v-for="(meal, idx) in meals" :key="idx">
+                {{ meal.name }}
+              </v-chip>
+            </v-chip-group>
           </v-card-title>
           <v-card-text>
             <v-list>
@@ -41,13 +55,6 @@
                   </v-list-item-content>
                 </template>
 
-                <v-list-item v-for="child in item.items" :key="child.title">
-                  <v-list-item-content>
-                    <v-list-item-title v-text="child.title"></v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-                
-                <v-btn>sssj</v-btn>
                 <v-list-item v-for="child in item.items" :key="child.title">
                   <v-list-item-content>
                     <v-list-item-title v-text="child.title"></v-list-item-title>
@@ -89,16 +96,36 @@ export default {
       },
     ],
   }),
-
+  computed: {
+    ...mapState(["expected"]),
+    //*Get no blocked delivery
+    categories: function () {
+      return this.$store.getters.categories;
+    },
+    meals: function () {
+      return this.$store.getters.meals;
+    },
+    //* Is mobile
+    isMobile() {
+      return this.$vuetify.breakpoint.xsOnly;
+    },
+  },
   methods: {
     //* Init
     init() {
       //* Get all deliveries
-      this.$store.dispatch("fetchData", {
-        path: "/api/fetch/restaurant/categories",
-        mutation: "FETCH_CATEGORIES",
-        related: "fetch-categories",
-      });
+      this.$store.dispatch("multipleFetch", [
+        {
+          path: "/api/fetch/restaurant/categories",
+          mutation: "FETCH_CATEGORIES",
+          related: "fetch-categories",
+        },
+        {
+          path: "/api/fetch/meals",
+          mutation: "FETCH_MEALS",
+          related: "fetch-meals",
+        },
+      ]);
     },
     //* Add Category
     addCategory: function () {
@@ -106,19 +133,8 @@ export default {
 
       this.$dialog.show(HandleCategory, {
         title: "Ajouter nouveau Catr",
-        width: "60%",
+        width: "40%",
       });
-    },
-  },
-  computed: {
-    ...mapState(["expected"]),
-    //*Get no blocked delivery
-    categories: function () {
-      return this.$store.getters.categories;
-    },
-    //* Is mobile
-    isMobile() {
-      return this.$vuetify.breakpoint.xsOnly;
     },
   },
   watch: {
@@ -132,10 +148,6 @@ export default {
               position: "top-right",
               timeout: 3000,
             });
-            // this.$store.commit(
-            //   "ADD_DELIVERY",
-            //   expected.result.subMessage["data"]
-            // );
           }
           if (expected.status === "error") {
             for (const [key, value] of Object.entries(expected.result.errors)) {

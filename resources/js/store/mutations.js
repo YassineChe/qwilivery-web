@@ -60,8 +60,7 @@ let mutations = {
     },
     BLOCK_DELIVERY(state, delivery_id) {
         state.deliveries.find(delivery => {
-            if (delivery.id == delivery_id)
-                delivery.blocked_at = Date.now();
+            if (delivery.id == delivery_id) delivery.blocked_at = Date.now();
         });
     },
     UNBLOCK_DELIVERY(state, delivery_id) {
@@ -69,9 +68,12 @@ let mutations = {
             if (delivery.id == delivery_id) delivery.blocked_at = null;
         });
     },
-    /************************** */
+    /********* Categories & Meals ******** */
     FETCH_CATEGORIES(state, categories) {
         return (state.categories = categories);
+    },
+    FETCH_MEALS(state, meals) {
+        return (state.meals = meals);
     },
     /*********** Guard *********** */
     FETCH_RESTAURANTS(state, restaurants) {
