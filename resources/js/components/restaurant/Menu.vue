@@ -16,6 +16,7 @@
       </v-col>
     </v-row>
 
+    <!-- Buttons actions -->
     <v-row class="mt-5" flat>
       <v-col :align="!isMobile ? 'right' : ''">
         <v-btn
@@ -30,38 +31,51 @@
       </v-col>
     </v-row>
 
+    <!-- Contents -->
     <v-row>
       <v-col>
-        <v-card>
+        <v-card
+          :loading="isBusy('fetch-categories')"
+          :disabled="isBusy('fetch-categories')"
+        >
           <v-card-title>
-            <v-chip-group show-arrows>
-              <v-chip v-for="(meal, idx) in meals" :key="idx">
-                {{ meal.name }}
+            <v-chip-group
+              show-arrows
+              v-model="selectedCategory"
+              active-class="primary"
+            >
+              <v-chip
+                v-for="(category, idx) in categories"
+                :key="idx"
+                :value="category.id"
+              >
+                {{ category.name }}
               </v-chip>
             </v-chip-group>
           </v-card-title>
-          <v-card-text>
-            <v-list>
-              <v-list-group
-                v-for="item in categories"
-                :key="item.title"
-                v-model="item.active"
-                :prepend-icon="item.action"
-                no-action
-              >
-                <template v-slot:activator>
-                  <v-list-item-content>
-                    <v-list-item-title v-text="item.title"></v-list-item-title>
-                  </v-list-item-content>
-                </template>
 
-                <v-list-item v-for="child in item.items" :key="child.title">
-                  <v-list-item-content>
-                    <v-list-item-title v-text="child.title"></v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list-group>
-            </v-list>
+          <v-divider />
+
+          <v-card-text>
+            <v-card max-width="400" outlined>
+              <v-list-item three-line>
+                <v-list-item-content>
+                  <v-list-item-title class="headline mb-1">
+                    Headline 5
+                  </v-list-item-title>
+                  <v-list-item-subtitle
+                    >Greyhound divisely hello coldly
+                    fonwderfully</v-list-item-subtitle
+                  >
+                </v-list-item-content>
+
+                <v-list-item-avatar
+                  tile
+                  size="80"
+                  color="grey"
+                ></v-list-item-avatar>
+              </v-list-item>
+            </v-card>
           </v-card-text>
         </v-card>
       </v-col>
@@ -102,39 +116,52 @@ export default {
     categories: function () {
       return this.$store.getters.categories;
     },
-    meals: function () {
-      return this.$store.getters.meals;
+    data() {
+      return {
+        selectedCategory: "",
+        selection: 1,
+      };
     },
-    //* Is mobile
-    isMobile() {
-      return this.$vuetify.breakpoint.xsOnly;
+    computed: {
+      ...mapState(["expected"]),
+      //*Get no blocked delivery
+      categories: function () {
+        return this.$store.getters.categories;
+      },
+      //* Is mobile
+      isMobile() {
+        return this.$vuetify.breakpoint.xsOnly;
+      },
     },
-  },
-  methods: {
-    //* Init
-    init() {
-      //* Get all deliveries
-      this.$store.dispatch("multipleFetch", [
-        {
-          path: "/api/fetch/restaurant/categories",
-          mutation: "FETCH_CATEGORIES",
-          related: "fetch-categories",
-        },
-        {
-          path: "/api/fetch/meals",
-          mutation: "FETCH_MEALS",
-          related: "fetch-meals",
-        },
-      ]);
-    },
-    //* Add Category
-    addCategory: function () {
-      this.$store.commit("CLEAR_EXPECTED");
-
-      this.$dialog.show(HandleCategory, {
-        title: "Ajouter nouveau Catr",
-        width: "40%",
-      });
+    methods: {
+      //* Init
+      init() {
+        //* Get all deliveries
+        this.$store.dispatch("multipleFetch", [
+          {
+            path: "/api/fetch/categories",
+            mutation: "FETCH_CATEGORIES",
+            related: "fetch-categories",
+          },
+        ]);
+      },
+      //* Add Category
+      addCategory: function () {
+        this.$dialog.show(HandleCategory, {
+          title: "Ajouter nouveau Catregory",
+          "min-width": "45%",
+        });
+      },
+      //* The famous isBusy funtion haha
+      isBusy: function (fetcher) {
+        try {
+          return this.$store.getters.expected(fetcher).status == "busy"
+            ? true
+            : false;
+        } catch (error) {
+          return false;
+        }
+      },
     },
   },
   watch: {

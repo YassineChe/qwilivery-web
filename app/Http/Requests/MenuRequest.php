@@ -13,7 +13,7 @@ class MenuRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,6 @@ class MenuRequest extends FormRequest
     public function rules()
     {
         return [
-            'meal_id'     => "required|integer",
             'name'        => 'required|min:2|max:150',
             'description' => 'required|min:10|max:300',
         ];

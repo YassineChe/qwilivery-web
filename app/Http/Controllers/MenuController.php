@@ -12,21 +12,21 @@ use App\Http\Requests\MenuRequest;
 class MenuController extends Controller
 {
     //* Fetch Categories of restarant
-    public function fetchCategories(Request $request){
-        try{
-            return Category::Where('id', authIdFromGuard(getConnectedGuard()))->get();
-        }
-        catch(\Exception $e){
+    public function fetchCategories(Request $request)
+    {
+        try {
+            return Category::where('restaurant_id', authIdFromGuard(getConnectedGuard()))->get();
+        } catch (\Exception $e) {
             handleLogs($e);
         }
     }
 
     //* Fetch Variants of restarant
-    public function fetchVariants(Request $request){
-        try{
-            return Variant::Where('id', authIdFromGuard(getConnectedGuard()))->get();
-        }
-        catch(\Exception $e){
+    public function fetchVariants(Request $request)
+    {
+        try {
+            return Variant::where('id', authIdFromGuard(getConnectedGuard()))->get();
+        } catch (\Exception $e) {
             handleLogs($e);
         }
     }
@@ -34,18 +34,16 @@ class MenuController extends Controller
     //* Add Category 
     public function addCategory(MenuRequest $request)
     {
-        try{
-            if(
+        try {
+            if (
                 Category::Create([
-                    'meal_id'       => $request->meal_id,
                     'restaurant_id' => authIdFromGuard(getConnectedGuard()),
                     'name'          => $request->name,
                     'description'   => $request->description,
                 ])
             )
-            return dataToResponse('success', 'Succès', ["msg" => 'La catégorie a été ajoutée avec succès 👍',], true, 200);
-        }
-        catch(\Exception $e){
+                return dataToResponse('success', 'Succès', ["msg" => 'La catégorie a été ajoutée avec succès 👍',], true, 200);
+        } catch (\Exception $e) {
             handleLogs($e);
         }
     }
@@ -53,15 +51,28 @@ class MenuController extends Controller
     //* Add Variant 
     public function addVariant(Request $request)
     {
-        try{
+
+
+        // return $request;
+        try {
+
+            $avatar = storeUploaded(public_path() . '/menu', $request->avatar);
+
+            $request->validate([
+                'name' => 'required|min:2',
+                'price' => 'required|numeric',
+                'photo' => 'required|image',
+                'category_id' => 'required',
+            ]);
+
             Variant::Create([
-                'category_id' => authIdFromGuard(getConnectedGuard()),
                 'name'        => $request->name,
-                'size'        => $request->size,
                 'price'       => $request->price,
-            ]); 
-        }
-        catch(\Exception $e){
+                'photo'       => $avatar,
+                'category_id' => authIdFromGuard(getConnectedGuard()),
+
+            ]);
+        } catch (\Exception $e) {
             handleLogs($e);
         }
     }
@@ -70,14 +81,13 @@ class MenuController extends Controller
 
     public function editCategory(Request $request)
     {
-        try{
+        try {
             Category::where('id', $request->id)->update([
                 'name'        => $request->name,
                 'size'        => $request->size,
                 'price'       => $request->price,
             ]);
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             handleLogs($e);
         }
     }
@@ -85,34 +95,33 @@ class MenuController extends Controller
     //* Update Variant 
     public function editVariant(Request $request)
     {
-        try{
+        try {
             Variant::where('id', $request->id)->upadate([
                 'name'        => $request->name,
                 'size'        => $request->size,
                 'price'       => $request->price,
             ]);
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             handleLogs($e);
         }
     }
 
     //* Delete Category 
-    public function deleteCategory(Request $request){
-        try{
-            Category::Where('id', $request->id)->delete();
-        }
-        catch(\Exception $e){
+    public function deleteCategory(Request $request)
+    {
+        try {
+            Category::where('id', $request->id)->delete();
+        } catch (\Exception $e) {
             handleLogs($e);
         }
     }
 
     //* Delete Variant 
-    public function deleteVariant(Request $request){
-        try{
-            Variant::Where('id', $request->id)->delete();
-        }
-        catch(\Exception $e){
+    public function deleteVariant(Request $request)
+    {
+        try {
+            Variant::where('id', $request->id)->delete();
+        } catch (\Exception $e) {
             handleLogs($e);
         }
     }

@@ -268,14 +268,14 @@ export default {
         addRestaurant: function() {
             this.$dialog.show(HandleRestaurant, {
                 title: "Ajouter nouveau restaurant",
-                width: "40%"
+                "min-width": "45%"
             });
         },
         editRestaurant: function(restaurant) {
             this.$dialog.show(HandleRestaurant, {
                 dataToEdit: restaurant, // Props
                 title: "Modifier le restaurant",
-                width: "40%"
+                "min-width": "45%"
             });
         }
     },
