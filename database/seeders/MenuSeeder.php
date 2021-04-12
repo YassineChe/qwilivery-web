@@ -18,19 +18,19 @@ class MenuSeeder extends Seeder
     {
         $restaurant  = DB::table('restaurants')->select('id')->get()->toArray();;
 
-        DB::table('categories')->insert([
-            "name" => Str::random(7),
-            'restaurant_id' => $restaurant[array_rand($restaurant)]->id
-        ]);
+        // DB::table('categories')->insert([
+        //     "name" => Str::random(7),
+        //     'restaurant_id' => $restaurant[array_rand($restaurant)]->id
+        // ]);
 
-        $categories  = DB::table('categories')->select('id')->get()->toArray();
+        // $categories  = DB::table('categories')->select('id')->get()->toArray();
 
-        $items = ["small", "big", "larg"];
-        DB::table('variants')->insert([
-            "name" => Str::random(7),
-            'size' => $items[array_rand($items)],
-            'price' => rand(10, 100),
-            'category_id' => $categories[array_rand($categories)]->id,
-        ]);
+        // $items = ["small", "big", "larg"];
+        // DB::table('variants')->insert([
+        //     "name" => Str::random(7),
+        //     'size' => $items[array_rand($items)],
+        //     'price' => rand(10, 100),
+        //     'category_id' => $categories[array_rand($categories)]->id,
+        // ]);
     }
 }
