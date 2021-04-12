@@ -1,5 +1,5 @@
 <template>
-    <dialogCard title="Ajouter nouveau catégorie" :actions="actions()">
+    <dialogCard :title="title" :actions="actions()">
         <v-row>
             <!--  category name -->
             <v-col cols="12">
@@ -18,7 +18,7 @@
                     dense
                     outlined
                     hide-details="auto"
-                    label="La description"
+                    label="Description"
                     v-model="category.description"
                 ></v-textarea>
             </v-col>

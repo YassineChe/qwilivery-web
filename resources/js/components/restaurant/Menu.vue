@@ -40,6 +40,7 @@
                 >
                     <v-card-title>
                         <v-chip-group
+                            mandatory
                             show-arrows
                             v-model="selectedCategory"
                             active-class="primary"
@@ -53,11 +54,28 @@
                             </v-chip>
                         </v-chip-group>
                     </v-card-title>
-
                     <v-divider />
-
+                    <!-- Category Information + Add Buttons -->
+                    <v-toolbar flat v-if="selectedCategory">
+                        <v-toolbar-title>{{
+                            categoryById(selectedCategory)["name"]
+                        }}</v-toolbar-title>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            color="primary"
+                            outlined
+                            fab
+                            small
+                            @click="addVariant()"
+                        >
+                            <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                    </v-toolbar>
+                    <!-- Divide here -->
+                    <v-divider />
+                    <!-- Variants list -->
                     <v-card-text>
-                        <v-card max-width="400" outlined>
+                        <v-card max-width="400" outlined elevation="3">
                             <v-list-item three-line>
                                 <v-list-item-content>
                                     <v-list-item-title class="headline mb-1">
@@ -69,11 +87,11 @@
                                     >
                                 </v-list-item-content>
 
-                                <v-list-item-avatar
-                                    tile
-                                    size="80"
-                                    color="grey"
-                                ></v-list-item-avatar>
+                                <v-list-item-avatar tile size="100">
+                                    <v-img
+                                        src="https://storage.buonmenu.com/s3mcmzx4n3luqzl8xc8bgvkdeoau"
+                                    ></v-img>
+                                </v-list-item-avatar>
                             </v-list-item>
                         </v-card>
                     </v-card-text>
@@ -85,6 +103,7 @@
 <script>
 import Headline from "../pieces/Headline";
 import HandleCategory from "../pieces/HandleCategory";
+import HandleVariant from "../pieces/HandleVariant";
 
 import { mapState } from "vuex";
 export default {
@@ -126,6 +145,16 @@ export default {
                 title: "Ajouter nouveau Catregory",
                 "min-width": "45%"
             });
+        },
+        addVariant: function() {
+            this.$dialog.show(HandleVariant, {
+                title: "Ajouter une variante",
+                "min-width": "45%"
+            });
+        },
+        //* Categories
+        categoryById: function(id) {
+            return this.categories.find(category => category.id == id);
         },
         //* The famous isBusy funtion haha
         isBusy: function(fetcher) {
