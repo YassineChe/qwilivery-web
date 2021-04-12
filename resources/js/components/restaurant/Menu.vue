@@ -16,7 +16,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col>
+      <v-col cols="12">
         <v-card>
           <v-card-title>
             <p>Catégories</p>
@@ -46,12 +46,18 @@
                     <v-list-item-title v-text="child.title"></v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
+                
+                <v-btn>sssj</v-btn>
+                <v-list-item v-for="child in item.items" :key="child.title">
+                  <v-list-item-content>
+                    <v-list-item-title v-text="child.title"></v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
               </v-list-group>
             </v-list>
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col> </v-col>
     </v-row>
   </div>
 </template>
