@@ -14,7 +14,7 @@ class MenuController extends Controller
     //* Fetch Categories of restarant
     public function fetchCategories(Request $request){
         try{
-            return Category::Where('id', authIdFromGuard(getConnectedGuard()))->get();
+            return Category::where('restaurant_id', authIdFromGuard(getConnectedGuard()))->get();
         }
         catch(\Exception $e){
             handleLogs($e);
@@ -24,7 +24,7 @@ class MenuController extends Controller
     //* Fetch Variants of restarant
     public function fetchVariants(Request $request){
         try{
-            return Variant::Where('id', authIdFromGuard(getConnectedGuard()))->get();
+            return Variant::where('id', authIdFromGuard(getConnectedGuard()))->get();
         }
         catch(\Exception $e){
             handleLogs($e);
@@ -37,7 +37,6 @@ class MenuController extends Controller
         try{
             if(
                 Category::Create([
-                    'meal_id'       => $request->meal_id,
                     'restaurant_id' => authIdFromGuard(getConnectedGuard()),
                     'name'          => $request->name,
                     'description'   => $request->description,
@@ -100,7 +99,7 @@ class MenuController extends Controller
     //* Delete Category 
     public function deleteCategory(Request $request){
         try{
-            Category::Where('id', $request->id)->delete();
+            Category::where('id', $request->id)->delete();
         }
         catch(\Exception $e){
             handleLogs($e);
@@ -110,7 +109,7 @@ class MenuController extends Controller
     //* Delete Variant 
     public function deleteVariant(Request $request){
         try{
-            Variant::Where('id', $request->id)->delete();
+            Variant::where('id', $request->id)->delete();
         }
         catch(\Exception $e){
             handleLogs($e);

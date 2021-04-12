@@ -9,7 +9,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\MenuController;
-use App\Http\Controllers\MealController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,20 +58,19 @@ Route::middleware("auth:delivery")->group(
         Route::post('/update/delivery', [DeliveryController::class, "updateDelivery"]); // update info of delivery man
     }
 );
+
 ######### API Routes Restaurant  #########
 Route::middleware("auth:restaurant")->group(
     function () {
         //Category & Variant Stuff
-        Route::get('/fetch/restaurant/categories', [MenuController::class, 'fetchCategories']);      // Fetch menu
-        Route::post('/add/restaurant/category', [MenuController::class, 'addCategory']); // Create category
-        Route::post('/add/restaurant/variant', [MenuController::class, 'addVariant']);  // Create variant
-        Route::get('/fetch/restaurant/variants', [MenuController::class, 'fetchVariants']);      // Fetch menu
-        Route::put('/edit/restaurant/category', [MenuController::class, 'editCategory']); // Update  category
-        Route::put('/edit/restaurant/variant', [MenuController::class, 'editVariant']);  // Update variant
-        Route::delete('/delete/restaurant/variant', [MenuController::class, 'deleteVariant']);  // Delete variant
-        Route::delete('/delete/restaurant/category', [MenuController::class, 'deleteCategory']); // Delete category
-        //Meals Stuff
-        Route::get('/fetch/meals', [MealController::class, 'fetchMeals']);
+        Route::get('/fetch/categories', [MenuController::class, 'fetchCategories']);      // Fetch menu
+        Route::post('/add/category', [MenuController::class, 'addCategory']); // Add category
+        Route::post('/add/variant', [MenuController::class, 'addVariant']);  // Add variant
+        Route::get('/fetch/variants', [MenuController::class, 'fetchVariants']); // Fetch menu
+        Route::put('/edit/category', [MenuController::class, 'editCategory']); // Update  category
+        Route::put('/edit/variant', [MenuController::class, 'editVariant']);  // Update variant
+        Route::delete('/delete/variant', [MenuController::class, 'deleteVariant']);  // Delete variant
+        Route::delete('/delete/category', [MenuController::class, 'deleteCategory']); // Delete category
     }
 );
 

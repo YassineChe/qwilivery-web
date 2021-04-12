@@ -72,9 +72,6 @@ let mutations = {
     FETCH_CATEGORIES(state, categories) {
         return (state.categories = categories);
     },
-    FETCH_MEALS(state, meals) {
-        return (state.meals = meals);
-    },
     /*********** Guard *********** */
     FETCH_RESTAURANTS(state, restaurants) {
         return (state.restaurants = restaurants);

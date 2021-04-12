@@ -32,9 +32,6 @@ let getters = {
     categories: state => {
         return state.categories;
     },
-    meals: state => {
-        return state.meals;
-    },
     /************** restaurant ************* */
     restaurants: state => {
         return state.restaurants;
