@@ -18,6 +18,7 @@ class CreateVariantsTable extends Migration
             $table->string('photo');
             $table->string('name');
             $table->integer('price');
+            $table->text('description')->nullable();
             $table->foreignId('category_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });

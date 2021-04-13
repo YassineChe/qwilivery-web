@@ -63,12 +63,14 @@
 export default {
     props: {
         categoryToEdit: { required: false },
-        title: { required: true, type: String }
+        title: { required: true, type: String },
+        categoryId: { required: true }
     },
     data() {
         return {
             variantTempPhoto: "",
             variant: {
+                category_id: "",
                 name: "",
                 price: "",
                 description: ""
@@ -103,10 +105,21 @@ export default {
                     rounded: true,
                     handle: () => {
                         // if (!this.categoryToEdit)
+                        const image = this.$refs.triggerMe.$refs.input;
+
+                        const formData = new FormData();
+
+                        formData.append("avatar", image.files[0]);
+
+                        for (const [key, value] of Object.entries(
+                            this.variant
+                        )) {
+                            formData.append(key, value);
+                        }
                         return this.$store.dispatch("postData", {
-                            path: "/api/add/category",
-                            data: this.category,
-                            related: "add-category",
+                            path: "/api/add/variant",
+                            data: formData,
+                            related: "add-variant",
                             returned: true
                         });
                     }
@@ -115,9 +128,10 @@ export default {
         }
     },
     created() {
-        if (this.categoryToEdit) {
-            this.category = this.categoryToEdit;
-        }
+        this.variant.category_id = this.categoryId;
+        // if (this.categoryToEdit) {
+        //     this.category = this.categoryToEdit;
+        // }
     }
 };
 </script>

@@ -110,28 +110,20 @@ export default {
     components: {
         Headline
     },
+    data() {
+        return {
+            selectedCategory: ""
+        };
+    },
     computed: {
         ...mapState(["expected"]),
         //*Get no blocked delivery
         categories: function() {
             return this.$store.getters.categories;
         },
-        data() {
-            return {
-                selectedCategory: "",
-                selection: 1
-            };
-        },
-        computed: {
-            ...mapState(["expected"]),
-            //*Get no blocked delivery
-            categories: function() {
-                return this.$store.getters.categories;
-            },
-            //* Is mobile
-            isMobile() {
-                return this.$vuetify.breakpoint.xsOnly;
-            }
+        //* Is mobile
+        isMobile() {
+            return this.$vuetify.breakpoint.xsOnly;
         }
     },
     methods: {
@@ -156,6 +148,7 @@ export default {
         addVariant: function() {
             this.$dialog.show(HandleVariant, {
                 title: "Ajouter une variante",
+                categoryId: this.selectedCategory,
                 "min-width": "45%"
             });
         },

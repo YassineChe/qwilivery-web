@@ -51,27 +51,27 @@ class MenuController extends Controller
     //* Add Variant 
     public function addVariant(Request $request)
     {
-
-
-        // return $request;
         try {
 
             $avatar = storeUploaded(public_path() . '/menu', $request->avatar);
 
-            $request->validate([
-                'name' => 'required|min:2',
-                'price' => 'required|numeric',
-                'photo' => 'required|image',
-                'category_id' => 'required',
-            ]);
+            // $request->validate([
+            //     'name' => 'required|min:2',
+            //     'price' => 'required|numeric',
+            //     'photo' => 'required|image',
+            //     'category_id' => 'required',
+            // ]);
 
             Variant::Create([
                 'name'        => $request->name,
                 'price'       => $request->price,
                 'photo'       => $avatar,
+                'description' => $request->description,
                 'category_id' => authIdFromGuard(getConnectedGuard()),
-
             ]);
+
+                return 'saalm';
+
         } catch (\Exception $e) {
             handleLogs($e);
         }
