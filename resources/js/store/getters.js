@@ -28,7 +28,7 @@ let getters = {
     deliveries: state => {
         return state.deliveries;
     },
-    /********** Categories & Meals ********* */
+    /********** Categories & Variants ********* */
     categories: state => {
         return state.categories;
     },

@@ -62,9 +62,9 @@
 <script>
 export default {
     props: {
-        categoryToEdit: { required: false },
+        variantToEdit: { required: false },
         title: { required: true, type: String },
-        categoryId: { required: true }
+        categoryId: { required: false }
     },
     data() {
         return {
@@ -104,34 +104,42 @@ export default {
                     color: "primary",
                     rounded: true,
                     handle: () => {
-                        // if (!this.categoryToEdit)
+                        //Prepare consts
                         const image = this.$refs.triggerMe.$refs.input;
-
                         const formData = new FormData();
-
+                        //Append image
                         formData.append("avatar", image.files[0]);
-
+                        //Append to form data
                         for (const [key, value] of Object.entries(
                             this.variant
                         )) {
                             formData.append(key, value);
                         }
-                        return this.$store.dispatch("postData", {
-                            path: "/api/add/variant",
-                            data: formData,
-                            related: "add-variant",
-                            returned: true
-                        });
+
+                        if (!this.variantToEdit)
+                            return this.$store.dispatch("postData", {
+                                path: "/api/add/variant",
+                                data: formData,
+                                related: "add-variant",
+                                returned: true
+                            });
+                        else
+                            return this.$store.dispatch("postData", {
+                                path: "/api/edit/variant",
+                                data: formData,
+                                related: "edit-variant",
+                                returned: true
+                            });
                     }
                 }
             };
         }
     },
     created() {
-        this.variant.category_id = this.categoryId;
-        // if (this.categoryToEdit) {
-        //     this.category = this.categoryToEdit;
-        // }
+        if (this.variantToEdit) {
+            this.variant = this.variantToEdit;
+            this.variantTempPhoto = `/images/variants/${this.variantToEdit.photo}`;
+        } else this.variant.category_id = this.categoryId;
     }
 };
 </script>

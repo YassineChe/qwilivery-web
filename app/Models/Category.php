@@ -13,8 +13,8 @@ class Category extends Model
     protected $guarded = [];
 
 
-    public function variant()
-    {
-        return   $this->hasMany(Variant::class);
+    //* RelationShip
+    public function variants(){
+        return $this->hasMany(Variant::class);
     }
 }

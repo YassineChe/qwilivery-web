@@ -13,11 +13,11 @@ export default {
     props: {
         headline: {
             type: String,
-            required: true
+            required: false
         },
         headlineClasses: {
             type: Array,
-            required: true
+            required: false
         },
         subheadline: {
             type: String,
