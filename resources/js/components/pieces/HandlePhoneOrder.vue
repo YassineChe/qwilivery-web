@@ -21,17 +21,47 @@
 
             <v-stepper-items>
                 <v-stepper-content step="1" class="mt-2">
-                    <v-card>
-                        <v-card-text>
+                    <validation-observer ref="observer" v-slot="{ invalid }">
+                        <dialogCard :actions="step1Actions(invalid)">
                             <v-row>
                                 <!-- Fullname -->
                                 <v-col cols="12">
-                                    <v-text-field
-                                        dense
-                                        outlined
-                                        label="Nom"
-                                        hide-details="auto"
-                                    ></v-text-field>
+                                    <validation-provider
+                                        v-slot="{
+                                            errors
+                                        }"
+                                        name="Nom complet"
+                                        rules="required"
+                                    >
+                                        <v-text-field
+                                            dense
+                                            outlined
+                                            :error-messages="errors"
+                                            v-model="order.fullname"
+                                            label="Nom complet"
+                                            hide-details="auto"
+                                        ></v-text-field>
+                                    </validation-provider>
+                                </v-col>
+
+                                <!-- Fullname -->
+                                <v-col cols="12">
+                                    <validation-provider
+                                        v-slot="{
+                                            errors
+                                        }"
+                                        name="Address"
+                                        rules="required"
+                                    >
+                                        <v-text-field
+                                            dense
+                                            outlined
+                                            :error-messages="errors"
+                                            v-model="order.address"
+                                            label="Address"
+                                            hide-details="auto"
+                                        ></v-text-field>
+                                    </validation-provider>
                                 </v-col>
                                 <!-- Map -->
                                 <v-col cols="12">
@@ -54,101 +84,210 @@
                                     </small>
                                 </v-col>
                             </v-row>
-                        </v-card-text>
-                    </v-card>
+                        </dialogCard>
+                    </validation-observer>
+                </v-stepper-content>
+                <v-stepper-content step="2" class="mt-2">
+                    <validation-observer ref="observer" v-slot="{ invalid }">
+                        <dialogCard :actions="step2Actions(invalid)">
+                            <v-row>
+                                <!-- Category -->
+                                <v-col cols="12" sm="3" md="3" lg="3">
+                                    <validation-provider
+                                        v-slot="{
+                                            errors
+                                        }"
+                                        name="Catégorie"
+                                        rules="required"
+                                    >
+                                        <v-select
+                                            v-model="selectedCategoryId"
+                                            dense
+                                            label="Catégorie"
+                                            outlined
+                                            hide-details="auto"
+                                            :items="categories"
+                                            :error-messages="errors"
+                                            no-data-text="Sélectionnez une catégorie"
+                                            item-value="id"
+                                            item-text="name"
+                                        ></v-select>
+                                    </validation-provider>
+                                </v-col>
+                                <!-- Variant -->
+                                <v-col cols="12" sm="3" md="4" lg="3">
+                                    <validation-provider
+                                        v-slot="{
+                                            errors
+                                        }"
+                                        name="Article"
+                                        rules="required"
+                                    >
+                                        <v-select
+                                            v-model="selectedVariantObj"
+                                            dense
+                                            label="Article"
+                                            outlined
+                                            no-data-text="Sélectionnez un article"
+                                            hide-details="auto"
+                                            :items.sync="variants"
+                                            :error-messages="errors"
+                                            item-text="name"
+                                            item-value="id"
+                                            return-object
+                                        ></v-select>
+                                    </validation-provider>
+                                </v-col>
+                                <!-- Qty stuff -->
+                                <v-col cols="12" sm="3" md="3" lg="3">
+                                    <v-row align="center" justify="center">
+                                        <v-col align="center">
+                                            <v-btn
+                                                fab
+                                                color="primary"
+                                                x-small
+                                                @click="qtyMinus()"
+                                            >
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                        </v-col>
+                                        <v-col align="center">
+                                            <span class="font-weight-bold">{{
+                                                qty
+                                            }}</span>
+                                        </v-col>
+                                        <v-col align="center">
+                                            <v-btn
+                                                fab
+                                                color="primary"
+                                                x-small
+                                                @click="qtyPlus()"
+                                            >
+                                                <v-icon>mdi-plus</v-icon>
+                                            </v-btn>
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                                <!-- Append to orders -->
+                                <v-col
+                                    cols="12"
+                                    sm="2"
+                                    md="2"
+                                    lg="2"
+                                    align="center"
+                                >
+                                    <v-btn
+                                        color="success"
+                                        text
+                                        block
+                                        outlined
+                                        rounded
+                                        :disabled="invalid"
+                                        @click="appendOrder()"
+                                    >
+                                        Ajouter
+                                        <v-icon right>mdi-plus-circle</v-icon>
+                                    </v-btn>
+                                </v-col>
+
+                                <v-col cols="12">
+                                    <v-divider class="mb-3" />
+                                    ({{ order.orders.length }}) Commande(s)
+                                    <v-data-table
+                                        disable-sort
+                                        hide-default-footer
+                                        disable-pagination
+                                        dense
+                                        :headers="headers"
+                                        :items="order.orders"
+                                        no-data-text="Aucune commande disponible"
+                                    >
+                                        <template
+                                            v-slot:[`item.variant`]="{ item }"
+                                        >
+                                            {{ item.variant.name }}
+                                        </template>
+
+                                        <template
+                                            v-slot:[`item.qty`]="{ item }"
+                                        >
+                                            <v-chip color="info" small>
+                                                {{ item.qty }}
+                                            </v-chip>
+                                        </template>
+
+                                        <template
+                                            v-slot:[`item.price`]="{ item }"
+                                        >
+                                            {{ item.qty * item.variant.price }}
+                                            $
+                                        </template>
+
+                                        <template
+                                            v-slot:[`item.actions`]="{ item }"
+                                        >
+                                            <v-icon
+                                                small
+                                                color="error"
+                                                @click="
+                                                    deleteOrder(item.randomId)
+                                                "
+                                            >
+                                                mdi-delete
+                                            </v-icon>
+                                        </template>
+                                    </v-data-table>
+                                </v-col>
+                            </v-row>
+                        </dialogCard>
+                    </validation-observer>
                 </v-stepper-content>
 
-                <v-stepper-content step="2" class="mt-2">
-                    <v-card>
+                <v-stepper-content step="3" class="mt-2">
+                    <dialogCard :actions="finishOrder()">
                         <v-row>
-                            <!-- Category -->
-                            <v-col cols="12" sm="3" md="3" lg="3">
-                                <v-select
-                                    v-model="selectedCategoryId"
+                            <v-col cols="4">
+                                <v-subheader>Nom complet</v-subheader>
+                            </v-col>
+                            <v-col cols="8">
+                                <v-text-field
+                                    outlined
+                                    v-model="order.fullname"
                                     dense
-                                    label="Catégorie"
-                                    outlined
-                                    hide-details="auto"
-                                    :items="categories"
-                                    no-data-text="Sélectionnez une catégorie"
-                                    item-value="id"
-                                    item-text="name"
-                                ></v-select>
-                            </v-col>
-                            <!-- Variant -->
-                            <v-col cols="12" sm="3" md="4" lg="3">
-                                <v-select
-                                    v-model="selectedVariantObj"
-                                    dense
-                                    label="Article"
-                                    outlined
-                                    no-data-text="Sélectionnez un article"
-                                    hide-details="auto"
-                                    :items.sync="variants"
-                                    item-text="name"
-                                    item-value="id"
-                                    return-object
-                                ></v-select>
-                            </v-col>
-                            <!-- Qty stuff -->
-                            <v-col cols="12" sm="3" md="3" lg="3">
-                                <v-row align="center" justify="center">
-                                    <v-col align="center">
-                                        <v-btn
-                                            fab
-                                            color="primary"
-                                            x-small
-                                            @click="qtyMinus()"
-                                        >
-                                            <v-icon>mdi-minus</v-icon>
-                                        </v-btn>
-                                    </v-col>
-                                    <v-col align="center">
-                                        <span class="font-weight-bold">{{
-                                            qty
-                                        }}</span>
-                                    </v-col>
-                                    <v-col align="center">
-                                        <v-btn
-                                            fab
-                                            color="primary"
-                                            x-small
-                                            @click="qtyPlus()"
-                                        >
-                                            <v-icon>mdi-plus</v-icon>
-                                        </v-btn>
-                                    </v-col>
-                                </v-row>
-                            </v-col>
-                            <!-- Append to orders -->
-                            <v-col
-                                cols="12"
-                                sm="2"
-                                md="2"
-                                lg="2"
-                                align="center"
-                            >
-                                <v-btn
-                                    color="success"
-                                    text
-                                    block
-                                    outlined
-                                    rounded
-                                    @click="appendOrder()"
-                                >
-                                    Ajouter
-                                    <v-icon right>mdi-plus-circle</v-icon>
-                                </v-btn>
+                                    disabled
+                                ></v-text-field>
                             </v-col>
 
+                            <v-col cols="4">
+                                <v-subheader>Total</v-subheader>
+                            </v-col>
+                            <v-col cols="8"> {{ totalPrice }}$ </v-col>
+
+                            <v-col cols="4">
+                                <v-subheader>Location</v-subheader>
+                            </v-col>
+                            <v-col cols="8">
+                                <GmapMap
+                                    :center="{ lat: 45.482858, lng: -73.63715 }"
+                                    :zoom="10"
+                                    map-type-id="terrain"
+                                    style="width: 100%; height: 150px"
+                                >
+                                    <GmapMarker
+                                        :position="{
+                                            lat: 45.482858,
+                                            lng: -73.63715
+                                        }"
+                                    />
+                                </GmapMap>
+                            </v-col>
                             <v-col cols="12">
-                                <v-divider class="mb-3" />
-                                ({{ this.order.orders.length }}) Commande(s)
                                 <v-data-table
                                     disable-sort
                                     hide-default-footer
                                     disable-pagination
                                     dense
+                                    disabled
                                     :headers="headers"
                                     :items="order.orders"
                                     no-data-text="Aucune commande disponible"
@@ -173,18 +312,12 @@
                                     <template
                                         v-slot:[`item.actions`]="{ item }"
                                     >
-                                        <v-icon
-                                            small
-                                            color="error"
-                                            @click="deleteOrder(item.randomId)"
-                                        >
-                                            mdi-delete
-                                        </v-icon>
+                                        -
                                     </template>
                                 </v-data-table>
                             </v-col>
                         </v-row>
-                    </v-card>
+                    </dialogCard>
                 </v-stepper-content>
             </v-stepper-items>
         </v-stepper>
@@ -201,7 +334,7 @@ Vue.use(VueGoogleMaps, {
     }
 });
 export default {
-    layout: ["default", { width: 800 }],
+    layout: ["default", { width: 900 }],
     data() {
         return {
             headers: [
@@ -214,10 +347,11 @@ export default {
             selectedCategoryId: "",
             selectedVariantObj: "",
             focusHere: { lat: 45.482858, lng: -73.63715 },
-            cstep: 2,
+            cstep: 1,
             order: {
                 orders: [],
                 fullname: "",
+                address: "",
                 lat: null,
                 lng: null
             }
@@ -240,6 +374,13 @@ export default {
             } catch (error) {
                 return [];
             }
+        },
+        totalPrice: function() {
+            var total = 0;
+            this.order.orders.forEach(order => {
+                total += order.qty * order.variant.price;
+            });
+            return total;
         }
     },
     methods: {
@@ -284,6 +425,64 @@ export default {
                 }),
                 1
             );
+        },
+        //* Step 1 Actions
+        step1Actions: function(invalid) {
+            return {
+                close: {
+                    text: "Fermer",
+                    color: "error"
+                },
+                next: {
+                    text: "Suivant",
+                    disabled: invalid,
+                    handle: () => {
+                        this.cstep++;
+                        return false;
+                    }
+                }
+            };
+        },
+        step2Actions: function(invalid) {
+            return {
+                previous: {
+                    text: "Précédent",
+                    handle: () => {
+                        this.cstep--;
+                        return false;
+                    }
+                },
+                next: {
+                    text: "Suivant",
+                    disabled: invalid || this.order.orders.length == 0,
+                    handle: () => {
+                        this.cstep++;
+                        return false;
+                    }
+                }
+            };
+        },
+        finishOrder: function(invalid) {
+            return {
+                previous: {
+                    text: "Précédent",
+                    handle: () => {
+                        this.cstep--;
+                        return false;
+                    }
+                },
+                next: {
+                    text: "Valider la commande",
+                    handle: () => {
+                        return this.$store.dispatch("postData", {
+                            path: "/api/add/order",
+                            data: this.order,
+                            related: "add-order",
+                            returned: true
+                        });
+                    }
+                }
+            };
         }
     },
     created() {

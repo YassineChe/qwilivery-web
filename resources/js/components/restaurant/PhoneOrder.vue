@@ -36,6 +36,7 @@
 <script>
 import Headline from "../pieces/Headline";
 import HandlePhoneOrder from "../pieces/HandlePhoneOrder";
+import { mapState } from "vuex";
 
 export default {
     components: {
@@ -47,6 +48,7 @@ export default {
         };
     },
     computed: {
+        ...mapState(["expected"]),
         //* Is mobile
         isMobile() {
             return this.$vuetify.breakpoint.xsOnly;
@@ -54,20 +56,33 @@ export default {
     },
     methods: {
         addPhoneOrder: function() {
-            this.$dialog.show(HandlePhoneOrder, {
-                // minWidth: "100px"
-            });
+            this.$dialog.show(HandlePhoneOrder);
         }
     },
-    created() {
-        navigator.geolocation.getCurrentPosition(
-            pos => {
-                console.log(pos);
-            },
-            err => {
-                console.log(err);
+    watch: {
+        // Variant added
+        expected() {
+            {
+                let expected = this.$store.getters.expected("add-order");
+                if (expected != undefined) {
+                    //Clear expected
+                    this.$store.commit("CLEAR_EXPECTED");
+
+                    if (expected.status === "success") {
+                        this.$dialog.notify.success(
+                            expected.result.subMessage["msg"],
+                            {
+                                position: "top-right",
+                                timeout: 3000
+                            }
+                        );
+
+                        //this.init();
+                    }
+                }
             }
-        );
-    }
+        }
+    },
+    created() {}
 };
 </script>

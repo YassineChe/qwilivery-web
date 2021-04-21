@@ -99,9 +99,9 @@
                 <!-- Phone order -->
                 <v-list-item :to="{ name: 'order' }">
                     <v-list-item-icon>
-                        <v-icon>mdi-silverware</v-icon>
+                        <v-icon>mdi-phone-forward</v-icon>
                     </v-list-item-icon>
-                    <v-list-item-title>Menu</v-list-item-title>
+                    <v-list-item-title>Commandes télé.</v-list-item-title>
                 </v-list-item>
             </v-list>
         </v-navigation-drawer>
