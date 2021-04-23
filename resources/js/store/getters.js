@@ -24,17 +24,24 @@ let getters = {
             return undefined;
         }
     },
-    /************** deliveries ************* */
+    /************** DELIVERIES ************* */
     deliveries: state => {
         return state.deliveries;
     },
-    /********** Categories & Meals ********* */
+    /********** CATEGORIES & VARIANTS ********* */
     categories: state => {
         return state.categories;
     },
-    /************** restaurant ************* */
+    /************** RESTAURANTS ************* */
     restaurants: state => {
         return state.restaurants;
+    },
+    /********** ORDER & PREORDER ********* */
+    preorders: state => {
+        return state.preorders;
+    },
+    orders: state => {
+        return state.orders;
     },
     //handle result
     callback: state => result => {

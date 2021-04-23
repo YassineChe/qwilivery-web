@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,9 +69,12 @@ Route::middleware("auth:restaurant")->group(
         Route::post('/add/variant', [MenuController::class, 'addVariant']);  // Add variant
         Route::get('/fetch/variants', [MenuController::class, 'fetchVariants']); // Fetch menu
         Route::put('/edit/category', [MenuController::class, 'editCategory']); // Update  category
-        Route::put('/edit/variant', [MenuController::class, 'editVariant']);  // Update variant
-        Route::delete('/delete/variant', [MenuController::class, 'deleteVariant']);  // Delete variant
-        Route::delete('/delete/category', [MenuController::class, 'deleteCategory']); // Delete category
+        Route::post('/edit/variant', [MenuController::class, 'editVariant']);  // Update variant
+        Route::delete('/delete/variant/{variant_id}', [MenuController::class, 'deleteVariant']);  // Delete variant
+        Route::delete('/delete/category/{category_id}', [MenuController::class, 'deleteCategory']); // Delete category
+        // Order Stuff
+        Route::get('/fetch/preorders', [OrderController::class, 'preOrders']);
+        Route::post('/add/order', [OrderController::class, 'addOrder']);
     }
 );
 

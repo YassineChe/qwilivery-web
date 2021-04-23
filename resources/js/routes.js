@@ -16,9 +16,10 @@ import Restaurants from "./components/admin/Restaurants";
 import DeliveryDashboard from "./components/delivery/DeliveryDashboard";
 import Profile from "./components/delivery/Profile";
 
-//* Restaurant  
+//* Restaurant
 import RestaurantDashboard from "./components/restaurant/RestuarantDashboard";
 import Menu from "./components/restaurant/Menu";
+import PhoneOrder from "./components/restaurant/PhoneOrder";
 
 Vue.use(VueRouter);
 
@@ -64,8 +65,8 @@ const adminRoutes = {
         }
     ]
 };
-//? Restaurant Dashboard
 
+//? Restaurant Dashboard
 const restaurantRoutes = {
     path: "/",
     name: "dashboard",
@@ -74,13 +75,19 @@ const restaurantRoutes = {
     meta: { requiresAuth: true, guard: "restaurant" },
     children: [
         {
-            path: "/menu",
+            path: "/restaurant-menu",
             name: "menu",
             component: Menu,
-            meta: { guard: "restaurant", title: ' -menu' }
-        },]
-
-}
+            meta: { guard: "restaurant" }
+        },
+        {
+            path: "/order",
+            name: "order",
+            component: PhoneOrder,
+            meta: { guard: "restaurant" }
+        }
+    ]
+};
 
 //? Delivery Dashboard
 
@@ -95,9 +102,10 @@ const deliveryRoutes = {
             path: "/profile",
             name: "profile",
             component: Profile,
-            meta: { guard: "delivery", title: ' -Profil' }
-        },]
-}
+            meta: { guard: "delivery" }
+        }
+    ]
+};
 
 /* **********************************************************
 # For avoiding duplicated routes 

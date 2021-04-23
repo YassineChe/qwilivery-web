@@ -15,4 +15,4 @@ use App\Http\Controllers\DeliveryController;
 |
 */
 
-Route::any('/{any}', [PublicController::class, 'clue'])->where('any', '.*');;
+Route::any('/{any}', [PublicController::class, 'clue'])->where('any', '.*');
