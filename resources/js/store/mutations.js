@@ -99,6 +99,13 @@ let mutations = {
         state.restaurants.find(restaurant => {
             if (restaurant.id == restaurant_id) restaurant.blocked_at = null;
         });
+    },
+    /********* ORDER & PREORDERS ******** */
+    FETCH_PREORDERS(state, preorders) {
+        return (state.preorders = preorders);
+    },
+    FETCH_ORDERS(state, orders) {
+        return (state.orders = orders);
     }
 };
 export default mutations;

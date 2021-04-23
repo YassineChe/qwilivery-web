@@ -15,6 +15,7 @@ class CreatePreOrdersTable extends Migration
     {
         Schema::create('pre_orders', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('restaurant_id')->references('id')->on('restaurants');
             $table->text('fullname');
             $table->text('address')->nullable();
             $table->text('lat')->nullable();

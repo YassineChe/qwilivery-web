@@ -9,4 +9,9 @@ class PreOrder extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    //* Relationship orders
+    public function orders(){
+        return $this->hasMany(Order::class);
+    }
 }

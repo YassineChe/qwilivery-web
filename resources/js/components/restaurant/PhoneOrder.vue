@@ -30,6 +30,24 @@
                 </v-btn>
             </v-col>
         </v-row>
+
+        <v-card>
+            <template>
+                <v-data-table :items="preorders" :headers="headers">
+                    <!-- Orders -->
+                    <template v-slot:[`item.orders`]="{ item }">
+                        <v-btn fab x-small color="primary">
+                            {{ item.orders.length }}
+                        </v-btn>
+                    </template>
+                    <template v-slot:[`item.actions`]="{ item }">
+                        <v-icon small color="error">
+                            mdi-delete
+                        </v-icon>
+                    </template>
+                </v-data-table>
+            </template>
+        </v-card>
     </div>
 </template>
 
@@ -44,17 +62,36 @@ export default {
     },
     data() {
         return {
+            headers: [
+                { text: "#REF", value: "id" },
+                { text: "NOM COMPLET", value: "fullname" },
+                { text: "Adresse", value: "address" },
+                { text: "COMMANDE(S)", value: "orders" },
+                { text: "ACTION", value: "actions" }
+            ],
             orderedVariants: [{}]
         };
     },
     computed: {
         ...mapState(["expected"]),
+        preorders: function() {
+            return this.$store.getters.preorders;
+        },
         //* Is mobile
         isMobile() {
             return this.$vuetify.breakpoint.xsOnly;
         }
     },
     methods: {
+        //* Init
+        init: function() {
+            this.$store.dispatch("fetchData", {
+                path: "/api/fetch/preorders",
+                mutation: "FETCH_PREORDERS",
+                related: "fetch-preorders"
+            });
+        },
+        //* Trigger new command
         addPhoneOrder: function() {
             this.$dialog.show(HandlePhoneOrder);
         }
@@ -83,6 +120,8 @@ export default {
             }
         }
     },
-    created() {}
+    created() {
+        this.init();
+    }
 };
 </script>

@@ -308,12 +308,6 @@
                                         {{ item.qty * item.variant.price }}
                                         $
                                     </template>
-
-                                    <template
-                                        v-slot:[`item.actions`]="{ item }"
-                                    >
-                                        -
-                                    </template>
                                 </v-data-table>
                             </v-col>
                         </v-row>
@@ -330,7 +324,7 @@ import * as VueGoogleMaps from "vue2-google-maps";
 
 Vue.use(VueGoogleMaps, {
     load: {
-        key: "AIzaSyBriQ2VfQyXzswFnsiLB8NkjmOejl77FmA"
+        key: "AIzaSyC--vxgbs7A5ZMudBRkcHcyc4fQ_sEr2XQ"
     }
 });
 export default {

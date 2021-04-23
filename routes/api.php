@@ -73,6 +73,7 @@ Route::middleware("auth:restaurant")->group(
         Route::delete('/delete/variant/{variant_id}', [MenuController::class, 'deleteVariant']);  // Delete variant
         Route::delete('/delete/category/{category_id}', [MenuController::class, 'deleteCategory']); // Delete category
         // Order Stuff
+        Route::get('/fetch/preorders', [OrderController::class, 'preOrders']);
         Route::post('/add/order', [OrderController::class, 'addOrder']);
     }
 );

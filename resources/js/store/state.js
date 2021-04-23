@@ -7,7 +7,9 @@ let state = {
     deliveries: [],
     restaurants: [],
     categories: [],
-    variants: []
+    variants: [],
+    preorders: [],
+    orders: []
 };
 
 export default state;
