@@ -21,7 +21,7 @@ class AuthController extends Controller
 {
 
     //* This will authenticated only delivery man
-    public function deliveryLogin(){
+    public function deliveryLogin(Request $request){
         $delivery = Delivery::where('email', $request->email)->first();
         if ($delivery){
             if (Hash::check($request->password, $delivery->password)) {
