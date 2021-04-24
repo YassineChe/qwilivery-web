@@ -23,12 +23,13 @@ use App\Http\Controllers\OrderController;
 */
 
 ############ Auth Route #############
-Route::POST("/login", [AuthController::class, "login"]);
+Route::post('/login/delivery', [AuthController::class, 'deliveryLogin']); // used on mobile
+Route::post("/login", [AuthController::class, "login"]);
 //* Reset password
-Route::POST('/reset/password', [AuthController::class, 'createRestLink']);
-Route::POST('/reset-password', [AuthController::class, 'restPassword']);
+Route::post('/reset/password', [AuthController::class, 'createRestLink']);
+Route::post('/reset-password', [AuthController::class, 'restPassword']);
 //* register new user
-Route::POST('/register/delivery', [AuthController::class, 'create']); //create new Delivery
+Route::post('/register/delivery', [AuthController::class, 'create']); //create new Delivery
 
 ######### API Routes Admin  #########
 Route::middleware("auth:admin")->group(function () {
@@ -57,6 +58,7 @@ Route::middleware("auth:delivery")->group(
         Route::put('/edit/delivery/password', [DeliveryController::class, "updatePassword"]); // Update password
         Route::get('/download/file', [DeliveryController::class, "downloadFile"]); // Download permit
         Route::post('/update/delivery', [DeliveryController::class, "updateDelivery"]); // update info of delivery man
+        Route::get('/fetch/orders/to/deliver', [OrderController::class, 'orderToDeliver']); // Fetch order to deliver
     }
 );
 

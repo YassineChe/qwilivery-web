@@ -49,4 +49,17 @@ class OrderController extends Controller
             handleLogs($e);
         }
     }
+
+    public function orderToDeliver(){
+        try{
+            return response(
+                PreOrder::where('delivered', false)->with('orders')
+                        ->get()
+                        , 200
+            );
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
 }

@@ -19,6 +19,22 @@ use App\Notifications\ConfirmAccountMail;
 
 class AuthController extends Controller
 {
+
+    //* This will authenticated only delivery man
+    public function deliveryLogin(){
+        $delivery = Delivery::where('email', $request->email)->first();
+        if ($delivery){
+            if (Hash::check($request->password, $delivery->password)) {
+                return response([
+                    'guard' => 'delivery',
+                    'token' => $delivery->createToken('delivery-api', ['delivery-stuff'])->plainTextToken
+                ]);
+            }
+            return dataToResponse('error', 'Erreur!', 'Le mot de passe est erroné', false, 422);
+        }
+        return dataToResponse('error', 'Erreur!', 'Ces identifiants ne correspondent pas à nos enregistrements', false, 422);
+    }
+
     //* Login Admin
     public function login(Request $request)
     {
@@ -52,7 +68,7 @@ class AuthController extends Controller
             if (Hash::check($request->password, $restaurant->password)) {
                 return response([
                     'guard' => 'restaurant',
-                    'token' => $restaurant->createToken('admin-api', ['admin-stuff'])->plainTextToken
+                    'token' => $restaurant->createToken('restaurant-api', ['restaurant-stuff'])->plainTextToken
                 ]);
             }
             //Wrong password!
