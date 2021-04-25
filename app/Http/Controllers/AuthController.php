@@ -26,9 +26,11 @@ class AuthController extends Controller
         if ($delivery){
             if (Hash::check($request->password, $delivery->password)) {
                 return response([
+                    'first_name' => $delivery->first_name,
+                    'last_name'  => $delivery->last_name,
                     'guard' => 'delivery',
                     'token' => $delivery->createToken('delivery-api', ['delivery-stuff'])->plainTextToken
-                ]);
+                ], 200);
             }
             return dataToResponse('error', 'Erreur!', 'Le mot de passe est erroné', false, 422);
         }

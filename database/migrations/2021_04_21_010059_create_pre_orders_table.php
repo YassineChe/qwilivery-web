@@ -15,12 +15,13 @@ class CreatePreOrdersTable extends Migration
     {
         Schema::create('pre_orders', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('delivery_id')->nullable()->references('id')->on('deliveries');
             $table->foreignId('restaurant_id')->references('id')->on('restaurants');
             $table->text('fullname');
             $table->text('address')->nullable();
             $table->text('lat')->nullable();
             $table->text('lng')->nullable();
-            $table->boolean('delivered')->default(false);
+            $table->timestamp('delivered_at')->default(false);
             $table->timestamps();
         });
     }
