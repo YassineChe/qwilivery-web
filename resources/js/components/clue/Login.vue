@@ -180,8 +180,8 @@ export default {
     data() {
         return {
             credentials: {
-                email: "admin@mail.com",
-                password: "123456"
+                email: "",
+                password: ""
             },
             restPasword: false,
             emailRest: ""

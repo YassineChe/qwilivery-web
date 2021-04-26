@@ -31,7 +31,7 @@
             </v-col>
         </v-row>
 
-        <v-card>
+        <v-card class="mt-5">
             <template>
                 <v-data-table :items="preorders" :headers="headers">
                     <!-- Orders -->

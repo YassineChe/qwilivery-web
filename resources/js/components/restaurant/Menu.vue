@@ -227,7 +227,6 @@ import Headline from "../pieces/Headline";
 import HandleCategory from "../pieces/HandleCategory";
 import HandleVariant from "../pieces/HandleVariant";
 import { mapState } from "vuex";
-
 export default {
     components: {
         Headline
