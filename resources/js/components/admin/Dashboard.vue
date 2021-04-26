@@ -10,13 +10,7 @@
         </AdminNavbar>
 
         <!-- Drawer navigation -->
-        <v-navigation-drawer
-            v-model="drawer"
-            app
-            floating
-            color=""
-            class="elevation-3"
-        >
+        <v-navigation-drawer v-model="drawer" class="elevation-3" app floating>
             <v-list>
                 <v-list-item>
                     <v-list-item-content>
@@ -27,30 +21,62 @@
             <!-- Lisf of content -->
             <v-list nav dense>
                 <v-list-item-group color="primary">
+                    <!-- Dashboard -->
+                    <v-subheader>Dashboard</v-subheader>
+                    <v-list-item :to="{ name: 'admin-home-dashboard' }">
+                        <v-list-item-icon>
+                            <v-icon>mdi-view-dashboard</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Tableau de bord</v-list-item-title>
+                    </v-list-item>
                     <v-subheader>Utilisateurs</v-subheader>
                     <!-- Restaurants  -->
-                    <v-list-item to="restaurants">
+                    <v-list-item :to="{ name: 'restaurants' }">
                         <v-list-item-icon>
-                            <v-icon>mdi-silverware-variant</v-icon>
+                            <v-icon>mdi-store</v-icon>
                         </v-list-item-icon>
                         <v-list-item-title>Restaurants</v-list-item-title>
                     </v-list-item>
                     <!-- Delivery man -->
-                    <v-list-item to="livreurs">
+                    <v-list-item :to="{ name: 'deliveries' }">
                         <v-list-item-icon>
-                            <v-icon>mdi-truck-delivery</v-icon>
+                            <v-icon>mdi-moped</v-icon>
                         </v-list-item-icon>
                         <v-list-item-title>Livreurs</v-list-item-title>
                     </v-list-item>
 
-                    <v-subheader>Chat</v-subheader>
+                    <v-subheader>Chat & Historique</v-subheader>
                     <v-list-item>
                         <v-list-item-icon>
-                            <v-icon>mdi-chat</v-icon>
+                            <v-icon>mdi-history</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>
+                            Historique
+                        </v-list-item-title>
+                    </v-list-item>
+                    <!-- Chat -->
+                    <v-list-item>
+                        <v-list-item-icon>
+                            <v-icon>mdi-chat-outline</v-icon>
                         </v-list-item-icon>
                         <v-list-item-title>
                             Boite de messagrie
                         </v-list-item-title>
+                    </v-list-item>
+                    <!-- Dashboard -->
+                    <v-subheader>Paramètres</v-subheader>
+                    <v-list-item to="restaurants">
+                        <v-list-item-icon>
+                            <v-icon>mdi-account-cog</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Porfile</v-list-item-title>
+                    </v-list-item>
+                    <!-- Logout -->
+                    <v-list-item @click="signOut()">
+                        <v-list-item-icon>
+                            <v-icon>mdi-logout</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Se déconnecter</v-list-item-title>
                     </v-list-item>
                 </v-list-item-group>
             </v-list>
@@ -62,7 +88,8 @@
         <!-- Footer -->
         <v-footer padless height="50px" color="transparent">
             <v-col class="text-center" cols="12">
-                {{ new Date().getFullYear() }} — <strong>Delivery</strong>
+                {{ new Date().getFullYear() }} —
+                <strong>Qwilivery - Made by Spoveup ♥</strong>
             </v-col>
         </v-footer>
         <!-- <preLoader></preLoader> -->
@@ -78,6 +105,11 @@ export default {
     data: () => ({
         drawer: true
     }),
+    methods: {
+        signOut: function() {
+            this.$auth.signOut();
+        }
+    },
     beforeCreate() {
         //* fetchGuard
         this.$store.dispatch("fetchData", {

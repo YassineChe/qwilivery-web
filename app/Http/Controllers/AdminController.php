@@ -16,8 +16,10 @@ class AdminController extends Controller
     public function approvedDeliveryMan(Request $request)
     {
         try {
-            if (Delivery::where('id', $request->delivery_id)->update(['status' => 1])) {
-                //Return data to front
+            if (
+                Delivery::where('id', $request->delivery_id)
+                        ->update(['approved_at' => \Carbon\Carbon::now()])
+                ) {
                 return dataToResponse('success', 'Succès ', 'La mise à jour a réussi', false, 200);
             }
         } catch (\Exception $e) {

@@ -1,62 +1,104 @@
 <template>
-    <dialogCard :title="title" :actions="actions()">
-        <v-row>
-            <!-- Photo of Variant -->
-            <v-col cols="12" align="center">
-                <v-avatar
-                    tile
-                    size="100"
-                    color="grey lighten-2"
-                    @click.native="triggerMe()"
-                >
-                    <v-icon v-if="!variantTempPhoto" size="50"
-                        >mdi-cloud-upload</v-icon
+    <validation-observer ref="observer" v-slot="{ invalid }">
+        <dialogCard :title="title" :actions="actions(invalid)">
+            <v-row>
+                <!-- Photo of Variant -->
+                <v-col cols="12" align="center">
+                    <v-avatar
+                        tile
+                        size="100"
+                        color="grey lighten-2"
+                        @click.native="triggerMe()"
                     >
-                    <img v-else :src="variantTempPhoto" />
-                </v-avatar>
-                <v-file-input
-                    v-show="false"
-                    ref="triggerMe"
-                    truncate-length="15"
-                    @change.native="imageChanged"
-                ></v-file-input>
-            </v-col>
-            <!-- Variant name -->
-            <v-col cols="12">
-                <v-text-field
-                    dense
-                    outlined
-                    hide-details="auto"
-                    label="Nom de variante "
-                    v-model="variant.name"
-                ></v-text-field>
-            </v-col>
+                        <v-icon v-if="!variantTempPhoto" size="50"
+                            >mdi-cloud-upload</v-icon
+                        >
+                        <img v-else :src="variantTempPhoto" />
+                    </v-avatar>
+                    <validation-provider
+                        v-slot="{
+                            errors
+                        }"
+                        name="image"
+                        rules="required|ext:png,jpg"
+                    >
+                        <v-file-input
+                            v-show="false"
+                            ref="triggerMe"
+                            hide-details="auto"
+                            :error-messages="errors"
+                            truncate-length="15"
+                            @change.native="imageChanged"
+                        ></v-file-input>
+                    </validation-provider>
+                </v-col>
+                <!-- Variant name -->
+                <v-col cols="12">
+                    <validation-provider
+                        v-slot="{
+                            errors
+                        }"
+                        name="Article"
+                        rules="required|max:50"
+                    >
+                        <v-text-field
+                            dense
+                            outlined
+                            prepend-inner-icon="mdi-food"
+                            :error-messages="errors"
+                            hide-details="auto"
+                            label="Nom d'article"
+                            v-model="variant.name"
+                        ></v-text-field>
+                    </validation-provider>
+                </v-col>
 
-            <!-- Variant name -->
-            <v-col cols="12">
-                <v-text-field
-                    type="numeric"
-                    dense
-                    outlined
-                    hide-details="auto"
-                    label="Prix"
-                    v-model="variant.price"
-                    append-icon="mdi-currency-usd"
-                ></v-text-field>
-            </v-col>
-            <!-- Description -->
-            <v-col cols="12">
-                <v-textarea
-                    dense
-                    outlined
-                    rows="3"
-                    hide-details="auto"
-                    label="Description"
-                    v-model="variant.description"
-                ></v-textarea>
-            </v-col>
-        </v-row>
-    </dialogCard>
+                <!-- Variant name -->
+                <v-col cols="12">
+                    <validation-provider
+                        v-slot="{
+                            errors
+                        }"
+                        name="Prix"
+                        rules="required|numeric"
+                    >
+                        <v-text-field
+                            type="numeric"
+                            dense
+                            outlined
+                            hide-details="auto"
+                            label="Prix"
+                            v-model="variant.price"
+                            prepend-inner-icon="mdi-currency-usd"
+                            :error-messages="errors"
+                        ></v-text-field>
+                    </validation-provider>
+                </v-col>
+                <!-- Description -->
+                <v-col cols="12">
+                    <validation-provider
+                        v-slot="{
+                            errors
+                        }"
+                        name="Description"
+                        rules="max:100"
+                    >
+                        <v-textarea
+                            dense
+                            outlined
+                            rows="3"
+                            hide-details="auto"
+                            :counter="100"
+                            label="Description"
+                            :error-messages="errors"
+                            v-model="variant.description"
+                            prepend-inner-icon="mdi-text"
+                        ></v-textarea>
+                    </validation-provider>
+                </v-col>
+            </v-row>
+        </dialogCard>
+    </validation-observer>
 </template>
 
 <script>
@@ -92,7 +134,7 @@ export default {
             };
         },
         //* Actions
-        actions: function() {
+        actions: function(invalid) {
             return {
                 close: {
                     text: "Fermer",
@@ -102,6 +144,7 @@ export default {
                 add: {
                     text: "Valider",
                     color: "primary",
+                    disabled: invalid,
                     rounded: true,
                     handle: () => {
                         //Prepare consts

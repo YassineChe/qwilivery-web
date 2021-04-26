@@ -32,14 +32,20 @@
                 <template v-slot:activator="{ on }">
                     <v-btn icon x-large v-on="on">
                         <v-avatar size="45">
-                            <img :src="`/images/avatar.png`" />
+                            <img
+                                :src="`/images/restaurants_logo/restaurant.png`"
+                            />
                         </v-avatar>
                     </v-btn>
-                    <div>
-                        <v-layout class="mr-3 mt-5">
-                            <v-flex>
-                                <h4 class="grey--text">Elon</h4>
-                                <p>Musk</p>
+                    <div class="mr-2">
+                        <v-layout column align-content-center>
+                            <v-flex align-self-center>
+                                <h4>
+                                    {{ guard["name"] }}
+                                </h4>
+                            </v-flex>
+                            <v-flex align-self-center>
+                                Restaurant
                             </v-flex>
                         </v-layout>
                     </div>
@@ -81,7 +87,6 @@
                 active-class="deep-purple--text text--accent-4"
             >
                 <v-subheader>Tableau de bord</v-subheader>
-                <v-divider />
                 <!-- Home  -->
                 <v-list-item to="/">
                     <v-list-item-icon>
@@ -89,6 +94,8 @@
                     </v-list-item-icon>
                     <v-list-item-title>Accueil</v-list-item-title>
                 </v-list-item>
+
+                <v-subheader>Utilisations</v-subheader>
                 <!-- Menu -->
                 <v-list-item :to="{ name: 'menu' }">
                     <v-list-item-icon>
@@ -102,6 +109,22 @@
                         <v-icon>mdi-phone-forward</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>Commandes télé.</v-list-item-title>
+                </v-list-item>
+
+                <!-- Dashboard -->
+                <v-subheader>Paramètres</v-subheader>
+                <v-list-item to="restaurants">
+                    <v-list-item-icon>
+                        <v-icon>mdi-account-cog</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Porfile</v-list-item-title>
+                </v-list-item>
+                <!-- Logout -->
+                <v-list-item @click="signOut()">
+                    <v-list-item-icon>
+                        <v-icon>mdi-logout</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Se déconnecter</v-list-item-title>
                 </v-list-item>
             </v-list>
         </v-navigation-drawer>
@@ -136,7 +159,11 @@ export default {
             return this.$vuetify.breakpoint.xsOnly;
         }
     },
-
+    methods: {
+        signOut: function() {
+            this.$auth.signOut();
+        }
+    },
     beforeCreate() {
         //* fetchGuard
         this.$store.dispatch("fetchData", {

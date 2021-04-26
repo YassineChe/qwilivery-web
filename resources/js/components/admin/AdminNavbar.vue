@@ -8,7 +8,7 @@
         :elevation="elevation"
         :fixed="fixed"
         :flat="flat"
-        v-if="user"
+        v-if="guard"
         rounded
     >
         <!-- This slot to bind drawer status on/off -->
@@ -22,34 +22,62 @@
             <v-icon color="grey lighten-1" medium> mdi-bell-outline </v-icon>
         </v-badge>
         <!-- profil -->
-        <v-menu bottom min-width="200px" rounded offset-y>
+        <v-menu
+            bottom
+            min-width="200px"
+            origin="center center"
+            transition="scale-transition"
+            rounded
+            offset-y
+        >
             <template v-slot:activator="{ on }">
                 <v-btn icon x-large v-on="on">
                     <v-avatar size="45">
-                        <img :src="`/images/avatar.png`" />
+                        <img :src="`/images/avatars/avatar.png`" />
                     </v-avatar>
                 </v-btn>
-                <div>
-                    <v-layout class="mr-3 mt-5">
-                        <v-flex>
-                            <h4 class="grey--text">Elon</h4>
-                            <p>Musk</p>
+
+                <div class="mr-2">
+                    <v-layout column align-content-center>
+                        <v-flex align-self-center>
+                            <h4>
+                                {{ guard["last_name"] }}
+                            </h4>
+                        </v-flex>
+                        <v-flex align-self-center>
+                            {{ guard["first_name"] }}
                         </v-flex>
                     </v-layout>
                 </div>
             </template>
             <v-card>
-                <v-list-item-content class="justify-center">
-                    <div class="mx-auto text-center">
-                        <v-btn depressed text :to="{ name: 'profile' }">
-                            Modifier le compte
-                        </v-btn>
-                        <v-divider class="my-3"></v-divider>
-                        <v-btn depressed text @click="signOut()">
-                            Se déconnecter
-                        </v-btn>
-                    </div>
-                </v-list-item-content>
+                <v-list dense>
+                    <v-subheader>Porfile</v-subheader>
+                    <v-list-item-group>
+                        <!-- Profile -->
+                        <v-list-item :to="{ name: 'profile' }">
+                            <v-list-item-icon>
+                                <v-icon v-text="'mdi-account'"></v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title
+                                    v-text="'Profile'"
+                                ></v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <!-- Singout -->
+                        <v-list-item @click="signOut()">
+                            <v-list-item-icon>
+                                <v-icon v-text="'mdi-logout'"></v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title
+                                    v-text="'Se déconnecter'"
+                                ></v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </v-list-item-group>
+                </v-list>
             </v-card>
         </v-menu>
     </v-app-bar>
@@ -67,15 +95,12 @@ export default {
         height: { default: "70px" },
         classes: { default: "" }
     },
-    data: () => ({
-        guardInfos: []
-    }),
     computed: {
         ...mapState(["guard"]),
         isMobile() {
             return this.$vuetify.breakpoint.mdAndDown;
         },
-        user: function() {
+        guard: function() {
             try {
                 return this.$store.getters.guard;
             } catch (error) {

@@ -10,7 +10,8 @@ import ChangePassword from "./components/clue/ChangePassword";
 
 //* Admin.
 import Dashboard from "./components/admin/Dashboard";
-import Livreurs from "./components/admin/Livreurs";
+import AdminHome from "./components/admin/AdminHome";
+import Deliveries from "./components/admin/Deliveries";
 import Restaurants from "./components/admin/Restaurants";
 //* delivery
 import DeliveryDashboard from "./components/delivery/DeliveryDashboard";
@@ -48,13 +49,20 @@ const adminRoutes = {
     path: "/",
     name: "dashboard",
     component: Dashboard,
-    name: "",
+    name: "admin-dashboard",
+    redirect: "admin-home-dashboard", //This will redirect to home of dashboard!,
     meta: { requiresAuth: true, guard: "admin" },
     children: [
         {
-            path: "/livreurs",
-            name: "livreurs",
-            component: Livreurs,
+            path: "/",
+            name: "admin-home-dashboard",
+            component: AdminHome,
+            meta: { guard: "admin" }
+        },
+        {
+            path: "/deliveries",
+            name: "deliveries",
+            component: Deliveries,
             meta: { guard: "admin" }
         },
         {

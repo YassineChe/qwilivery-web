@@ -24,7 +24,7 @@
                     :block="isMobile"
                     @click="addRestaurant()"
                 >
-                    <v-icon left>mdi-silverware-variant</v-icon>
+                    <v-icon left>mdi-store</v-icon>
                     Ajouter Restaurant
                 </v-btn>
             </v-col>
@@ -50,6 +50,17 @@
                 disable-sort
                 item-key="id"
             >
+                <!-- Logo -->
+                <template v-slot:[`item.logo`]="{ item }">
+                    <v-avatar size="40">
+                        <img
+                            :src="`/images/restaurants_logo/${item.logo}`"
+                            alt="John"
+                        />
+                    </v-avatar>
+                </template>
+
+                <!-- Name -->
                 <template v-slot:[`item.name`]="{ item }">
                     <v-icon color="error" v-if="item.blocked_at != null"
                         >mdi-cancel</v-icon
@@ -57,10 +68,12 @@
                     <span>{{ item.name }}</span>
                 </template>
 
+                <!-- Tax -->
                 <template v-slot:[`item.rate`]="{ item }">
                     <span>{{ item.rate }}$</span>
                 </template>
 
+                <!-- Actions -->
                 <template v-slot:[`item.actions`]="{ item }">
                     <v-speed-dial
                         :v-model="true"
@@ -180,6 +193,7 @@ export default {
         return {
             search: "",
             headers: [
+                { value: "logo", text: "LOGO" },
                 { value: "name", text: "NOM DU RESTAURANT" },
                 { value: "email", text: "EMAIL" },
                 { value: "phone_number", text: "TÉLÉPHONE" },

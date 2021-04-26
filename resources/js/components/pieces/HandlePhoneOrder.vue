@@ -25,7 +25,7 @@
                         <dialogCard :actions="step1Actions(invalid)">
                             <v-row>
                                 <!-- Fullname -->
-                                <v-col cols="12">
+                                <v-col cols="6">
                                     <validation-provider
                                         v-slot="{
                                             errors
@@ -39,6 +39,26 @@
                                             :error-messages="errors"
                                             v-model="order.fullname"
                                             label="Nom complet"
+                                            hide-details="auto"
+                                        ></v-text-field>
+                                    </validation-provider>
+                                </v-col>
+
+                                <!-- Phone number -->
+                                <v-col cols="6">
+                                    <validation-provider
+                                        v-slot="{
+                                            errors
+                                        }"
+                                        name="Télépone"
+                                        rules="required|numeric|min:10|max:10"
+                                    >
+                                        <v-text-field
+                                            dense
+                                            outlined
+                                            :error-messages="errors"
+                                            v-model="order.phone_number"
+                                            label="Télépone"
                                             hide-details="auto"
                                         ></v-text-field>
                                     </validation-provider>
@@ -345,6 +365,7 @@ export default {
             order: {
                 orders: [],
                 fullname: "",
+                phone_number: "",
                 address: "",
                 lat: null,
                 lng: null

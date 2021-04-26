@@ -18,10 +18,12 @@ class CreatePreOrdersTable extends Migration
             $table->foreignId('delivery_id')->nullable()->references('id')->on('deliveries');
             $table->foreignId('restaurant_id')->references('id')->on('restaurants');
             $table->text('fullname');
+            $table->text('phone_number');
             $table->text('address')->nullable();
             $table->text('lat')->nullable();
             $table->text('lng')->nullable();
-            $table->timestamp('delivered_at')->default(false);
+            $table->timestamp('delivered_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

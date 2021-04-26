@@ -12,7 +12,6 @@ class Delivery extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
-
     protected $guarded = [];
 
     /**
@@ -22,6 +21,26 @@ class Delivery extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
+
+    //? Getter (FirstName)
+    public function getFirstNameAttribute($value){
+        return ucfirst($value);
+    }
+    
+    //? Getter (LastName)
+    public function getLastNameAttribute($value){
+        return ucfirst($value);
+    }
+
+    //? Setter (LastName)
+    public function setLastNameAttribute($value){
+        $this->attributes['last_name'] = strtolower(trim($value));
+    }
+
+    //? Setter (FirstName)
+    public function setFirstNameAttribute($value){
+        $this->attributes['first_name'] = strtolower(trim($value));
+    }
+
 }

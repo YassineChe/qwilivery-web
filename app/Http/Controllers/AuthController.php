@@ -7,24 +7,23 @@ use App\Models\Admin;
 use App\Models\Restaurant;
 use App\Models\Delivery;
 use App\Models\Password_reset;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\DeliveryRequest;
-
+//Notifications
 use App\Notifications\ResetEmail;
 use App\Notifications\ConfirmAccountMail;
-
-
 
 class AuthController extends Controller
 {
 
-    //* This will authenticated only delivery man
+    //* This will authenticated only delivery man (FOR MOBILE)
     public function deliveryLogin(Request $request){
         $delivery = Delivery::where('email', $request->email)->first();
         if ($delivery){
-            if (Hash::check($request->password, $delivery->password)) {
+            if (\Hash::check($request->password, $delivery->password)) {
+
+                if ($delivery->approved_at == null)
+                    return dataToResponse('error', 'Erreur!', 'Votre compte n\'a pas encore été approuvé', false, 422);
+
                 return response([
                     'first_name' => $delivery->first_name,
                     'last_name'  => $delivery->last_name,
@@ -37,17 +36,15 @@ class AuthController extends Controller
         return dataToResponse('error', 'Erreur!', 'Ces identifiants ne correspondent pas à nos enregistrements', false, 422);
     }
 
-    //* Login Admin
+    //* Login Admin (WEB PART)
     public function login(Request $request)
     {
-
         $delivery = Delivery::where('email', $request->email)->first();
         $admin = Admin::where('email', $request->email)->first();
         $restaurant = Restaurant::where('email', $request->email)->first();
 
         if ($admin) {
-            // If login Success login
-            if (Hash::check($request->password, $admin->password)) {
+            if (\Hash::check($request->password, $admin->password)) {
                 return response([
                     'guard' => 'admin',
                     'token' => $admin->createToken('admin-api', ['admin-stuff'])->plainTextToken
@@ -56,8 +53,7 @@ class AuthController extends Controller
             //Wrong password!
             return dataToResponse('error', 'Erreur!', 'Le mot de passe est erroné', false, 422);
         } else if ($delivery) {
-            // If login Success login
-            if (Hash::check($request->password, $delivery->password)) {
+            if (\Hash::check($request->password, $delivery->password)) {
                 return response([
                     'guard' => 'delivery',
                     'token' => $delivery->createToken('admin-api', ['admin-stuff'])->plainTextToken
@@ -66,8 +62,7 @@ class AuthController extends Controller
             //Wrong password!
             return dataToResponse('error', 'Erreur!', 'Le mot de passe est erroné', false, 422);
         } else if ($restaurant) {
-            // If login Success login
-            if (Hash::check($request->password, $restaurant->password)) {
+            if (\Hash::check($request->password, $restaurant->password)) {
                 return response([
                     'guard' => 'restaurant',
                     'token' => $restaurant->createToken('restaurant-api', ['restaurant-stuff'])->plainTextToken
@@ -116,14 +111,14 @@ class AuthController extends Controller
             return dataToResponse('error', 'Erreur!', ' votre URL a expiré', false, 422);
         }
 
-        $time = Carbon::parse($reset->created_at)->addMinutes(10);
+        $time = \Carbon\Carbon::parse($reset->created_at)->addMinutes(10);
 
-        if (Carbon::now() <= $time) {
+        if (\Carbon\Carbon::now() <= $time) {
 
             $admin = Admin::where('email', $reset->email)->first();
             if ($admin) {
                 $admin->update([
-                    'password' => Hash::make($request->password)
+                    'password' => \Hash::make($request->password)
                 ]);
                 $reset->delete();
                 return dataToResponse('success', 'success!', 'le mot de passe a été mis à jour avec succès', false, 200);
@@ -132,9 +127,8 @@ class AuthController extends Controller
     }
 
     //* Create new Delivery  (DeliveryRequest)
-    public function create(DeliveryRequest $request)
+    public function regiterDelivery(DeliveryRequest $request)
     {
-
         $request->validate([
             'password'   => 'required|min:6',
         ]);
@@ -146,14 +140,14 @@ class AuthController extends Controller
         $fileName =  storeUploaded(public_path() . '/files', $request->permit);
 
         $delivery =  Delivery::create([
-            "first_name" => $request->first_name,
-            "last_name"  => $request->last_name,
-            "avatar"     => "avatar.png",
-            "email"      => $request->email,
-            "password"   => hash::make($request->password),
-            "experience" => $request->experience,
-            "permit"    => $fileName,
-            "phone_number"      => $request->phone_number,
+            "first_name"   => $request->first_name,
+            "last_name"    => $request->last_name,
+            "avatar"       => "avatar.png",
+            "email"        => $request->email,
+            "password"     => \hash::make($request->password),
+            "experience"   => $request->experience,
+            "permit"       => $fileName,
+            "phone_number" => $request->phone_number,
         ]);
         // send email.
         $delivery->notify(new ConfirmAccountMail($delivery->email, $delivery->token));

@@ -17,7 +17,7 @@ class CreateCategoriesTable extends Migration
             $table->id();
             $table->foreignId('restaurant_id')->references('id')->on('restaurants');
             $table->string('name');
-            $table->string('description');
+            $table->text('description');
             $table->timestamps();
         });
     }

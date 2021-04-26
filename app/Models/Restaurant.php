@@ -12,9 +12,11 @@ class Restaurant extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
-
-
     protected $guarded = [];
+    
+    protected $hidden = [
+        'password',
+    ];
 
     //? Getter (Name)
     public function getNameAttribute($value){
@@ -41,9 +43,5 @@ class Restaurant extends Authenticatable
      *
      * @var array
      */
-    protected $hidden = [
-        'password',
-    ];
-
     
 }

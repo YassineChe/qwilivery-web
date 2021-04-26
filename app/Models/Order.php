@@ -9,4 +9,9 @@ class Order extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    //* Relationship variants
+    public function variant(){
+        return $this->belongsTo(Variant::class);
+    }
 }

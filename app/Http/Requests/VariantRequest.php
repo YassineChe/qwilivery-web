@@ -28,7 +28,7 @@ class VariantRequest extends FormRequest
         return [
             'name' => 'required|min:2',
             'price' => 'required|numeric',
-            'photo' => 'image',
+            'photo' => 'image|mimes:jpeg,png,jpg|max:1048',
             'category_id' => 'required',
         ];
     }
