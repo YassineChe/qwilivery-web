@@ -1,7 +1,9 @@
 <template>
     <dialogCard
         :title="
-            isBusy('fetch-orders') ? 'Chargement en cours...' : 'La commande'
+            isBusy('fetch-orders')
+                ? 'Chargement en cours...'
+                : `(REF:${preOrderId}) Commande`
         "
     >
         <v-data-table
@@ -68,6 +70,7 @@ export default {
                     this.orders = response;
                 });
         },
+        //* The famous isBusy funtion haha
         isBusy: function(fetcher) {
             try {
                 return this.$store.getters.expected(fetcher).status == "busy"

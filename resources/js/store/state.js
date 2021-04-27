@@ -1,5 +1,6 @@
 let state = {
     guard: null,
+    profile: [],
     /*expected request */
     expected: [],
     /* Vars */

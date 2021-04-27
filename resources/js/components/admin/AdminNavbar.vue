@@ -33,7 +33,7 @@
             <template v-slot:activator="{ on }">
                 <v-btn icon x-large v-on="on">
                     <v-avatar size="45">
-                        <img :src="`/images/avatars/avatar.png`" />
+                        <img :src="`/images/avatars/${guard.avatar}`" />
                     </v-avatar>
                 </v-btn>
 

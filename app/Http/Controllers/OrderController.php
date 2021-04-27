@@ -53,24 +53,23 @@ class OrderController extends Controller
         }
     }
 
-    //* Orders
+    //* Orders (This function is common between Restaurabt and admin with instruction)
     public function fetchOrderByPreOrderID($pre_order_id){
         try{
-            //Let make sure that Restaurant
-            //Its able to request this json
-            if(
-            PreOrder::select('id')->where('id', $pre_order_id)
-                                ->where('restaurant_id', authIdFromGuard('restaurant'))
-                                ->first()
-            )
-            return
-                response(
-                    Order::where('pre_order_id', (int)$pre_order_id)
-                            ->with('variant')
-                            ->get()
-                            , 200
-                );
-            
+            switch(getConnectedGuard()){
+                case 'restaurant':
+                    $isAuthorized = PreOrder::select('id')->where('id', $pre_order_id)
+                                            ->where('restaurant_id', authIdFromGuard('restaurant'))
+                                            ->first();
+                    if ($isAuthorized)
+                        $orders = Order::where('pre_order_id', (int)$pre_order_id)->with('variant')->get();
+                break;
+                case 'admin': 
+                    $orders = Order::where('pre_order_id', (int)$pre_order_id)->with('variant')->get();
+                break;
+            }
+
+            return response($orders, 200);
         }
         catch(\Exception $e){
             handleLogs($e);
@@ -92,14 +91,41 @@ class OrderController extends Controller
     }
 
     //* This will set as SoftDelete will leave traceability for Qwilivery admin
-    public function deleteOrderByRestaurant($order_id){
+    public function deleteOrder($order_id){
         try{
-            if(
-                PreOrder::where('id', (int)$order_id)
-                        ->where('restaurant_id', authIdFromGuard('restaurant'))
-                        ->delete()
-            )
+            switch (getConnectedGuard()) {
+                case 'restaurant':
+                        $delete = PreOrder::where('id', (int)$order_id)
+                                    ->where('restaurant_id', authIdFromGuard('restaurant'))
+                                    ->delete();
+                break;
+                
+                case 'admin':
+                    $delete = PreOrder::where('id', (int)$order_id)->forceDelete();
+                    if ($delete)
+                        Order::where('pre_order_id', (int)$order_id)->delete();
+                break;
+            }
+
+            if ($delete)
                 return dataToResponse('success', 'Succès', 'Commande supprimée avec succès ❌', true, 200); 
+
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
+    //* Fetch order historic
+    public function fetchHistoric(){
+        try{
+            return
+                response(PreOrder::with(['restaurant', 'orders', 'delivery'])
+                                ->withTrashed()
+                                ->orderBy('id', 'DESC')
+                                ->get()
+                                , 200
+                );
         }
         catch(\Exception $e){
             handleLogs($e);

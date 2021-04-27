@@ -43,6 +43,9 @@ let getters = {
     orders: state => {
         return state.orders;
     },
+    profile: state => {
+        return state.profile;
+    },
     //handle result
     callback: state => result => {
         return typeof result === "object"

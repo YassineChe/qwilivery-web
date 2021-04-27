@@ -19,9 +19,20 @@
         <!-- Buttons actions -->
         <v-row class="mt-5">
             <v-col :align="!isMobile ? 'right' : ''">
-                <v-btn color="primary" v-if="!isMobile" @click="init()">
-                    <v-icon>mdi-refresh</v-icon>
-                </v-btn>
+                <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            v-bind="attrs"
+                            v-on="on"
+                            color="primary"
+                            v-if="!isMobile"
+                            @click="init()"
+                        >
+                            <v-icon>mdi-refresh</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Rafraîchir</span>
+                </v-tooltip>
 
                 <v-btn
                     color="primary"
@@ -36,49 +47,56 @@
         </v-row>
 
         <v-card class="mt-5">
-            <template>
-                <v-data-table
-                    :items="preorders"
-                    :headers="headers"
-                    :loading="isBusy('fetch-preorders')"
-                    loading-text="Chargement en cours ..."
-                    :disabled="isBusy('fetch-preorders')"
-                >
-                    <!-- Orders -->
-                    <template v-slot:[`item.orders`]="{ item }">
-                        <v-btn fab x-small color="primary">
-                            {{ item.orders.length }}
-                        </v-btn>
-                    </template>
-                    <!-- Delivered Status -->
-                    <template v-slot:[`item.delivered_at`]="{ item }">
-                        <v-chip
-                            small
-                            :color="item.delivered_at ? 'success' : 'error'"
-                            v-text="item.delivered_at ? 'Livré' : 'En cours'"
-                        ></v-chip>
-                    </template>
-                    <!-- Actions -->
-                    <template v-slot:[`item.actions`]="{ item }">
-                        <!-- Delete Order -->
-                        <v-icon
-                            small
-                            color="error"
-                            @click="deleteOrder(item.id)"
-                        >
-                            mdi-delete
-                        </v-icon>
-                        <!--  -->
-                        <v-icon
-                            small
-                            color="info"
-                            @click="orderDetails(item.id)"
-                        >
-                            mdi-eye
-                        </v-icon>
-                    </template>
-                </v-data-table>
-            </template>
+            <!-- Search -->
+            <v-toolbar flat>
+                <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Rechercher"
+                    hide-details
+                    solo
+                    clearable
+                ></v-text-field>
+            </v-toolbar>
+            <!-- Table -->
+            <v-data-table
+                :items="preorders"
+                :headers="headers"
+                :search="search"
+                :loading="isBusy('fetch-preorders')"
+                :disabled="isBusy('fetch-preorders')"
+                loading-text="Chargement en cours ..."
+                no-data-text="Aucune commande trouvée"
+                no-results-text="Aucune commande trouvée"
+            >
+                <!-- Orders -->
+                <template v-slot:[`item.orders`]="{ item }">
+                    <v-btn
+                        fab
+                        x-small
+                        color="primary"
+                        @click="orderDetails(item.id)"
+                    >
+                        {{ item.orders.length }}
+                    </v-btn>
+                </template>
+                <!-- Delivered Status -->
+                <template v-slot:[`item.delivered_at`]="{ item }">
+                    <v-chip
+                        small
+                        :color="item.delivered_at ? 'success' : 'error'"
+                        v-text="item.delivered_at ? 'Livré' : 'En cours'"
+                    >
+                    </v-chip>
+                </template>
+                <!-- Actions -->
+                <template v-slot:[`item.actions`]="{ item }">
+                    <!-- Delete Order -->
+                    <v-icon small color="error" @click="deleteOrder(item.id)">
+                        mdi-delete
+                    </v-icon>
+                </template>
+            </v-data-table>
         </v-card>
     </div>
 </template>
@@ -95,16 +113,16 @@ export default {
     },
     data() {
         return {
+            search: "",
             headers: [
                 { text: "#REF", value: "id" },
                 { text: "Nom complet", value: "fullname" },
                 { text: "Téléphone", value: "phone_number" },
                 { text: "Adresse", value: "address" },
-                { text: "Commande(S)", value: "orders" },
+                { text: "Commande(s)", value: "orders" },
                 { text: "Livré", value: "delivered_at" },
                 { text: "Actions", value: "actions" }
-            ],
-            orderedVariants: [{}]
+            ]
         };
     },
     computed: {
@@ -128,7 +146,9 @@ export default {
         },
         //* Trigger new command
         addPhoneOrder: function() {
-            this.$dialog.show(HandlePhoneOrder);
+            this.$dialog.show(HandlePhoneOrder, {
+                persistent: true
+            });
         },
         //* Delete order
         deleteOrder: function(order_id) {

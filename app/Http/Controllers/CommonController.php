@@ -9,10 +9,9 @@ class CommonController extends Controller
     //? Chech for authenticated guard
     public function fetchAuthenticatedGuard(Request $request)
     {
-
         try {
             return response(
-                \Auth::guard(getConnectedGuard())->user() //->only('first_name', 'last_name', 'email'));
+                \Auth::guard(getConnectedGuard())->user()
                 ,
                 200
             );

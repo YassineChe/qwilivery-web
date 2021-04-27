@@ -10,9 +10,11 @@ import ChangePassword from "./components/clue/ChangePassword";
 
 //* Admin.
 import Dashboard from "./components/admin/Dashboard";
-import AdminHome from "./components/admin/AdminHome";
+import AdminHome from "./components/admin/Home";
 import Deliveries from "./components/admin/Deliveries";
 import Restaurants from "./components/admin/Restaurants";
+import Historic from "./components/admin/Historic";
+import AdminProfile from "./components/admin/Profile";
 //* delivery
 import DeliveryDashboard from "./components/delivery/DeliveryDashboard";
 import Profile from "./components/delivery/Profile";
@@ -69,6 +71,18 @@ const adminRoutes = {
             path: "/restaurants",
             name: "restaurants",
             component: Restaurants,
+            meta: { guard: "admin" }
+        },
+        {
+            path: "/historic",
+            name: "historic",
+            component: Historic,
+            meta: { guard: "admin" }
+        },
+        {
+            path: "/profile",
+            name: "admin-profile",
+            component: AdminProfile,
             meta: { guard: "admin" }
         }
     ]

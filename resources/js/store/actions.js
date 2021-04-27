@@ -268,7 +268,7 @@ let actions = {
         return await axios
             .put(payload.path, payload.data, {
                 headers: {
-                    "content-type": "multipart/form-data",
+                    Accept: "application/json",
                     Authorization: `Bearer ${token.getToken()}`
                 }
             })

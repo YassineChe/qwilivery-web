@@ -46,7 +46,7 @@
                     </v-list-item>
 
                     <v-subheader>Chat & Historique</v-subheader>
-                    <v-list-item>
+                    <v-list-item :to="{ name: 'historic' }">
                         <v-list-item-icon>
                             <v-icon>mdi-history</v-icon>
                         </v-list-item-icon>
@@ -65,11 +65,11 @@
                     </v-list-item>
                     <!-- Dashboard -->
                     <v-subheader>Paramètres</v-subheader>
-                    <v-list-item to="restaurants">
+                    <v-list-item :to="{ name: 'admin-profile' }">
                         <v-list-item-icon>
                             <v-icon>mdi-account-cog</v-icon>
                         </v-list-item-icon>
-                        <v-list-item-title>Porfile</v-list-item-title>
+                        <v-list-item-title>Profile</v-list-item-title>
                     </v-list-item>
                     <!-- Logout -->
                     <v-list-item @click="signOut()">

@@ -106,6 +106,9 @@ let mutations = {
     },
     FETCH_ORDERS(state, orders) {
         return (state.orders = orders);
+    },
+    FETCH_PROFILE(state, profile) {
+        return (state.profile = profile);
     }
 };
 export default mutations;

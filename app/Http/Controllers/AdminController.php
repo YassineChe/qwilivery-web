@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 //Models
 use App\Models\Delivery;
+use App\Models\PreOrder;
+use App\Models\Admin;
 //Requests
 use Illuminate\Http\Request;
 use App\Http\Requests\DeliveryRequest;
@@ -12,9 +14,32 @@ use App\Notifications\NotifyDeliveryAccount;
 
 class AdminController extends Controller
 {
-    //* Approuve.  
-    public function approvedDeliveryMan(Request $request)
-    {
+
+    public function editProfile(Request $request){
+        try{
+            if (\Auth::guard('admin')->user()->avatar != $request->avatar)
+            $avatar =  storeUploaded(public_path() . '/images/avatars', $request->avatar);
+            else
+            $avatar = \Auth::guard('admin')->user()->avatar != $request->avatar;
+            
+            if(
+                Admin::where('id', authIdFromGuard('admin'))->update([
+                    'first_name'   => $request->first_name,
+                    'last_name'    => $request->last_name,
+                    'phone_number' => $request->phone_number,
+                    'email'        => $request->email,
+                    'avatar'       => $avatar
+                ])
+            )
+            return dataToResponse('success', 'Succès ', 'Mise à jour du profil réussie', false, 200);
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
+    //* Approuve delivery man
+    public function approvedDeliveryMan(Request $request){
         try {
             if (
                 Delivery::where('id', $request->delivery_id)
@@ -26,9 +51,8 @@ class AdminController extends Controller
             handleLogs($e);
         }
     }
-    //* Delete.
-    public function deleteDeliveryMan(Request $request)
-    {
+    //! Delete delivery man (need a softdelete)
+    public function deleteDeliveryMan(Request $request){
         try {
             if (Delivery::where('id', $request->delivery_id)->delete()) {
                 return dataToResponse('success', 'Succès ', 'La suppression est un succès 👍', true, 200);
@@ -38,9 +62,8 @@ class AdminController extends Controller
         }
     }
 
-    //* Block.
-    public function blockDeliveryMan(Request $request)
-    {
+    //* Block delivery man
+    public function blockDeliveryMan(Request $request){
         try {
             if (Delivery::where('id', $request->delivery_id)->update(["blocked_at" => \Carbon\Carbon::now()])) {
                 return dataToResponse('success', 'Succès ', 'Livreur a été bloqué ❌', true, 200);
@@ -50,9 +73,8 @@ class AdminController extends Controller
         }
     }
 
-    // *Unblock DeliveryMan
-    public function unblockDeliveryMan(Request $request)
-    {
+    //* Unblock delivery man
+    public function unblockDeliveryMan(Request $request){
         try {
             if (Delivery::where('id', $request->delivery_id)->update(['blocked_at' => null]))
                 return dataToResponse('success', 'Succès ', 'Débloquer avec succès ✅', true, 200);
@@ -71,10 +93,43 @@ class AdminController extends Controller
                 200
             );
     }
-    //* Add delivery men.
-    public function addDeliveryMan(DeliveryRequest $request)
-    {
 
+    //* Fetch delivery men with more information like whos in service ? or not!
+    public function fetchRestrictedDeliveries(){
+        try{
+            return  
+                response(Delivery::whereNull('blocked_at')
+                            ->with(['pre_order' => function($q){
+                                $q->select('id', 'delivery_id');
+                            }])
+                            ->get()
+                    , 200
+                );
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
+    //* Add dilivery man to spefic order
+    public function addDeliveryToOrder(Request $request){
+        try{
+            $preorder = PreOrder::select('id', 'delivery_id')
+                                    ->whereNull('delivery_id')
+                                    ->where('id', (int)$request->pre_order_id)->first();
+            if ($preorder)
+                if( $preorder->update(['delivery_id' => (int)$request->delivery_id]) )
+                    return dataToResponse('success', 'Succès ', 'Livreur a été affecté avec succès 👍', true, 200);
+
+            return dataToResponse('error', 'Erreur ', 'Un autre livreur s\'occupant de cette commande', true, 422);
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
+    //* Add delivery men.
+    public function addDeliveryMan(DeliveryRequest $request){
         //Generate random password.
         $generetedPassword = \Str::random(6);
         //Upload data to server.
@@ -93,16 +148,11 @@ class AdminController extends Controller
         if ($delivery)
             $delivery->notify(new NotifyDeliveryAccount(["password" => $generetedPassword, "email" => $request->email]));
 
-        return dataToResponse('success', 'Succès ', [
-            "msg" => 'Un E-mail a été envoyé au livreur avec les informations d\'identification 👍',
-            "data" => $delivery
-        ], true, 200);
+        return dataToResponse('success', 'Succès ', 'Un E-mail a été envoyé au livreur avec les informations d\'identification 👍', true, 200);
     }
 
     //* Add delivery men.
-    public function editDeliveryMan(Request $request)
-    {
-        // return $request;
+    public function editDeliveryMan(Request $request){
 
         $delivery = Delivery::where('id', $request->id)->first();
 
@@ -128,11 +178,7 @@ class AdminController extends Controller
             'permit'       => $fileName,
             'phone_number' => $request->phone_number,
         ]);
-        //Notify Delivery
-
-        return dataToResponse('success', 'Succès ', [
-            "msg" => 'La modification a réussi ',
-            "data" => $delivery
-        ], true, 200);
+        
+        return dataToResponse('success', 'Succès ', [ "msg" => 'La modification a réussi ', "data" => $delivery], true, 200);
     }
 }

@@ -1,0 +1,266 @@
+<template>
+    <div>
+        <v-row>
+            <v-col>
+                <!-- HeadLine -->
+                <Headline
+                    headline="Historiques"
+                    :subheadline="`(${preorders.length}) Commande(s)`"
+                    :headline-classes="[
+                        'text-h5',
+                        'primary--text',
+                        'font-weight-black',
+                        'text-uppercase'
+                    ]"
+                />
+            </v-col>
+        </v-row>
+
+        <!-- Buttons actions -->
+        <v-row class="mt-5">
+            <v-col :align="!isMobile ? 'right' : ''">
+                <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            v-bind="attrs"
+                            v-on="on"
+                            color="primary"
+                            :block="isMobile"
+                            @click="init()"
+                        >
+                            <v-icon>mdi-refresh</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Rafraîchir</span>
+                </v-tooltip>
+            </v-col>
+        </v-row>
+
+        <v-card class="mt-5">
+            <!-- Search -->
+            <v-toolbar flat>
+                <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Rechercher"
+                    hide-details
+                    solo
+                    clearable
+                ></v-text-field>
+            </v-toolbar>
+            <!-- Table -->
+            <v-data-table
+                :search="search"
+                :headers="headers"
+                :items="preorders"
+                :loading="isBusy('fetch-historic')"
+                :disabled="isBusy('fetch-historic')"
+                loading-text="Chargement en cours ..."
+                no-data-text="Aucune commande trouvée"
+                no-results-text="Aucune commande trouvée"
+            >
+                <!-- Orders -->
+                <template v-slot:[`item.id`]="{ item }">
+                    {{ item.id }}
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-icon
+                                v-if="item.deleted_at"
+                                color="error"
+                                v-bind="attrs"
+                                v-on="on"
+                                small
+                            >
+                                mdi-cancel
+                            </v-icon>
+                        </template>
+                        <span>{{
+                            `Commande supprimée par le restaurant : ${parseToDate(
+                                item.deleted_at
+                            )}`
+                        }}</span>
+                    </v-tooltip>
+                </template>
+                <!-- Orders -->
+                <template v-slot:[`item.orders`]="{ item }">
+                    <v-btn
+                        fab
+                        x-small
+                        color="primary"
+                        @click="orderDetails(item.id)"
+                    >
+                        {{ item.orders.length }}
+                    </v-btn>
+                </template>
+                <!-- Delivery -->
+                <template v-slot:[`item.delivery`]="{ item }">
+                    <v-avatar size="40" v-if="item.delivery != null">
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on, attrs }">
+                                <img
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    :src="
+                                        `/images/avatars/${item.delivery.avatar}`
+                                    "
+                                />
+                            </template>
+                            <span>{{
+                                `${item.delivery.last_name} ${item.delivery.first_name}`
+                            }}</span>
+                        </v-tooltip>
+                    </v-avatar>
+
+                    <v-tooltip top v-else>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                                v-bind="attrs"
+                                v-on="on"
+                                fab
+                                x-small
+                                color="accent"
+                                @click="setDeliveryToOrder(item.id)"
+                            >
+                                <v-icon>mdi-moped</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Définir un livreur</span>
+                    </v-tooltip>
+                </template>
+                <!-- Delivered Status -->
+                <template v-slot:[`item.delivered_at`]="{ item }">
+                    <v-chip
+                        small
+                        :color="item.delivered_at ? 'success' : 'error'"
+                        v-text="item.delivered_at ? 'Livré' : 'En cours'"
+                    >
+                    </v-chip>
+                </template>
+                <!-- Actions -->
+                <template v-slot:[`item.actions`]="{ item }">
+                    <!-- Delete Order -->
+                    <v-icon small color="error" @click="deleteOrder(item.id)">
+                        mdi-delete
+                    </v-icon>
+                </template>
+            </v-data-table>
+        </v-card>
+    </div>
+</template>
+
+<script>
+import Headline from "../pieces/Headline";
+import ViewOrderList from "../pieces/ViewOrderList";
+import SetDeliveryToOrder from "../pieces/SetDeliveryToOrder";
+import { mapState } from "vuex";
+
+import moment from "moment";
+moment.locale("fr");
+
+export default {
+    components: {
+        Headline
+    },
+    data() {
+        return {
+            search: "",
+            headers: [
+                { text: "#REF", value: "id" },
+                { text: "Nom complet", value: "fullname" },
+                { text: "Téléphone", value: "phone_number" },
+                { text: "Adresse", value: "address" },
+                { text: "Commande(s)", value: "orders" },
+                { text: "Livreur", value: "delivery" },
+                { text: "Livré", value: "delivered_at" },
+                { text: "Actions", value: "actions" }
+            ]
+        };
+    },
+    computed: {
+        ...mapState(["expected"]),
+        //* Preorders (Orders)
+        preorders: function() {
+            return this.$store.getters.preorders;
+        },
+        //* Is mobile
+        isMobile() {
+            return this.$vuetify.breakpoint.xsOnly;
+        }
+    },
+    methods: {
+        //* Init
+        init: function() {
+            this.$store.dispatch("fetchData", {
+                path: "/api/fetch/historic",
+                mutation: "FETCH_PREORDERS",
+                related: "fetch-historic"
+            });
+        },
+        //* View order details
+        orderDetails: function(pre_order_id) {
+            this.$dialog.show(ViewOrderList, {
+                preOrderId: pre_order_id
+            });
+        },
+        //* Delete
+        deleteOrder: function(order_id) {
+            this.$dialog.confirm({
+                text: "Etes-vous sûr de supprimer cette commande ?",
+                title: "Attention!",
+                actions: {
+                    false: "Non!",
+                    true: {
+                        color: "red",
+                        text: "Je confirme",
+                        handle: () => {
+                            //Delete it form backend
+                            this.$store.dispatch("deleteData", {
+                                path: `/api/delete/order/${order_id}`,
+                                related: "delete-order"
+                            });
+                        }
+                    }
+                }
+            });
+        },
+        //* Parse to date
+        parseToDate: function(date) {
+            return moment(date).format("MMMM, Do-YYYY h:mm:ss a");
+        },
+        setDeliveryToOrder: function(pre_order_id) {
+            this.$dialog.show(SetDeliveryToOrder, {
+                preOrderId: pre_order_id
+            });
+        },
+        //* The famous isBusy funtion haha
+        isBusy: function(fetcher) {
+            try {
+                return this.$store.getters.expected(fetcher).status == "busy"
+                    ? true
+                    : false;
+            } catch (error) {
+                return false;
+            }
+        }
+    },
+    watch: {
+        expected() {
+            //Delete Order
+            {
+                let expected = this.$store.getters.expected("delete-order");
+                if (expected != undefined && expected.status === "success") {
+                    this.$store.commit("CLEAR_EXPECTED");
+                    this.$dialog.notify.success(expected.result.subMessage, {
+                        position: "top-right",
+                        timeout: 3000
+                    });
+                    this.init();
+                }
+            }
+        }
+    },
+    created() {
+        this.init();
+    }
+};
+</script>

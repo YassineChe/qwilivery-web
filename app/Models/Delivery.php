@@ -43,4 +43,9 @@ class Delivery extends Authenticatable
         $this->attributes['first_name'] = strtolower(trim($value));
     }
 
+    //* Relationship Preorder (order)
+    public function pre_order(){
+        return $this->hasMany(PreOrder::class);
+    }
+
 }

@@ -430,6 +430,7 @@ export default {
                     variant: this.selectedVariantObj,
                     qty: this.qty
                 });
+                this.qty = 0;
             }
         },
         //* Delete order
