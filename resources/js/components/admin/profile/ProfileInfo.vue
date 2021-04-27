@@ -6,7 +6,7 @@
             :disabled="isBusy('edit-profile')"
         >
             <v-card-text v-if="guard">
-                <v-row>
+                <v-row justify="center" align="center">
                     <v-col cols="12" sm="4" md="4" lg="4" align="center">
                         <v-avatar
                             size="150"
@@ -39,6 +39,7 @@
                         </validation-provider>
                     </v-col>
                     <v-col cols="12" sm="8" lg="8" md="8">
+                        <v-subheader>Nom complet</v-subheader>
                         <v-row>
                             <v-col cols="12" sm="6" md="6" lg="6">
                                 <validation-provider
@@ -80,6 +81,8 @@
                                 </validation-provider>
                             </v-col>
 
+                            <v-subheader>Contact information</v-subheader>
+
                             <v-col cols="12" sm="12" md="12" lg="12">
                                 <validation-provider
                                     v-slot="{
@@ -105,7 +108,7 @@
                                     v-slot="{
                                         errors
                                     }"
-                                    name="Prénom"
+                                    name="E-mail"
                                     rules="required|max:50"
                                 >
                                     <v-text-field
@@ -164,6 +167,20 @@ export default {
             fileReader.readAsDataURL(e.target.files[0]);
             var extension = e.target.files[0].name.split(".")[1];
 
+            if (
+                extension.toLowerCase() !== "png" &&
+                extension.toLowerCase() !== "jpg" &&
+                extension.toLowerCase() !== "jpeg"
+            ) {
+                this.$dialog.notify.error(
+                    "Seuls les formats png, jpg sont autorisés",
+                    {
+                        position: "top-right",
+                        timeout: 3000
+                    }
+                );
+                return;
+            }
             fileReader.onload = e => {
                 this.tempAvatar = e.target.result;
             };

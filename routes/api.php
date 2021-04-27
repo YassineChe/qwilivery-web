@@ -60,6 +60,7 @@ Route::middleware("auth:admin")->group(function () {
     Route::get('/fetch/historic', [OrderController::class, 'fetchHistoric']); //List of Historic orders
     //* Porfile Stuff
     Route::post('/edit/admin/profile', [AdminController::class, 'editProfile']);
+    Route::put('/edit/admin/security', [AdminController::class, 'editPassword']);
 });
 
 //? Delivery api routes

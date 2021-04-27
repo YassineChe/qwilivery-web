@@ -15,12 +15,16 @@ use App\Notifications\NotifyDeliveryAccount;
 class AdminController extends Controller
 {
 
+    //* Edit Profile Information
     public function editProfile(Request $request){
         try{
-            if (\Auth::guard('admin')->user()->avatar != $request->avatar)
-            $avatar =  storeUploaded(public_path() . '/images/avatars', $request->avatar);
-            else
-            $avatar = \Auth::guard('admin')->user()->avatar != $request->avatar;
+            //Avatar handler
+            if (\Auth::guard('admin')->user()->avatar != $request->avatar){
+                $avatar =  storeUploaded(public_path() . '/images/avatars', $request->avatar);
+            }
+            else{
+                $avatar = \Auth::guard('admin')->user()->avatar;
+            }
             
             if(
                 Admin::where('id', authIdFromGuard('admin'))->update([
@@ -38,6 +42,24 @@ class AdminController extends Controller
         }
     }
 
+    //* Edit password
+    public function editPassword(Request $request){
+        try{
+            $admin = Admin::where('id', authIdFromGuard('admin'))->first();
+            if ($admin){
+                if (\Hash::check($request->old, $admin->makeVisible(['password'])->password)){
+                    if ($request->new == $request->cfm){
+                        $admin->update(['password' => \Hash::make($request->new)]);
+                        return dataToResponse('success', 'Succès ', 'Mot de passe a été changé avec succès', false, 200);
+                    }
+                }
+                return dataToResponse('error', 'Erreur ', 'L\'ancien mot de passe ne correspond pas', false, 422);
+            }
+        }catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
     //* Approuve delivery man
     public function approvedDeliveryMan(Request $request){
         try {
@@ -51,6 +73,7 @@ class AdminController extends Controller
             handleLogs($e);
         }
     }
+    
     //! Delete delivery man (need a softdelete)
     public function deleteDeliveryMan(Request $request){
         try {
