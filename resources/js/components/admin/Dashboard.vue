@@ -15,7 +15,7 @@
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
             <!-- The Spacer -->
             <v-spacer></v-spacer>
-            <v-badge color="error" content="6" overlap class="mr-9">
+            <!-- <v-badge color="error" content="6" overlap class="mr-9">
                 <v-icon color="grey lighten-1" medium>
                     mdi-message-outline</v-icon
                 >
@@ -24,8 +24,9 @@
                 <v-icon color="grey lighten-1" medium>
                     mdi-bell-outline
                 </v-icon>
-            </v-badge>
-            <!-- profil -->
+            </v-badge> -->
+
+            <!-- Profile menu -->
             <v-menu
                 bottom
                 min-width="200px"

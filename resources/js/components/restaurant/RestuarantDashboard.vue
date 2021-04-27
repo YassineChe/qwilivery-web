@@ -3,21 +3,29 @@
         <!-- Navbar -->
 
         <v-app-bar
-            v-if="guard"
-            tile
+            height="60px"
             color="white"
-            app
-            elevate-on-scroll
-            fixed
             elevation="3"
+            app
+            class="mx-7 mt-5"
+            flat
+            v-if="guard"
+            rounded
         >
+            <!-- Toogle drawer -->
+            <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
             <!-- The Spacer -->
-            <v-btn color="primary" outlined rounded>
+            <v-btn
+                color="primary"
+                outlined
+                rounded
+                :to="{ name: 'restaurant-order' }"
+            >
                 <v-icon :left="!isMobile">mdi-phone-forward</v-icon>
                 <span v-if="!isMobile">Commande téléphonique</span>
             </v-btn>
             <v-spacer></v-spacer>
-            <v-badge color="error" content="6" overlap class="mr-9">
+            <!-- <v-badge color="error" content="6" overlap class="mr-9">
                 <v-icon color="grey lighten-1" medium>
                     mdi-message-outline</v-icon
                 >
@@ -26,17 +34,26 @@
                 <v-icon color="grey lighten-1" medium>
                     mdi-bell-outline
                 </v-icon>
-            </v-badge>
-            <!-- profil -->
-            <v-menu bottom min-width="200px" rounded offset-y>
+            </v-badge> -->
+            <!-- Profil menu -->
+            <!-- Profile menu -->
+            <v-menu
+                bottom
+                min-width="200px"
+                origin="center center"
+                transition="scale-transition"
+                rounded
+                offset-y
+            >
                 <template v-slot:activator="{ on }">
                     <v-btn icon x-large v-on="on">
                         <v-avatar size="45">
                             <img
-                                :src="`/images/restaurants_logo/restaurant.png`"
+                                :src="`/images/restaurants_logo/${guard.logo}`"
                             />
                         </v-avatar>
                     </v-btn>
+
                     <div class="mr-2">
                         <v-layout column align-content-center>
                             <v-flex align-self-center>
@@ -51,17 +68,33 @@
                     </div>
                 </template>
                 <v-card>
-                    <v-list-item-content class="justify-center">
-                        <div class="mx-auto text-center">
-                            <v-btn depressed text :to="{ name: 'profile' }">
-                                Modifier le compte
-                            </v-btn>
-                            <v-divider class="my-3"></v-divider>
-                            <v-btn depressed text @click="signOut()">
-                                Se déconnecter
-                            </v-btn>
-                        </div>
-                    </v-list-item-content>
+                    <v-list dense>
+                        <v-subheader>Porfile</v-subheader>
+                        <v-list-item-group>
+                            <!-- Profile -->
+                            <v-list-item :to="{ name: 'restaurant-profile' }">
+                                <v-list-item-icon>
+                                    <v-icon v-text="'mdi-account'"></v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-content>
+                                    <v-list-item-title
+                                        v-text="'Profile'"
+                                    ></v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <!-- Singout -->
+                            <v-list-item @click="signOut()">
+                                <v-list-item-icon>
+                                    <v-icon v-text="'mdi-logout'"></v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-content>
+                                    <v-list-item-title
+                                        v-text="'Se déconnecter'"
+                                    ></v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-list-item-group>
+                    </v-list>
                 </v-card>
             </v-menu>
         </v-app-bar>
@@ -104,7 +137,7 @@
                     <v-list-item-title>Menu</v-list-item-title>
                 </v-list-item>
                 <!-- Phone order -->
-                <v-list-item :to="{ name: 'order' }">
+                <v-list-item :to="{ name: 'restaurant-order' }">
                     <v-list-item-icon>
                         <v-icon>mdi-phone-forward</v-icon>
                     </v-list-item-icon>

@@ -71,14 +71,21 @@
             >
                 <!-- Orders -->
                 <template v-slot:[`item.orders`]="{ item }">
-                    <v-btn
-                        fab
-                        x-small
-                        color="primary"
-                        @click="orderDetails(item.id)"
-                    >
-                        {{ item.orders.length }}
-                    </v-btn>
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                                v-bind="attrs"
+                                v-on="on"
+                                fab
+                                x-small
+                                color="primary"
+                                @click="orderDetails(item.id)"
+                            >
+                                {{ item.orders.length }}
+                            </v-btn>
+                        </template>
+                        <span>Nombre d'articles commandés</span>
+                    </v-tooltip>
                 </template>
                 <!-- Delivered Status -->
                 <template v-slot:[`item.delivered_at`]="{ item }">
@@ -88,6 +95,10 @@
                         v-text="item.delivered_at ? 'Livré' : 'En cours'"
                     >
                     </v-chip>
+                </template>
+                <!-- Order Date -->
+                <template v-slot:[`item.created_at`]="{ item }">
+                    {{ parseToDate(item.created_at) }}
                 </template>
                 <!-- Actions -->
                 <template v-slot:[`item.actions`]="{ item }">
@@ -107,6 +118,9 @@ import HandlePhoneOrder from "../pieces/HandlePhoneOrder";
 import ViewOrderList from "../pieces/ViewOrderList";
 import { mapState } from "vuex";
 
+import moment from "moment";
+moment.locale("fr");
+
 export default {
     components: {
         Headline
@@ -119,8 +133,9 @@ export default {
                 { text: "Nom complet", value: "fullname" },
                 { text: "Téléphone", value: "phone_number" },
                 { text: "Adresse", value: "address" },
-                { text: "Commande(s)", value: "orders" },
+                { text: "Article(s)", value: "orders" },
                 { text: "Livré", value: "delivered_at" },
+                { text: "Date de commande", value: "created_at" },
                 { text: "Actions", value: "actions" }
             ]
         };
@@ -143,6 +158,10 @@ export default {
                 mutation: "FETCH_PREORDERS",
                 related: "fetch-preorders"
             });
+        },
+        //* Parse to date
+        parseToDate: function(date) {
+            return moment(date).format("MM/D/YYYY H:mm");
         },
         //* Trigger new command
         addPhoneOrder: function() {

@@ -83,14 +83,21 @@
                 </template>
                 <!-- Orders -->
                 <template v-slot:[`item.orders`]="{ item }">
-                    <v-btn
-                        fab
-                        x-small
-                        color="primary"
-                        @click="orderDetails(item.id)"
-                    >
-                        {{ item.orders.length }}
-                    </v-btn>
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                                v-bind="attrs"
+                                v-on="on"
+                                fab
+                                x-small
+                                color="primary"
+                                @click="orderDetails(item.id)"
+                            >
+                                {{ item.orders.length }}
+                            </v-btn>
+                        </template>
+                        <span>Nombre d'articles commandés</span>
+                    </v-tooltip>
                 </template>
                 <!-- Delivery -->
                 <template v-slot:[`item.delivery`]="{ item }">
@@ -118,7 +125,7 @@
                                 v-on="on"
                                 fab
                                 x-small
-                                color="accent"
+                                color="warning"
                                 @click="setDeliveryToOrder(item.id)"
                             >
                                 <v-icon>mdi-moped</v-icon>
@@ -126,6 +133,10 @@
                         </template>
                         <span>Définir un livreur</span>
                     </v-tooltip>
+                </template>
+                <!-- Order Date -->
+                <template v-slot:[`item.created_at`]="{ item }">
+                    {{ parseToDate(item.created_at) }}
                 </template>
                 <!-- Delivered Status -->
                 <template v-slot:[`item.delivered_at`]="{ item }">
@@ -169,9 +180,10 @@ export default {
                 { text: "Nom complet", value: "fullname" },
                 { text: "Téléphone", value: "phone_number" },
                 { text: "Adresse", value: "address" },
-                { text: "Commande(s)", value: "orders" },
+                { text: "Article(s)", value: "orders" },
                 { text: "Livreur", value: "delivery" },
                 { text: "Livré", value: "delivered_at" },
+                { text: "Date de commande", value: "created_at" },
                 { text: "Actions", value: "actions" }
             ]
         };
@@ -225,7 +237,7 @@ export default {
         },
         //* Parse to date
         parseToDate: function(date) {
-            return moment(date).format("MMMM, Do-YYYY h:mm:ss a");
+            return moment(date).format("MM/D/YYYY H:mm");
         },
         setDeliveryToOrder: function(pre_order_id) {
             this.$dialog.show(SetDeliveryToOrder, {

@@ -18,6 +18,22 @@
 
         <v-row class="mt-5" flat>
             <v-col :align="!isMobile ? 'right' : ''">
+                <!-- Refresh -->
+                <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            v-bind="attrs"
+                            v-on="on"
+                            color="primary"
+                            :block="isMobile"
+                            @click="init()"
+                        >
+                            <v-icon>mdi-refresh</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Rafraîchir</span>
+                </v-tooltip>
+                <!-- Add Restaurant -->
                 <v-btn
                     color="primary"
                     outlined
@@ -301,6 +317,7 @@ export default {
 
                 if (expected != undefined) {
                     if (expected.status === "success") {
+                        this.$store.commit("CLEAR_EXPECTED");
                         this.$dialog.notify.success(
                             expected.result.subMessage,
                             {
@@ -308,6 +325,7 @@ export default {
                                 timeout: 3000
                             }
                         );
+                        this.init();
                     }
                     if (expected.status === "error") {
                         this.$store.getters
@@ -319,7 +337,6 @@ export default {
                                 });
                             });
                     }
-                    this.$store.commit("CLEAR_EXPECTED");
                 }
             }
 
@@ -329,6 +346,7 @@ export default {
 
                 if (expected != undefined) {
                     if (expected.status === "success") {
+                        this.$store.commit("CLEAR_EXPECTED");
                         this.$dialog.notify.success(
                             expected.result.subMessage,
                             {
@@ -338,7 +356,6 @@ export default {
                         );
                     }
                     if (expected.status === "error") {
-                        console.log(expected.result);
                         this.$store.getters
                             .callback(expected.result.subMessage)
                             .forEach(error => {

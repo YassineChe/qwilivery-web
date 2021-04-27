@@ -104,7 +104,13 @@ const restaurantRoutes = {
         },
         {
             path: "/order",
-            name: "order",
+            name: "restaurant-order",
+            component: PhoneOrder,
+            meta: { guard: "restaurant" }
+        },
+        {
+            path: "/order",
+            name: "restaurant-profile",
             component: PhoneOrder,
             meta: { guard: "restaurant" }
         }
