@@ -118,14 +118,17 @@
                         :small="isMobile"
                     >
                         <v-icon left>mdi-cloud-upload</v-icon>
-                        <span v-if="!isMobile && !delivery.permit"
+                        <span v-if="!delivery.fileName"
                             >joindre permis (PDF)</span
                         >
-                        <span v-if="delivery.permit">{{
-                            delivery.permit
-                        }}</span>
+                        <span v-else>{{ delivery.fileName.name }}</span>
                     </v-btn>
-                    <input hidden type="file" id="pdf-file" />
+                    <v-file-input
+                        v-model="delivery.fileName"
+                        v-show="false"
+                        id="pdf-file"
+                    >
+                    </v-file-input>
                 </v-col>
             </v-row>
         </dialogCard>
@@ -143,9 +146,10 @@ export default {
             delivery: {
                 first_name: "",
                 last_name: "",
+                email: "",
                 experience: "",
                 phone_number: "",
-                email: ""
+                fileName: null
             }
         };
     },

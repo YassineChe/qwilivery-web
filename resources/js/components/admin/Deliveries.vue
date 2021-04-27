@@ -17,6 +17,22 @@
         </v-row>
         <v-row class="mt-5" flat>
             <v-col :align="!isMobile ? 'right' : ''">
+                <!-- Refresh -->
+                <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            v-bind="attrs"
+                            v-on="on"
+                            color="primary"
+                            :block="isMobile"
+                            @click="init()"
+                        >
+                            <v-icon>mdi-refresh</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Rafraîchir</span>
+                </v-tooltip>
+
                 <v-btn
                     color="primary"
                     outlined
@@ -476,6 +492,7 @@ export default {
                 let expected = this.$store.getters.expected("add-delivery");
                 if (expected != undefined) {
                     if (expected.status === "success") {
+                        this.$store.commit("CLEAR_EXPECTED");
                         this.$dialog.notify.success(
                             expected.result.subMessage["msg"],
                             {
@@ -487,6 +504,7 @@ export default {
                             "ADD_DELIVERY",
                             expected.result.subMessage["data"]
                         );
+                        this.init();
                     }
                     if (expected.status === "error") {
                         for (const [key, value] of Object.entries(
@@ -505,6 +523,7 @@ export default {
             {
                 let expected = this.$store.getters.expected("edit-delivery");
                 if (expected != undefined) {
+                    this.$store.commit("CLEAR_EXPECTED");
                     if (expected.status === "success") {
                         this.$dialog.notify.success(
                             expected.result.subMessage["msg"],
@@ -517,6 +536,7 @@ export default {
                             "ADD_DELIVERY",
                             expected.result.subMessage["data"]
                         );
+                        this.init();
                     }
                     if (expected.status === "error") {
                         for (const [key, value] of Object.entries(
