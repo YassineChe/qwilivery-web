@@ -1,13 +1,90 @@
 <template>
     <v-app :style="{ background: this.$vuetify.theme.themes.light.background }">
         <!-- Navbar -->
-        <AdminNavbar app color="" elevation="2" classes="mx-7 mt-5" height="55">
-            <template #appBarNavIcon>
-                <v-app-bar-nav-icon
-                    @click="drawer = !drawer"
-                ></v-app-bar-nav-icon>
-            </template>
-        </AdminNavbar>
+
+        <v-app-bar
+            height="60px"
+            color="white"
+            elevation="3"
+            app
+            class="mx-7 mt-5"
+            flat
+            v-if="guard"
+            rounded
+        >
+            <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+            <!-- The Spacer -->
+            <v-spacer></v-spacer>
+            <v-badge color="error" content="6" overlap class="mr-9">
+                <v-icon color="grey lighten-1" medium>
+                    mdi-message-outline</v-icon
+                >
+            </v-badge>
+            <v-badge color="error" content="6" overlap class="mr-9">
+                <v-icon color="grey lighten-1" medium>
+                    mdi-bell-outline
+                </v-icon>
+            </v-badge>
+            <!-- profil -->
+            <v-menu
+                bottom
+                min-width="200px"
+                origin="center center"
+                transition="scale-transition"
+                rounded
+                offset-y
+            >
+                <template v-slot:activator="{ on }">
+                    <v-btn icon x-large v-on="on">
+                        <v-avatar size="45">
+                            <img :src="`/images/avatars/${guard.avatar}`" />
+                        </v-avatar>
+                    </v-btn>
+
+                    <div class="mr-2">
+                        <v-layout column align-content-center>
+                            <v-flex align-self-center>
+                                <h4>
+                                    {{ guard["last_name"] }}
+                                </h4>
+                            </v-flex>
+                            <v-flex align-self-center>
+                                {{ guard["first_name"] }}
+                            </v-flex>
+                        </v-layout>
+                    </div>
+                </template>
+                <v-card>
+                    <v-list dense>
+                        <v-subheader>Porfile</v-subheader>
+                        <v-list-item-group>
+                            <!-- Profile -->
+                            <v-list-item :to="{ name: 'admin-profile' }">
+                                <v-list-item-icon>
+                                    <v-icon v-text="'mdi-account'"></v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-content>
+                                    <v-list-item-title
+                                        v-text="'Profile'"
+                                    ></v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <!-- Singout -->
+                            <v-list-item @click="signOut()">
+                                <v-list-item-icon>
+                                    <v-icon v-text="'mdi-logout'"></v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-content>
+                                    <v-list-item-title
+                                        v-text="'Se déconnecter'"
+                                    ></v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-list-item-group>
+                    </v-list>
+                </v-card>
+            </v-menu>
+        </v-app-bar>
 
         <!-- Drawer navigation -->
         <v-navigation-drawer v-model="drawer" class="elevation-3" app floating>
@@ -97,14 +174,15 @@
 </template>
 
 <script>
-import preLoader from "../clue/preLoader";
-import AdminNavbar from "./AdminNavbar";
-
 export default {
-    components: { AdminNavbar, preLoader },
     data: () => ({
         drawer: true
     }),
+    computed: {
+        guard: function() {
+            return this.$store.getters.guard;
+        }
+    },
     methods: {
         signOut: function() {
             this.$auth.signOut();
