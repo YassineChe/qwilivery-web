@@ -20,7 +20,7 @@ class NotifyRestaurantAccount extends Notification
      */
     public function __construct($restaurant)
     {
-        $this->Restaurant = $restaurant;
+        $this->restaurant = $restaurant;
     }
 
     /**
@@ -43,9 +43,12 @@ class NotifyRestaurantAccount extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->action('Le link de site web est', url('/login'))
-            ->line('Email ' . $this->Restaurant['email'])
-            ->line('Password:' . $this->Restaurant['password']);
+            ->subject(env("APP_NAME").' | Information d\'authentification 🔑')
+            ->greeting('Bonjour!')
+            ->line('Vous trouverez ci-joint les informations d\'authentification')
+            ->line('Email: ' . $this->restaurant['email'])
+            ->line('Password: ' . $this->restaurant['password'])
+            ->action('Connexion', url('/login'));
     }
 
     /**
