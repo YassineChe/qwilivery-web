@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Delivery;
 use App\Models\Restaurant;
 use App\Models\PreOrder;
+use App\Models\Report;
 use DB;
 
 class StatisticController extends Controller
@@ -41,6 +42,37 @@ class StatisticController extends Controller
                 response()->json([
                     'count_delivered' => PreOrder::select(DB::raw('count(*) count_delivered'))->whereNotNull('delivered_at')->get()->pluck('count_delivered')[0]
                 ]);
+        }catch(\Exception $e){
+            return 0;
+        }
+    }
+
+    //* Count delivered order for delivery guy gaurd
+    public function countDelivedForDelivery(){
+        try{
+            return
+                response()->json([
+                    'count_delivered' 
+                                => PreOrder::select(DB::raw('count(*) count_delivered'))
+                                ->where('delivery_id', authIdFromGuard('delivery'))
+                                ->whereNotNull('delivered_at')->get()
+                                ->pluck('count_delivered')[0]
+                ], 200);
+        }catch(\Exception $e){
+            return 0;
+        }
+    }
+
+    //* Count delivered order for delivery guy gaurd
+    public function countReportsUnseen(){
+        try{
+            return
+                response()->json([
+                    'count_unseen_reports' 
+                                => Report::select(DB::raw('count(*) count_unseen_reports'))
+                                ->whereNull('seen_at')->get()
+                                ->pluck('count_unseen_reports')[0]
+                ], 200);
         }catch(\Exception $e){
             return 0;
         }

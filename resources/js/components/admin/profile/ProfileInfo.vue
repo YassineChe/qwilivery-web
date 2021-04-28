@@ -37,11 +37,15 @@
                                 @change.native="imageChanged"
                             ></v-file-input>
                         </validation-provider>
+                        <!-- Another trigger here -->
+                        <v-btn small text class="mt-1" @click="triggerMe()"
+                            >Changer photo de profile
+                        </v-btn>
                     </v-col>
                     <v-col cols="12" sm="8" lg="8" md="8">
                         <v-subheader>Nom complet</v-subheader>
                         <v-row>
-                            <v-col cols="12" sm="6" md="6" lg="6">
+                            <v-col cols="12">
                                 <validation-provider
                                     v-slot="{
                                         errors
@@ -61,7 +65,7 @@
                                 </validation-provider>
                             </v-col>
 
-                            <v-col cols="12" sm="6" md="6" lg="6">
+                            <v-col cols="12">
                                 <validation-provider
                                     v-slot="{
                                         errors

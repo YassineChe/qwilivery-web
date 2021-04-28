@@ -1,6 +1,7 @@
 <template>
     <v-row>
-        <v-col cols="12" sm="4" md="4" lg="4" class="mb-2">
+        <!-- Count restaurant -->
+        <v-col cols="12" sm="3" md="3" lg="3" class="mb-2">
             <StatisticCard
                 :loading="isBusy('fetch-restaurants-count')"
                 :text="count_restaurants"
@@ -9,7 +10,8 @@
                 color="primary"
             />
         </v-col>
-        <v-col cols="12" sm="4" md="4" lg="4" class="mb-2">
+        <!-- Count deliveries -->
+        <v-col cols="12" sm="3" md="3" lg="3" class="mb-2">
             <StatisticCard
                 :loading="isBusy('fetch-deliveries-count')"
                 :text="count_deliveries"
@@ -18,13 +20,24 @@
                 color="info"
             />
         </v-col>
-        <v-col cols="12" sm="4" md="4" lg="4" class="mb-2">
+        <!-- Count delivred -->
+        <v-col cols="12" sm="3" md="3" lg="3" class="mb-2">
             <StatisticCard
                 :loading="isBusy('fetch-delivered-count')"
                 :text="count_delivered"
                 description="Commandes livrées"
                 icon="mdi-package-variant-closed"
                 color="warning"
+            />
+        </v-col>
+        <!-- Count reports not seen -->
+        <v-col cols="12" sm="3" md="3" lg="3" class="mb-2">
+            <StatisticCard
+                :loading="isBusy('count-unseen-reports')"
+                :text="count_unseen_reports"
+                description="Rapports non lu"
+                icon="mdi-alert"
+                color="error"
             />
         </v-col>
     </v-row>
@@ -46,7 +59,7 @@ export default {
                     "count_deliveries"
                 ];
             } catch (error) {
-                return "...";
+                return "0";
             }
         },
         //* Count deliveries
@@ -56,7 +69,7 @@ export default {
                     "count_restaurants"
                 ];
             } catch (error) {
-                return "...";
+                return "0";
             }
         },
         //* Count delivered
@@ -66,7 +79,17 @@ export default {
                     "count_delivered"
                 ];
             } catch (error) {
-                return "...";
+                return "0";
+            }
+        },
+        //* Count unseen reprots
+        count_unseen_reports: function() {
+            try {
+                return this.$store.getters.dummies("count_unseen_reports")[
+                    "count_unseen_reports"
+                ];
+            } catch (error) {
+                return "0";
             }
         }
     },
@@ -88,6 +111,11 @@ export default {
                     path: "/api/fetch/count/delivered",
                     mutation: "FETCH_DUMMY",
                     related: "fetch-delivered-count"
+                },
+                {
+                    path: "/api/fetch/count/reports/unseen",
+                    mutation: "FETCH_DUMMY",
+                    related: "count-unseen-reports"
                 }
             ]);
         },

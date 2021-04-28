@@ -11,6 +11,7 @@ use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StatisticController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,20 +56,30 @@ Route::middleware("auth:admin")->group(function () {
     Route::get('/fetch/count/deliveries', [StatisticController::class, 'countDeliveries']); //How much delivery men
     Route::get('/fetch/count/restaurants', [StatisticController::class, 'countRestaurants']); // How much restaurant
     Route::get('/fetch/count/delivered', [StatisticController::class, 'countDelivered']); // How much delivered menu
+    Route::get('/fetch/count/reports/unseen', [StatisticController::class, 'countReportsUnseen']); // How much delivered menu
+    
     
     //* Historic stuff
     Route::get('/fetch/historic', [OrderController::class, 'fetchHistoric']); //List of Historic orders
-    //* Porfile Stuff
-    Route::post('/edit/admin/profile', [AdminController::class, 'editProfile']);
-    Route::put('/edit/admin/security', [AdminController::class, 'editPassword']);
+    
+    //* Porfile stuff
+    Route::post('/edit/admin/profile', [AdminController::class, 'editProfile']); // Edit profile
+    Route::put('/edit/admin/security', [AdminController::class, 'editPassword']); // Edit password 
+
+    //* Reports stuff
+    Route::get('/fetch/reports', [ReportController::class, 'fetchReports']); // Fetch report list
+    Route::delete('/delete/report/{report_id}', [ReportController::class, 'deleteReport']); // Delete report
 });
 
 //? Delivery api routes
 Route::middleware("auth:delivery")->group(function () {
-    Route::put('/edit/delivery/password', [DeliveryController::class, "updatePassword"]); // Update password
-    Route::get('/download/file', [DeliveryController::class, "downloadFile"]); // Download permit
-    Route::post('/update/delivery', [DeliveryController::class, "updateDelivery"]); // update info of delivery man
+    Route::put('/edit/delivery/security', [DeliveryController::class, "editPassword"]); // Update password
+    Route::post('/edit/delivery/profile', [DeliveryController::class, "editProfile"]); // update info of delivery man
     Route::get('/fetch/orders/to/deliver', [OrderController::class, 'orderToDeliver']); // Fetch order to deliver
+    Route::get('/fetch/last/five/missions', [OrderController::class, 'fetchLastFiveMissions']); // Delivery last five missions
+    Route::get('/fetch/delivery/historic', [OrderController::class, 'fetchDeliveryHistory']); // Fetch delivery historic
+    Route::get('/fetch/delivered/by/delivery', [StatisticController::class, 'countDelivedForDelivery']); // Statistic for delivery boy
+    Route::get('/download/file', [DeliveryController::class, "downloadFile"]); // Download permit
 });
 
 //? Restaurant api routes
@@ -90,10 +101,11 @@ Route::middleware("auth:restaurant")->group(function () {
 //? Common api routes between (Restaurant, Admin)
 Route::middleware('auth:restaurant,admin')->group(function(){
     Route::delete('/delete/order/{order_id}', [OrderController::class, 'deleteOrder']); // Delete order by restraunt will leave tracebility for admin
-    Route::get('/fetch/orders/{pre_order_id}', [OrderController::class, 'fetchOrderByPreOrderID']); // Fetch Order by PreOrder ID
 });
 
 //? Common api routes between all
 Route::middleware("auth:admin,delivery,restaurant")->group(function () {
-    Route::get('/fetch/authenticated/guard', [CommonController::class, 'fetchAuthenticatedGuard']);
+    Route::get('/fetch/authenticated/guard', [CommonController::class, 'fetchAuthenticatedGuard']); // Fetch authenticated guard
+    Route::get('/fetch/orders/{pre_order_id}', [OrderController::class, 'fetchOrderByPreOrderID']); // Fetch Order by PreOrder ID
+    Route::post('/add/report', [ReportController::class, 'addReport']); // Add new report
 });

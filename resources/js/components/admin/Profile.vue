@@ -5,7 +5,7 @@
                 <!-- HeadLine -->
                 <Headline
                     headline="Profile"
-                    subheadline="Modifier les informations de profil et la sécurité"
+                    subheadline="Modifier les informations de profile, le mot de passe et plus"
                     :headline-classes="[
                         'text-h5',
                         'primary--text',
@@ -37,7 +37,7 @@
         </v-row>
 
         <v-card class="mt-5">
-            <v-tabs vertical>
+            <v-tabs :vertical="!isMobile">
                 <v-tab>
                     <v-icon left> mdi-account </v-icon>
                     profile

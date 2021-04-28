@@ -100,7 +100,7 @@
             <v-list nav dense>
                 <v-list-item-group color="primary">
                     <!-- Dashboard -->
-                    <v-subheader>Dashboard</v-subheader>
+                    <v-subheader>Tableau de bord</v-subheader>
                     <v-list-item :to="{ name: 'admin-home-dashboard' }">
                         <v-list-item-icon>
                             <v-icon>mdi-view-dashboard</v-icon>
@@ -141,7 +141,7 @@
                             Boite de messagrie
                         </v-list-item-title>
                     </v-list-item>
-                    <!-- Dashboard -->
+                    <!-- Settings -->
                     <v-subheader>Paramètres</v-subheader>
                     <v-list-item :to="{ name: 'admin-profile' }">
                         <v-list-item-icon>
@@ -167,7 +167,13 @@
         <v-footer padless height="50px" color="transparent">
             <v-col class="text-center" cols="12">
                 {{ new Date().getFullYear() }} —
-                <strong>Qwilivery - Made by Spoveup ♥</strong>
+                <strong>
+                    <span>Qwilivery - Made</span>
+                    <a class="text-decoration-none" href="https://spveup.com"
+                        >by Spoveup
+                    </a>
+                    ❤️
+                </strong>
             </v-col>
         </v-footer>
         <!-- <preLoader></preLoader> -->

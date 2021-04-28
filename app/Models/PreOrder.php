@@ -23,7 +23,7 @@ class PreOrder extends Model
 
     //* Relationship restaurant
     public function restaurant(){
-        return $this->belongsTo(PreOrder::class);
+        return $this->belongsTo(Restaurant::class);
     }
 
     public function delivery(){

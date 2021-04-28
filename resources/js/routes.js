@@ -7,26 +7,30 @@ import Clue from "./components/Clue";
 import Login from "./components/clue/Login";
 import Register from "./components/clue/Register";
 import ChangePassword from "./components/clue/ChangePassword";
+import Guide from "./components/pieces/Guide";
+import NotFound from "./components/pieces/404";
 
 //* Admin.
 import Dashboard from "./components/admin/Dashboard";
 import AdminHome from "./components/admin/Home";
 import Deliveries from "./components/admin/Deliveries";
 import Restaurants from "./components/admin/Restaurants";
-import Historic from "./components/admin/Historic";
+import AdminHistoric from "./components/admin/Historic";
 import AdminProfile from "./components/admin/Profile";
 //* delivery
-import DeliveryDashboard from "./components/delivery/DeliveryDashboard";
-import Profile from "./components/delivery/Profile";
+import DeliveryHome from "./components/delivery/Home";
+import DeliveryDashboard from "./components/delivery/Dashboard";
+import DeliveryProfile from "./components/delivery/Profile";
+import DeliveryHistoric from "./components/delivery/Historic";
 
 //* Restaurant
-import RestaurantDashboard from "./components/restaurant/RestuarantDashboard";
+import RestaurantDashboard from "./components/restaurant/Dashboard";
 import Menu from "./components/restaurant/Menu";
 import PhoneOrder from "./components/restaurant/PhoneOrder";
 
 Vue.use(VueRouter);
 
-const routes = [];
+const routes = [{ path: "*", name: "not-found", component: NotFound }];
 
 //? Global routes
 const LoginRoutes = [
@@ -76,7 +80,7 @@ const adminRoutes = {
         {
             path: "/historic",
             name: "historic",
-            component: Historic,
+            component: AdminHistoric,
             meta: { guard: "admin" }
         },
         {
@@ -118,18 +122,36 @@ const restaurantRoutes = {
 };
 
 //? Delivery Dashboard
-
 const deliveryRoutes = {
     path: "/",
     name: "dashboard",
     component: DeliveryDashboard,
     name: "Dashboard",
+    redirect: "delivery-home",
     meta: { requiresAuth: true, guard: "delivery" },
     children: [
         {
+            path: "/",
+            name: "delivery-home",
+            component: DeliveryHome,
+            meta: { guard: "delivery" }
+        },
+        {
             path: "/profile",
-            name: "profile",
-            component: Profile,
+            name: "delivery-profile",
+            component: DeliveryProfile,
+            meta: { guard: "delivery" }
+        },
+        {
+            path: "/historic",
+            name: "delivery-historic",
+            component: DeliveryHistoric,
+            meta: { guard: "delivery" }
+        },
+        {
+            path: "/guide",
+            name: "guide",
+            component: Guide,
             meta: { guard: "delivery" }
         }
     ]
@@ -137,9 +159,9 @@ const deliveryRoutes = {
 
 /* **********************************************************
 # For avoiding duplicated routes 
-# e.g: employer profile & employer profile .. and more
+# e.g: delivery profile & admin profile .. and more
 # we will check for authenticated guard using local storage.
-# - Vue.auth undefined not recognized not until beforeEach routes that we used localstorage. 
+# - Vue.auth undefined not recognized not until beforeEach routes that why we used localstorage. 
 # We will push to routes const only the routes concerned
 ********************************************************** */
 

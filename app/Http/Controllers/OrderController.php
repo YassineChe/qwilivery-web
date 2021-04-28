@@ -56,10 +56,18 @@ class OrderController extends Controller
     //* Orders (This function is common between Restaurabt and admin with instruction)
     public function fetchOrderByPreOrderID($pre_order_id){
         try{
+
             switch(getConnectedGuard()){
                 case 'restaurant':
                     $isAuthorized = PreOrder::select('id')->where('id', $pre_order_id)
                                             ->where('restaurant_id', authIdFromGuard('restaurant'))
+                                            ->first();
+                    if ($isAuthorized)
+                        $orders = Order::where('pre_order_id', (int)$pre_order_id)->with('variant')->get();
+                break;
+                case 'delivery':
+                    $isAuthorized = PreOrder::select('id')->where('id', $pre_order_id)
+                                            ->where('delivery_id', authIdFromGuard('delivery'))
                                             ->first();
                     if ($isAuthorized)
                         $orders = Order::where('pre_order_id', (int)$pre_order_id)->with('variant')->get();
@@ -116,7 +124,7 @@ class OrderController extends Controller
         }
     }
 
-    //* Fetch order historic
+    //* Fetch order historic (Admin Guard)
     public function fetchHistoric(){
         try{
             return
@@ -131,4 +139,59 @@ class OrderController extends Controller
             handleLogs($e);
         }
     }
+
+    //* Fetch last five mission 
+    public function fetchLastFiveMissions(){
+        try{
+            return response(
+                PreOrder::where('delivery_id', authIdFromGuard('delivery'))
+                    ->with(['restaurant' => function($q){
+                        $q->select('id', 'name');
+                    }])
+                    ->orderBy('id', 'ASC')
+                    ->take(5)
+                    ->get()
+                , 
+                200)
+            ;
+        }catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
+    //* Fetch last five mission 
+    public function fetchDeliveryHistoric(){
+        try{
+            return response(
+                PreOrder::where('delivery_id', authIdFromGuard('delivery'))
+                    ->with(['restaurant' => function($q){
+                        $q->select('id', 'name');
+                    }])
+                    ->orderBy('id', 'ASC')
+                    ->take(5)
+                    ->get()
+                , 
+                200)
+            ;
+        }catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
+    //* Fetch Delivery boy historic
+    public function fetchDeliveryHistory(){
+        try{
+            return response(
+                PreOrder::where('delivery_id', authIdFromGuard('delivery'))
+                    ->with('restaurant', 'orders')
+                    ->orderBy('id', 'DESC')
+                    ->get()
+                , 
+                200)
+            ;
+        }catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
 }
