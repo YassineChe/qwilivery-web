@@ -140,7 +140,7 @@ class OrderController extends Controller
         }
     }
 
-    //* Fetch last five mission 
+    //* Fetch last five mission (For Delivery)
     public function fetchLastFiveMissions(){
         try{
             return response(
@@ -150,6 +150,22 @@ class OrderController extends Controller
                     }])
                     ->orderBy('id', 'ASC')
                     ->take(5)
+                    ->get()
+                , 
+                200)
+            ;
+        }catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
+    //* Fetch last five mission (For Delivery)
+    public function fetchLastTeenMissions(){
+        try{
+            return response(
+                PreOrder::where('restaurant_id', authIdFromGuard('restaurant'))
+                    ->orderBy('id', 'ASC')
+                    ->take(10)
                     ->get()
                 , 
                 200)

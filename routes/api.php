@@ -93,6 +93,7 @@ Route::middleware("auth:restaurant")->group(function () {
     Route::post('/edit/variant', [MenuController::class, 'editVariant']);  // Update variant
     Route::delete('/delete/variant/{variant_id}', [MenuController::class, 'deleteVariant']);  // Delete variant
     Route::delete('/delete/category/{category_id}', [MenuController::class, 'deleteCategory']); // Delete category
+    Route::get('/fetch/last/teen/missions', [OrderController::class, 'fetchLastTeenMissions']); // Delivery last five missions
     //* Order Stuff
     Route::get('/fetch/preorders', [OrderController::class, 'fetchPreOrders']);
     Route::post('/add/order', [OrderController::class, 'addOrder']);
