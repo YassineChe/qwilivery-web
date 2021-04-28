@@ -85,7 +85,7 @@ class AuthController extends Controller
             if (Password_reset::Where('email', $request->email)->delete());
             $admin = Password_reset::create([
                 'email' => $request->email,
-                'token' => Str::random(60),
+                'token' => \Str::random(60),
             ]);
             // Send email 
             $admin->notify(new ResetEmail($admin->email, $admin->token));
