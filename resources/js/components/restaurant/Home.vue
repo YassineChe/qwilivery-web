@@ -1,6 +1,6 @@
 <template>
     <v-row class="mt-5" v-if="guard">
-        <v-row align="center">
+        <v-row>
             <v-col cols="12" sm="4" md="4" lg="4" class="mb-2">
                 <StatisticCard
                     :loading="isBusy('fetch-delivered-count')"
@@ -30,9 +30,7 @@
                     color="warning"
                 />
             </v-col>
-        </v-row>
 
-        <v-row>
             <v-col cols="12" sm="6" md="6" lg="6" class="mb-2">
                 <v-card :loading="isBusy('fetch-teen-missions')">
                     <v-card-title>

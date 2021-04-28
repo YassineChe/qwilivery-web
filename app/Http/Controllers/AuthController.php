@@ -101,7 +101,7 @@ class AuthController extends Controller
     public function restPassword(Request $request)
     {
         if ($request->password !== $request->confirm) {
-            return dataToResponse('error', 'Erreur!', 'le mot de passe ne correspond pas', false, 422);
+            return dataToResponse('error', 'Erreur!', 'Le mot de passe ne correspond pas', false, 422);
         }
 
         //Check if token exist
