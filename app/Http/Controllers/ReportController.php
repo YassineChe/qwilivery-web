@@ -10,6 +10,13 @@ class ReportController extends Controller
     //* Fetch Report
     public function fetchReports(){
         try{
+
+            //? In case thi function called its means
+            //? That the admin visited report list
+            //? So before dispatching rows let's update seen_at
+
+            Report::whereNull('seen_at')->update(['seen_at' => \Carbon\Carbon::now()]);
+
             return response()->json([
                 'deliveries' => Report::where('guard', 'delivery')->with('delivery')->orderBy('id', 'DESC')->get(),
                 'restaurants'=> Report::where('guard', 'restaurant')->with('restaurant')->orderBy('id', 'DESC')->get()
@@ -31,7 +38,7 @@ class ReportController extends Controller
                     'description' => $request->description
                 ])
             )
-            return dataToResponse('success', 'Succès ', 'votre rapport envoyé, nous vous contacterons dans les plus brefs délais', false, 200);
+            return dataToResponse('success', 'Succès ', 'Votre rapport envoyé, nous vous contacterons dans les plus brefs délais', false, 200);
         }
         catch(\Exception $e){
             handleLogs($e);

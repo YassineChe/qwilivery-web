@@ -16,7 +16,11 @@
             </v-col>
         </v-row>
 
-        <v-card class="mt-5">
+        <v-card
+            class="mt-5"
+            :loading="isBusy('fetch-reports')"
+            :disabled="isBusy('fetch-reports')"
+        >
             <v-tabs
                 fixed-tabs
                 centered
@@ -35,6 +39,7 @@
 
                 <v-tab-item>
                     <v-data-table
+                        no-data-text="Aucun rapport trouvé"
                         :headers="[
                             {
                                 text: 'REF',
@@ -69,18 +74,22 @@
                     >
                         <!-- avatar -->
                         <template v-slot:[`item.avatar`]="{ item }">
-                            <v-avatar size="40">
+                            <v-avatar size="40" v-if="item.delivery">
                                 <img
                                     :src="
                                         `/images/avatars/${item.delivery.avatar}`
                                     "
                                 />
                             </v-avatar>
+                            <span v-else>—</span>
                         </template>
                         <!-- Full Name -->
                         <template v-slot:[`item.fullname`]="{ item }">
-                            {{ item.delivery.last_name }}
-                            {{ item.delivery.first_name }}
+                            <span v-if="item.delivery">
+                                {{ item.delivery.last_name }}
+                                {{ item.delivery.first_name }}
+                            </span>
+                            <span v-else>—</span>
                         </template>
                         <!-- Description -->
                         <template v-slot:[`item.description`]="{ item }">
@@ -113,6 +122,7 @@
                 </v-tab-item>
                 <v-tab-item>
                     <v-data-table
+                        no-data-text="Aucun rapport trouvé"
                         :headers="[
                             {
                                 text: 'REF',
@@ -147,17 +157,21 @@
                     >
                         <!-- avatar -->
                         <template v-slot:[`item.avatar`]="{ item }">
-                            <v-avatar size="40">
+                            <v-avatar size="40" v-if="item.restaurant">
                                 <img
                                     :src="
                                         `/images/restaurants_logo/${item.restaurant.logo}`
                                     "
                                 />
                             </v-avatar>
+                            <span v-else>—</span>
                         </template>
                         <!-- Full Name -->
                         <template v-slot:[`item.fullname`]="{ item }">
-                            {{ item.restaurant.name }}
+                            <span v-if="item.restaurant">{{
+                                item.restaurant.name
+                            }}</span>
+                            <span v-else>—</span>
                         </template>
                         <!-- Description -->
                         <template v-slot:[`item.description`]="{ item }">
@@ -196,6 +210,7 @@
 import Headline from "../pieces/Headline";
 import ViewReport from "../pieces/ViewReport";
 
+import { mapState } from "vuex";
 import moment from "moment";
 moment.locale("fr");
 
@@ -205,6 +220,7 @@ export default {
         ViewReport
     },
     computed: {
+        ...mapState(["expected"]),
         //* Reports deliveries
         reports_deliveries: function() {
             try {
@@ -236,7 +252,23 @@ export default {
         },
         //* Delete report
         deleteReport: function(report_id) {
-            alert(report_id);
+            this.$dialog.confirm({
+                text: "Êtes-vous sûr de vouloir supprimer ?",
+                title: "Attention!",
+                actions: {
+                    false: "Non!",
+                    true: {
+                        color: "red",
+                        text: "Je confirme",
+                        handle: () => {
+                            this.$store.dispatch("deleteData", {
+                                path: `/api/delete/report/${report_id}`,
+                                related: "delete-report"
+                            });
+                        }
+                    }
+                }
+            });
         },
         //* View Report
         viewReport: function(report) {
@@ -247,38 +279,29 @@ export default {
         //* Parse to date
         parseToDate: function(date) {
             return moment(date).format("MM/D/YYYY H:mm");
+        },
+        //* The famous isBusy funtion haha
+        isBusy: function(fetcher) {
+            try {
+                return this.$store.getters.expected(fetcher).status == "busy"
+                    ? true
+                    : false;
+            } catch (error) {
+                return false;
+            }
         }
     },
     watch: {
         expected() {
             {
-                let expected = this.$store.getters.expected("edit-admin");
-                if (expected != undefined) {
-                    //If sucess
-                    if (expected.status === "success") {
-                        this.$dialog.message.success(
-                            expected.result.subMessage,
-                            {
-                                position: "bottom",
-                                timeout: 2000
-                            }
-                        );
-                    }
-                }
-            }
-            {
                 let expected = this.$store.getters.expected("delete-report");
-                if (expected != undefined) {
-                    //If sucess
-                    if (expected.result.status === "success") {
-                        this.$dialog.message.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 2000
-                            }
-                        );
-                    }
+                if (expected != undefined && expected.status === "success") {
+                    this.$store.commit("CLEAR_EXPECTED");
+                    this.$dialog.message.success(expected.result.subMessage, {
+                        position: "top-right",
+                        timeout: 2000
+                    });
+                    this.init();
                 }
             }
         }

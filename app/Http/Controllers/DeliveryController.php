@@ -11,7 +11,6 @@ use App\Models\Delivery;
 class DeliveryController extends Controller
 {
 
-    //* Update password
     //* Edit password
     public function editPassword(Request $request){
         try{

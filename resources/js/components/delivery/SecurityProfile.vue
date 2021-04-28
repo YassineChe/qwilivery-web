@@ -153,7 +153,7 @@ export default {
                 let expected = this.$store.getters.expected("edit-password");
                 if (expected != undefined) {
                     //If sucess
-                    if (expected.result.status === "success") {
+                    if (expected.status === "success") {
                         this.$dialog.message.success(
                             expected.result.subMessage,
                             {
@@ -162,7 +162,7 @@ export default {
                             }
                         );
                     }
-                    if (expected.result.status === "errors") {
+                    if (expected.status === "error") {
                         this.$dialog.notify.error(expected.result.subMessage, {
                             position: "top-right",
                             timeout: 2000
