@@ -12,18 +12,18 @@ class ResetEmail extends Notification
     use Queueable;
 
     // Set Data
-    public $Token;
-    public $Email;
+    public $token;
+    public $email;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($Email, $Token)
+    public function __construct(eEmail, $token)
     {
-        $this->Token = $Token;
-        $this->Email = $Email;
+        $this->token = $token;
+        $this->email = $email;
     }
 
     /**
@@ -46,7 +46,7 @@ class ResetEmail extends Notification
     public function toMail($notifiable)
     {
 
-        $url = url('/reset-password/' . $this->Token);
+        $url = url('/reset-password/' . $this->token);
         $why = "Cet e-mail vous a été envoyé suite à une demande de réinitialisation du mot de passe de votre compte.
                    Pour réinitialiser votre mot de passe, cliquez sur le lien ci-dessous.
                    Si vous n'avez pas effectué cette action,
