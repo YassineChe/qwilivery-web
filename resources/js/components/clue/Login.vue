@@ -113,11 +113,8 @@
                                                 <span
                                                     class="grey--text text--darken-1"
                                                 >
-                                                    Entrez votre email et nous
-                                                    vous enverrons des
-                                                    instructions pour
-                                                    réinitialiser votre mot de
-                                                    passe
+                                                    Vous recevrez un email avec
+                                                    le lien de récupération
                                                 </span>
                                             </template>
                                         </Headline>

@@ -107,9 +107,8 @@ class AuthController extends Controller
         //Check if token exist
         $reset = Password_reset::Where('token', $request->token)->first();
 
-        if (!$reset) {
-            return dataToResponse('error', 'Erreur!', ' votre URL a expiré', false, 422);
-        }
+        if (!$reset) 
+            return dataToResponse('error', 'Erreur!', 'Votre URL a expiré', false, 422);
 
         $time = \Carbon\Carbon::parse($reset->created_at)->addMinutes(10);
 
@@ -117,9 +116,7 @@ class AuthController extends Controller
 
             $admin = Admin::where('email', $reset->email)->first();
             if ($admin) {
-                $admin->update([
-                    'password' => \Hash::make($request->password)
-                ]);
+                $admin->update(['password' => \Hash::make($request->password)]);
                 $reset->delete();
                 return dataToResponse('success', 'success!', 'le mot de passe a été mis à jour avec succès', false, 200);
             }
