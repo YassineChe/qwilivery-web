@@ -53,7 +53,7 @@ class ResetEmail extends Notification
                    Veuillez ignorer cet email";
 
         return (new MailMessage)
-            ->line('Salut .' . $this->email)
+            ->greeting('Bonjour!')
             ->line($why)
             ->action('Réinitialisez votre mot de passe', url($url));
     }
