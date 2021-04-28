@@ -111,6 +111,27 @@ export default {
             return this.$store.getters.guard;
         }
     },
+    methods: {
+        //* Edit passsword.
+        updatePassword: function() {
+            return this.$store.dispatch("editData", {
+                path: `/api/edit/delivery/password`,
+                data: this.password,
+                related: `edit-password`,
+                returned: true
+            });
+        },
+        //* The famous is busy function
+        isBusy: function(fetcher) {
+            try {
+                return this.$store.getters.expected(fetcher).status == "busy"
+                    ? true
+                    : false;
+            } catch (error) {
+                return false;
+            }
+        }
+    },
     watch: {
         expected() {
             {
@@ -133,7 +154,6 @@ export default {
                 if (expected != undefined) {
                     //If sucess
                     if (expected.result.status === "success") {
-                        console.log(expected);
                         this.$dialog.message.success(
                             expected.result.subMessage,
                             {
@@ -149,27 +169,6 @@ export default {
                         });
                     }
                 }
-            }
-        }
-    },
-    methods: {
-        //* Edit passsword.
-        updatePassword: function() {
-            return this.$store.dispatch("editData", {
-                path: `/api/edit/delivery/password`,
-                data: this.password,
-                related: `edit-password`,
-                returned: true
-            });
-        },
-        //* The famous is busy function
-        isBusy: function(fetcher) {
-            try {
-                return this.$store.getters.expected(fetcher).status == "busy"
-                    ? true
-                    : false;
-            } catch (error) {
-                return false;
             }
         }
     }

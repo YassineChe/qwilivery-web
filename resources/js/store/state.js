@@ -10,7 +10,8 @@ let state = {
     categories: [],
     variants: [],
     preorders: [],
-    orders: []
+    orders: [],
+    reports: []
 };
 
 export default state;

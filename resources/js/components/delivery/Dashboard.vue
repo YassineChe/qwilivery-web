@@ -222,7 +222,6 @@ export default {
                         position: "top-right",
                         timeout: 3000
                     });
-                    this.init();
                 }
             }
         }

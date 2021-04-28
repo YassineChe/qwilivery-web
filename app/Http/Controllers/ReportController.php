@@ -10,7 +10,10 @@ class ReportController extends Controller
     //* Fetch Report
     public function fetchReports(){
         try{
-            return response(Report::all(), 200);
+            return response()->json([
+                'deliveries' => Report::where('guard', 'delivery')->with('delivery')->orderBy('id', 'DESC')->get(),
+                'restaurants'=> Report::where('guard', 'restaurant')->with('restaurant')->orderBy('id', 'DESC')->get()
+            ]);
         }
         catch(\Exception $e){
             handleLogs($e);

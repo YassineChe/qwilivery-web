@@ -145,12 +145,23 @@
                 </v-list-item>
 
                 <!-- Dashboard -->
-                <v-subheader>Paramètres</v-subheader>
+                <v-subheader>Profile & Paramètres</v-subheader>
                 <v-list-item to="restaurants">
                     <v-list-item-icon>
                         <v-icon>mdi-account-cog</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>Porfile</v-list-item-title>
+                </v-list-item>
+                <!-- Reports -->
+                <v-list-item @click="postReport()">
+                    <v-list-item-icon>
+                        <v-icon v-text="'mdi-alert'"></v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item-title
+                            v-text="'Reporter'"
+                        ></v-list-item-title>
+                    </v-list-item-content>
                 </v-list-item>
                 <!-- Logout -->
                 <v-list-item @click="signOut()">
@@ -182,11 +193,15 @@
 </template>
 
 <script>
+import PostReport from "../pieces/PostReport";
+import { mapState } from "vuex";
 export default {
     data: () => ({
         drawer: true
     }),
     computed: {
+        ...mapState(["expected"]),
+        //* Guard
         guard: function() {
             try {
                 return this.$store.getters.guard;
@@ -200,8 +215,28 @@ export default {
         }
     },
     methods: {
+        //* Post Report
+        postReport: function() {
+            this.$dialog.show(PostReport);
+        },
+        //* Logout
         signOut: function() {
             this.$auth.signOut();
+        }
+    },
+    watch: {
+        expected() {
+            //Delete Order
+            {
+                let expected = this.$store.getters.expected("add-report");
+                if (expected != undefined && expected.status === "success") {
+                    this.$store.commit("CLEAR_EXPECTED");
+                    this.$dialog.notify.success(expected.result.subMessage, {
+                        position: "top-right",
+                        timeout: 3000
+                    });
+                }
+            }
         }
     },
     beforeCreate() {

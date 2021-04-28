@@ -17,6 +17,8 @@ import Deliveries from "./components/admin/Deliveries";
 import Restaurants from "./components/admin/Restaurants";
 import AdminHistoric from "./components/admin/Historic";
 import AdminProfile from "./components/admin/Profile";
+import AdminReports from "./components/admin/Reports";
+
 //* delivery
 import DeliveryHome from "./components/delivery/Home";
 import DeliveryDashboard from "./components/delivery/Dashboard";
@@ -87,6 +89,12 @@ const adminRoutes = {
             path: "/profile",
             name: "admin-profile",
             component: AdminProfile,
+            meta: { guard: "admin" }
+        },
+        {
+            path: "/reports",
+            name: "admin-reports",
+            component: AdminReports,
             meta: { guard: "admin" }
         }
     ]

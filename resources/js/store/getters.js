@@ -43,8 +43,12 @@ let getters = {
     orders: state => {
         return state.orders;
     },
+    /********** PROFILE & REPORTS ********* */
     profile: state => {
         return state.profile;
+    },
+    reports: state => {
+        return state.reports;
     },
     //handle result
     callback: state => result => {

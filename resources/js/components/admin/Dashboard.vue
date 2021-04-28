@@ -142,13 +142,30 @@
                         </v-list-item-title>
                     </v-list-item>
                     <!-- Settings -->
-                    <v-subheader>Paramètres</v-subheader>
+                    <v-subheader>Paramètres & Rapports</v-subheader>
                     <v-list-item :to="{ name: 'admin-profile' }">
                         <v-list-item-icon>
                             <v-icon>mdi-account-cog</v-icon>
                         </v-list-item-icon>
                         <v-list-item-title>Profile</v-list-item-title>
                     </v-list-item>
+                    <!-- Reports -->
+                    <v-list-item :to="{ name: 'admin-reports' }">
+                        <v-list-item-icon>
+                            <v-icon>mdi-alert</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>
+                            Rapports
+                            <v-chip
+                                v-if="count_unseen_reports > 0"
+                                class="float-right"
+                                small
+                                color="error"
+                                >{{ count_unseen_reports }}</v-chip
+                            >
+                        </v-list-item-title>
+                    </v-list-item>
+
                     <!-- Logout -->
                     <v-list-item @click="signOut()">
                         <v-list-item-icon>
@@ -186,11 +203,33 @@ export default {
         drawer: true
     }),
     computed: {
+        //* Count unseen reprots
+        count_unseen_reports: function() {
+            try {
+                return this.$store.getters.dummies("count_unseen_reports")[
+                    "count_unseen_reports"
+                ];
+            } catch (error) {
+                return "0";
+            }
+        },
+        //* Guard
         guard: function() {
             return this.$store.getters.guard;
         }
     },
     methods: {
+        //* init
+        init: function() {
+            this.$store.dispatch("multipleFetch", [
+                {
+                    path: "/api/fetch/count/reports/unseen",
+                    mutation: "FETCH_DUMMY",
+                    related: "count-unseen-reports"
+                }
+            ]);
+        },
+        //* Logout
         signOut: function() {
             this.$auth.signOut();
         }
