@@ -31,7 +31,7 @@
                                     <v-flex mt-5>
                                         <!-- HeadLine -->
                                         <Headline
-                                            headline="Bienvenue dans Ready2Go👋"
+                                            headline="Bienvenue, Qwilivery👋"
                                             :headline-classes="[
                                                 'text-h5',
                                                 'grey--text text--darken-2'

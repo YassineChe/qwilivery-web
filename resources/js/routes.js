@@ -18,6 +18,7 @@ import Restaurants from "./components/admin/Restaurants";
 import AdminHistoric from "./components/admin/Historic";
 import AdminProfile from "./components/admin/Profile";
 import AdminReports from "./components/admin/Reports";
+import AdminMessenger from "./components/admin/Messenger";
 
 //* delivery
 import DeliveryHome from "./components/delivery/Home";
@@ -26,9 +27,11 @@ import DeliveryProfile from "./components/delivery/Profile";
 import DeliveryHistoric from "./components/delivery/Historic";
 
 //* Restaurant
+import RestaurantHome from "./components/restaurant/Home";
 import RestaurantDashboard from "./components/restaurant/Dashboard";
 import Menu from "./components/restaurant/Menu";
 import PhoneOrder from "./components/restaurant/PhoneOrder";
+import RestaurantProfile from "./components/restaurant/Profile";
 
 Vue.use(VueRouter);
 
@@ -96,6 +99,12 @@ const adminRoutes = {
             name: "admin-reports",
             component: AdminReports,
             meta: { guard: "admin" }
+        },
+        {
+            path: "/messenger",
+            name: "admin-messenger",
+            component: AdminMessenger,
+            meta: { guard: "admin" }
         }
     ]
 };
@@ -106,8 +115,15 @@ const restaurantRoutes = {
     name: "dashboard",
     component: RestaurantDashboard,
     name: "Dashboard",
+    redirect: "restaurant-home-dashboard",
     meta: { requiresAuth: true, guard: "restaurant" },
     children: [
+        {
+            path: "/",
+            name: "restaurant-home-dashboard",
+            component: RestaurantHome,
+            meta: { guard: "restaurant" }
+        },
         {
             path: "/restaurant-menu",
             name: "menu",
@@ -121,9 +137,9 @@ const restaurantRoutes = {
             meta: { guard: "restaurant" }
         },
         {
-            path: "/order",
+            path: "/profile",
             name: "restaurant-profile",
-            component: PhoneOrder,
+            component: RestaurantProfile,
             meta: { guard: "restaurant" }
         }
     ]

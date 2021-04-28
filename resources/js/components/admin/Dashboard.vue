@@ -133,7 +133,7 @@
                         </v-list-item-title>
                     </v-list-item>
                     <!-- Chat -->
-                    <v-list-item>
+                    <v-list-item :to="{ name: 'admin-messenger' }">
                         <v-list-item-icon>
                             <v-icon>mdi-chat-outline</v-icon>
                         </v-list-item-icon>

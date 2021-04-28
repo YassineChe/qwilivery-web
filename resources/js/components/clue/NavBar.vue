@@ -87,7 +87,7 @@
                                     >
                                         <template #subheadline>
                                             <span>
-                                                Ready2Go en construction..
+                                                Qwerlivery en construction..
                                                 Spoveup Team.
                                             </span>
                                         </template>

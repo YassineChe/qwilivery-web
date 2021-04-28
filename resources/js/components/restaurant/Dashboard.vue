@@ -146,7 +146,7 @@
 
                 <!-- Dashboard -->
                 <v-subheader>Profile & Paramètres</v-subheader>
-                <v-list-item to="restaurants">
+                <v-list-item :to="{ name: 'restaurant-profile' }">
                     <v-list-item-icon>
                         <v-icon>mdi-account-cog</v-icon>
                     </v-list-item-icon>

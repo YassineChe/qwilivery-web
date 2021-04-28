@@ -96,6 +96,13 @@ Route::middleware("auth:restaurant")->group(function () {
     //* Order Stuff
     Route::get('/fetch/preorders', [OrderController::class, 'fetchPreOrders']);
     Route::post('/add/order', [OrderController::class, 'addOrder']);
+    //* Porfile stuff
+    Route::post('/edit/restaurant/profile', [RestaurantController::class, 'editProfile']); // Edit profile
+    Route::put('/edit/restaurant/security', [RestaurantController::class, 'editPassword']); // Edit password 
+    //Statistics
+    Route::get('/fetch/count/restaurant/categories', [StatisticController::class, 'countCategoriesByRestaurant']);
+    Route::get('/fetch/count/restaurant/preorder', [StatisticController::class, 'countPreOrdersByRestaurant']);
+    Route::get('/fetch/count/restaurant/delivered', [StatisticController::class, 'countDelivredByRestaurant']);
 });
 
 //? Common api routes between (Restaurant, Admin)

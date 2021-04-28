@@ -14,7 +14,7 @@ class DeliveryController extends Controller
     //* Edit password
     public function editPassword(Request $request){
         try{
-            $delivery = delivery::where('id', authIdFromGuard('delivery'))->first();
+            $delivery = Delivery::where('id', authIdFromGuard('delivery'))->first();
             if ($delivery){
                 if (\Hash::check($request->old, $delivery->makeVisible(['password'])->password)){
                     if ($request->new == $request->cfm){

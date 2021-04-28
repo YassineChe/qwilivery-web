@@ -229,15 +229,7 @@ export default {
         StatisticCard,
         Headline
     },
-    data: () => ({
-        messages: [
-            {
-                message: `Sure, I'll see you later.`,
-                time: "10:42am",
-                color: "red"
-            }
-        ]
-    }),
+
     computed: {
         //* Last five orders status
         preorders: function() {
