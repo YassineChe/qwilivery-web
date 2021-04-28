@@ -20,7 +20,7 @@ class ResetEmail extends Notification
      *
      * @return void
      */
-    public function __construct(eEmail, $token)
+    public function __construct($email, $token)
     {
         $this->token = $token;
         $this->email = $email;
