@@ -89,7 +89,7 @@ class OrderController extends Controller
         try{
             return response(
                 PreOrder::whereNull('delivered_at')->whereNull('delivery_id')
-                        ->with('orders')
+                    ->with(['orders', 'restaurant'])
                         ->get()
                         , 200
             );

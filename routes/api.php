@@ -75,11 +75,12 @@ Route::middleware("auth:admin")->group(function () {
 Route::middleware("auth:delivery")->group(function () {
     Route::put('/edit/delivery/security', [DeliveryController::class, "editPassword"]); // Update password
     Route::post('/edit/delivery/profile', [DeliveryController::class, "editProfile"]); // update info of delivery man
-    Route::get('/fetch/orders/to/deliver', [OrderController::class, 'orderToDeliver']); // Fetch order to deliver
     Route::get('/fetch/last/five/missions', [OrderController::class, 'fetchLastFiveMissions']); // Delivery last five missions
     Route::get('/fetch/delivery/historic', [OrderController::class, 'fetchDeliveryHistory']); // Fetch delivery historic
     Route::get('/fetch/delivered/by/delivery', [StatisticController::class, 'countDelivedForDelivery']); // Statistic for delivery boy
     Route::get('/download/file', [DeliveryController::class, "downloadFile"]); // Download permit
+    //Used in mobile
+    Route::get('/fetch/orders/to/deliver', [OrderController::class, 'orderToDeliver']); // Fetch order to deliver
 });
 
 //? Restaurant api routes
