@@ -88,7 +88,8 @@ class OrderController extends Controller
     public function orderToDeliver(){
         try{
             return response(
-                PreOrder::where('delivered', false)->with('orders')
+                PreOrder::whereNull('delivered_at')->whereNull('delivery_id')
+                        ->with('orders')
                         ->get()
                         , 200
             );
