@@ -43,7 +43,7 @@ let mutations = {
         //Push the new one
         return state.dummies.push(dummies);
     },
-    //! ################################
+    /************** DELIVERY **************** */
     FETCH_DELIVERIES(state, deliveries) {
         return (state.deliveries = deliveries);
     },
@@ -113,6 +113,10 @@ let mutations = {
     },
     FETCH_REPORTS(state, reports) {
         return (state.reports = reports);
+    },
+    /************** CHATFLOWS **************/
+    FETCH_CHATFLOWS(state, chatflows) {
+        return (state.chatflows = chatflows);
     }
 };
 export default mutations;

@@ -50,6 +50,10 @@ let getters = {
     reports: state => {
         return state.reports;
     },
+    /*********** CHATFLOW *********** */
+    chatflows: state => {
+        return state.chatflows;
+    },
     //handle result
     callback: state => result => {
         return typeof result === "object"

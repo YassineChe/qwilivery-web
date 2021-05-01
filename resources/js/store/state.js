@@ -11,7 +11,8 @@ let state = {
     variants: [],
     preorders: [],
     orders: [],
-    reports: []
+    reports: [],
+    chatflows: []
 };
 
 export default state;

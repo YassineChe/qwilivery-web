@@ -12,6 +12,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,7 +59,6 @@ Route::middleware("auth:admin")->group(function () {
     Route::get('/fetch/count/delivered', [StatisticController::class, 'countDelivered']); // How much delivered menu
     Route::get('/fetch/count/reports/unseen', [StatisticController::class, 'countReportsUnseen']); // How much delivered menu
     
-    
     //* Historic stuff
     Route::get('/fetch/historic', [OrderController::class, 'fetchHistoric']); //List of Historic orders
     
@@ -69,6 +69,10 @@ Route::middleware("auth:admin")->group(function () {
     //* Reports stuff
     Route::get('/fetch/reports', [ReportController::class, 'fetchReports']); // Fetch report list
     Route::delete('/delete/report/{report_id}', [ReportController::class, 'deleteReport']); // Delete report
+
+    //* Chat stuff
+    Route::post('/admin/send/message', [ChatController::class, 'sendMessageByAdmin']); //Message sent by admin
+    Route::get('/fetch/chatflow/delivery/{delivery_id}', [ChatController::class, 'fetchChatFlowByDeliveryID']); // Fetching chatflow by delivery id
 });
 
 //? Delivery api routes

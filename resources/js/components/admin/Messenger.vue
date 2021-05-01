@@ -44,7 +44,7 @@
                                     v-for="(delivery, idx) in items"
                                     :key="idx"
                                     link
-                                    @click="showChatFlow(conversation)"
+                                    @click="showChatFlow(delivery.id)"
                                 >
                                     <v-list-item-avatar>
                                         <v-img
@@ -70,11 +70,17 @@
                     </v-list-item-group>
                 </v-list>
             </v-col>
+            <!-- Messages (Content) -->
             <v-col cols="auto" class="flex-grow-1 flex-shrink-0">
                 <v-responsive height="70vh">
-                    <v-card tile class="d-flex flex-column fill-height">
-                        <v-card-title class="sbg">
-                            <h5>{{ "Name here" }}</h5>
+                    <v-card
+                        tile
+                        class="d-flex flex-column fill-height"
+                        :loading="isBusy('fetch-chatflows')"
+                        :disabled="isBusy('fetch-chatflows')"
+                    >
+                        <v-card-title class="font-weight-thin">
+                            {{ "Name here" }}
                         </v-card-title>
 
                         <v-card-text
@@ -82,27 +88,34 @@
                             id="scrollHere"
                         >
                             <!-- d-flex flex-row-reverse -->
-                            <template>
-                                <div class="my-2">
-                                    <v-chip class="white--text" color="primary">
-                                        <v-avatar left>
-                                            <v-img
-                                                :src="
-                                                    `images/avatars/avatar.png`
-                                                "
-                                            ></v-img>
-                                        </v-avatar>
-                                        Hello It's me</v-chip
+                            <template v-for="(chatflow, idx) in chatflows">
+                                <div
+                                    class="my-2"
+                                    :key="idx"
+                                    :class="
+                                        chatflow.from == 'admin'
+                                            ? 'd-flex flex-row-reverse'
+                                            : ''
+                                    "
+                                >
+                                    <v-chip
+                                        class="white--text"
+                                        :color="
+                                            chatflow.from == 'admin'
+                                                ? 'primary'
+                                                : 'accent'
+                                        "
+                                    >
+                                        {{ chatflow.message }}</v-chip
                                     >
                                 </div>
                             </template>
                         </v-card-text>
-
                         <v-divider />
                         <v-card-actions>
                             <v-text-field
                                 label="Message ..."
-                                v-model="message"
+                                v-model="flow.message"
                                 clearable
                                 outlined
                                 @keydown.enter="sendMessage()"
@@ -122,10 +135,19 @@ export default {
     data() {
         return {
             search: "",
-            message: ""
+            flow: {
+                delivery_id: null,
+                admin_id: "",
+                from: "admin",
+                to: "delivery",
+                message: ""
+            }
         };
     },
     computed: {
+        chatflows: function() {
+            return this.$store.getters.chatflows;
+        },
         deliveries: function() {
             return this.$store.getters.deliveries;
         },
@@ -141,6 +163,29 @@ export default {
                 mutation: "FETCH_DELIVERIES",
                 related: "fetch-deliveries"
             });
+        },
+        showChatFlow: function(delivery_id) {
+            //Set
+            this.flow.delivery_id = delivery_id;
+            //Get
+            this.$store.dispatch("fetchData", {
+                path: `/api/fetch/chatflow/delivery/${delivery_id}`,
+                mutation: "FETCH_CHATFLOWS",
+                related: "fetch-chatflows"
+            });
+        },
+        //Send message
+        sendMessage: function() {
+            if (this.flow.delivery_id != null)
+                this.$store.dispatch("postData", {
+                    path: "/api/admin/send/message",
+                    data: this.flow,
+                    related: "send-message"
+                });
+
+            this.chatflows.push(Object.assign({}, this.flow));
+            this.scrollToBottom();
+            this.flow.message = "";
         },
         //* The famous isBusy funtion haha
         isBusy: function(fetcher) {
