@@ -43,7 +43,7 @@ class NotifyRestaurantAccount extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(env("APP_NAME").' | Information d\'authentification 🔑')
+            ->subject(config('app.name').' | Information d\'authentification 🔑')
             ->greeting('Bonjour!')
             ->line('Vous trouverez ci-joint les informations d\'authentification')
             ->line('Email: ' . $this->restaurant['email'])
