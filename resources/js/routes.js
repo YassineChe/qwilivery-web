@@ -3,7 +3,6 @@ import VueRouter from "vue-router";
 import Vue from "vue";
 
 //! Global routes
-import Clue from "./components/Clue";
 import Login from "./components/clue/Login";
 import Register from "./components/clue/Register";
 import ChangePassword from "./components/clue/ChangePassword";
@@ -45,7 +44,7 @@ const LoginRoutes = [
     {
         path: "/",
         name: "clue",
-        component: Clue,
+        component: Login,
         meta: { requiresAuth: false }
     },
     {

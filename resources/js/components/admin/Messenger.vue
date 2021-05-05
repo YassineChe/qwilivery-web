@@ -80,7 +80,7 @@
                         :disabled="isBusy('fetch-chatflows')"
                     >
                         <v-card-title class="font-weight-thin">
-                            {{ "Name here" }}
+                            {{ shouldBeHere }}
                         </v-card-title>
 
                         <v-card-text
@@ -145,6 +145,15 @@ export default {
         };
     },
     computed: {
+        shouldBeHere: function() {
+            if (this.flow.delivery_id != null) {
+                let delivery = this.deliveries.find(delivery => {
+                    return this.flow.delivery_id == delivery.id;
+                });
+
+                return delivery["last_name"] + " " + delivery["first_name"];
+            }
+        },
         chatflows: function() {
             return this.$store.getters.chatflows;
         },

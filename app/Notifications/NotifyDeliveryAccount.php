@@ -43,9 +43,12 @@ class NotifyDeliveryAccount extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->action('Le link de site web est', url('/login'))
-            ->line('Email ' . $this->delivery['email'])
-            ->line('Password:' . $this->delivery['password']);
+            ->subject(env("APP_NAME").' | Information d\'authentification 🔑')
+            ->greeting('Bonjour!')
+            ->line('Vous trouverez ci-joint les informations d\'authentification')
+            ->line('Email: ' . $this->delivery['email'])
+            ->line('Password: ' . $this->delivery['password'])
+            ->action('Connexion', url('/login'));
     }
 
     /**

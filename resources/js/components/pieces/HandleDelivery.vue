@@ -119,14 +119,14 @@
                     >
                         <v-icon left>mdi-cloud-upload</v-icon>
                         <span v-if="!delivery.fileName"
-                            >joindre permis (PDF)</span
+                            >joindre permis (PNG)</span
                         >
                         <span v-else>{{ delivery.fileName.name }}</span>
                     </v-btn>
                     <v-file-input
                         v-model="delivery.fileName"
                         v-show="false"
-                        id="pdf-file"
+                        id="png-permit"
                     >
                     </v-file-input>
                 </v-col>
@@ -137,6 +137,7 @@
 
 <script>
 export default {
+    layout: ["default", { width: 600 }],
     props: {
         deliveryToEdit: { required: false },
         title: { required: true, type: String }
@@ -147,8 +148,8 @@ export default {
                 first_name: "",
                 last_name: "",
                 email: "",
-                experience: "",
                 phone_number: "",
+                experience: "",
                 fileName: null
             }
         };
@@ -175,7 +176,7 @@ export default {
                     rounded: true,
                     handle: () => {
                         // Empty the images so that we upload new ones
-                        const file = document.querySelector("#pdf-file");
+                        const file = document.querySelector("#png-permit");
                         // Make sure the file input is not null
                         if (!file.files) return;
 
@@ -209,7 +210,7 @@ export default {
         },
         //* Rander input
         rander() {
-            document.getElementById("pdf-file").click();
+            document.getElementById("png-permit").click();
         }
     },
     created() {

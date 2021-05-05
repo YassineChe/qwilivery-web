@@ -54,6 +54,10 @@ class AuthController extends Controller
             return dataToResponse('error', 'Erreur!', 'Le mot de passe est erroné', false, 422);
         } else if ($delivery) {
             if (\Hash::check($request->password, $delivery->password)) {
+
+                if ($delivery->approved_at == null)
+                    return dataToResponse('error', 'Erreur!', 'Votre compte n\'a pas encore été approuvé', false, 422);
+
                 return response([
                     'guard' => 'delivery',
                     'token' => $delivery->createToken('admin-api', ['admin-stuff'])->plainTextToken

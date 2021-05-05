@@ -111,8 +111,7 @@ class AdminController extends Controller
     {
         return
             response(
-                Delivery::orderByRaw('created_at DESC')
-                    ->get(),
+                Delivery::orderBy('id', 'DESC')->get(),
                 200
             );
     }
@@ -156,7 +155,7 @@ class AdminController extends Controller
         //Generate random password.
         $generetedPassword = \Str::random(6);
         //Upload data to server.
-        $fileName =  storeUploaded(public_path() . '/files', $request->permit);
+        $fileName =  storeUploaded(public_path() . '/images/permits', $request->permit);
         //Store data
         $delivery = Delivery::Create([
             'first_name'   => $request->first_name,
@@ -181,9 +180,9 @@ class AdminController extends Controller
 
         if ($request->permit != $delivery->permit) {
             try {
-                $fileName =  storeUploaded(public_path() . '/files', $request->permit);
+                $fileName =  storeUploaded(public_path() . '/images/permits', $request->permit);
                 // delete old permit 
-                unlink("files/" . $delivery->permit);
+                unlink("images/permits/" . $delivery->permit);
             } catch (\Exception $e) {
                 handleLogs($e);
             }

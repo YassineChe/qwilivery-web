@@ -131,14 +131,14 @@
                                                 }}
                                             </span>
                                             <span v-else>
-                                                joindre votre permis (PDF)
+                                                joindre votre permis (PNG)
                                             </span>
                                         </v-btn>
                                         <input
                                             hidden
                                             @change="changeName()"
                                             type="file"
-                                            id="pdf-file"
+                                            id="png-permit"
                                         />
                                     </v-flex>
                                     <v-flex mt-5>
@@ -208,14 +208,14 @@ export default {
     },
     methods: {
         changeName() {
-            const file = document.querySelector("#pdf-file");
+            const file = document.querySelector("#png-permit");
             // Make sure the file input is not null
             this.file = file.files[0].name;
         },
         //* register
         register: function() {
             // Empty the images so that we upload new ones
-            const file = document.querySelector("#pdf-file");
+            const file = document.querySelector("#png-permit");
             // Make sure the file input is not null
             if (!file.files) return;
             // The file is a valid file.
@@ -233,7 +233,7 @@ export default {
         },
         //* Rander input
         rander() {
-            document.getElementById("pdf-file").click();
+            document.getElementById("png-permit").click();
         },
         // Overlly
         isBusy: function(fetcher) {

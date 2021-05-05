@@ -15,6 +15,7 @@
                 />
             </v-col>
         </v-row>
+
         <v-row class="mt-5" flat>
             <v-col :align="!isMobile ? 'right' : ''">
                 <!-- Refresh -->
@@ -32,7 +33,7 @@
                     </template>
                     <span>Rafraîchir</span>
                 </v-tooltip>
-
+                <!-- Add delivery -->
                 <v-btn
                     color="primary"
                     outlined
@@ -44,40 +45,41 @@
                 </v-btn>
             </v-col>
         </v-row>
+
         <v-card class="mt-5">
             <v-toolbar flat>
                 <v-text-field
                     v-model="search"
                     append-icon="mdi-magnify"
-                    label="Search"
+                    label="Rechercher e.g: Nom, E-mail, Téléphone..."
                     hide-details
                     solo
                     clearable
-                ></v-text-field>
+                >
+                </v-text-field>
             </v-toolbar>
 
             <v-data-table
-                :loading="isBusy('fetch-deliveries')"
                 :headers="headers"
                 :items="deliveries"
                 :search="search"
                 disable-sort
                 item-key="id"
             >
-                <template v-slot:[`item.name`]="{ item }">
+                <template v-slot:[`item.name`]="{ item }" v-if="deliveries">
                     <v-icon color="error" v-if="item.blocked_at != null"
                         >mdi-cancel</v-icon
                     >
                     <span>{{ item.first_name + " " + item.last_name }}</span>
                 </template>
 
-                <template v-slot:[`item.avatar`]="{ item }">
+                <template v-slot:[`item.avatar`]="{ item }" v-if="deliveries">
                     <v-avatar size="40">
                         <img :src="`/images/avatars/${item.avatar}`" />
                     </v-avatar>
                 </template>
 
-                <template v-slot:[`item.status`]="{ item }">
+                <template v-slot:[`item.status`]="{ item }" v-if="deliveries">
                     <v-chip v-if="!item.status">
                         <v-switch
                             v-model="item.status"
@@ -88,7 +90,7 @@
                     <v-chip color="success" v-else> approuvé(e) </v-chip>
                 </template>
 
-                <template v-slot:[`item.actions`]="{ item }">
+                <template v-slot:[`item.actions`]="{ item }" v-if="deliveries">
                     <v-speed-dial
                         :v-model="true"
                         direction="left"
@@ -148,7 +150,6 @@
                             Télécharger permis
                         </v-tooltip>
                         <!-- Block -->
-                        <!-- Block -->
                         <v-tooltip top>
                             <template v-slot:activator="{ on, attrs }">
                                 <v-btn
@@ -206,10 +207,12 @@
 </template>
 
 <script>
+//Components
 import Headline from "../pieces/Headline";
 import HandleDelivery from "../pieces/HandleDelivery";
-
+//libs
 import { mapState } from "vuex";
+
 export default {
     components: {
         Headline
@@ -218,29 +221,12 @@ export default {
         return {
             search: "",
             headers: [
-                {
-                    value: "avatar",
-                    text: "Photo"
-                },
-                {
-                    value: "name",
-                    text: "NOM ET PRÉNOM"
-                },
-                {
-                    value: "status",
-                    text: "APPROUVER"
-                },
-                {
-                    value: "email",
-                    text: "EMAIL"
-                },
-                {
-                    value: "phone_number",
-                    text: "TÉLÉPHONE"
-                },
-                {
-                    value: "actions"
-                }
+                { value: "avatar", text: "Photo" },
+                { value: "name", text: "NOM ET PRÉNOM" },
+                { value: "status", text: "APPROUVER" },
+                { value: "email", text: "EMAIL" },
+                { value: "phone_number", text: "TÉLÉPHONE" },
+                { value: "actions" }
             ]
         };
     },
@@ -248,7 +234,10 @@ export default {
         ...mapState(["expected"]),
         //*Get no blocked delivery
         deliveries: function() {
-            return this.$store.getters.deliveries;
+            console.log(this.$store.getters.deliveries);
+            return this.$store.getters.deliveries == null
+                ? []
+                : this.$store.getters.deliveries;
         },
         //* Is mobile
         isMobile() {
@@ -270,8 +259,7 @@ export default {
             this.$store.commit("CLEAR_EXPECTED");
 
             this.$dialog.show(HandleDelivery, {
-                title: "Ajouter nouveau Livreur",
-                width: "40%"
+                title: "Ajouter nouveau Livreur"
             });
         },
         //* Edit delivery
@@ -280,8 +268,7 @@ export default {
 
             this.$dialog.show(HandleDelivery, {
                 deliveryToEdit: Delivery, // Props
-                title: "Modifier le Livreur",
-                width: "40%"
+                title: "Modifier le Livreur"
             });
         },
         // * Edit approvement delivery man.
@@ -499,10 +486,6 @@ export default {
                                 position: "top-right",
                                 timeout: 3000
                             }
-                        );
-                        this.$store.commit(
-                            "ADD_DELIVERY",
-                            expected.result.subMessage["data"]
                         );
                         this.init();
                     }
