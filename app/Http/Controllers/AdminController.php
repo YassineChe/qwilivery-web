@@ -201,6 +201,6 @@ class AdminController extends Controller
             'phone_number' => $request->phone_number,
         ]);
         
-        return dataToResponse('success', 'Succès ', [ "msg" => 'La modification a réussi ', "data" => $delivery], true, 200);
+        return dataToResponse('success', 'Succès ', 'La modification a réussi ', true, 200);
     }
 }

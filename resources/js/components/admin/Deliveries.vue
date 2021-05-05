@@ -481,7 +481,7 @@ export default {
                     if (expected.status === "success") {
                         this.$store.commit("CLEAR_EXPECTED");
                         this.$dialog.notify.success(
-                            expected.result.subMessage["msg"],
+                            expected.result.subMessage,
                             {
                                 position: "top-right",
                                 timeout: 3000
@@ -509,16 +509,13 @@ export default {
                     this.$store.commit("CLEAR_EXPECTED");
                     if (expected.status === "success") {
                         this.$dialog.notify.success(
-                            expected.result.subMessage["msg"],
+                            expected.result.subMessage,
                             {
                                 position: "top-right",
                                 timeout: 3000
                             }
                         );
-                        this.$store.commit(
-                            "ADD_DELIVERY",
-                            expected.result.subMessage["data"]
-                        );
+
                         this.init();
                     }
                     if (expected.status === "error") {
