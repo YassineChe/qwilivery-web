@@ -48,9 +48,7 @@
                 <template v-slot:activator="{ on }">
                     <v-btn icon x-large v-on="on">
                         <v-avatar size="45">
-                            <img
-                                :src="`/images/restaurants_logo/${guard.logo}`"
-                            />
+                            <img :src="`/images/avatars/${guard.avatar}`" />
                         </v-avatar>
                     </v-btn>
 

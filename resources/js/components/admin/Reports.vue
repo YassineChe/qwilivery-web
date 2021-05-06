@@ -160,7 +160,7 @@
                             <v-avatar size="40" v-if="item.restaurant">
                                 <img
                                     :src="
-                                        `/images/restaurants_logo/${item.restaurant.logo}`
+                                        `/images/avatars/${item.restaurant.avatar}`
                                     "
                                 />
                             </v-avatar>

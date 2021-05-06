@@ -12,7 +12,9 @@ let state = {
     preorders: [],
     orders: [],
     reports: [],
-    chatflows: []
+    chatflows: [],
+    conversations: [],
+    persons: [] // This for both employers & Employees (Used in search chat (start chat))
 };
 
 export default state;

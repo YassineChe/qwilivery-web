@@ -15,8 +15,10 @@ class CreateConversationsTable extends Migration
     {
         Schema::create('conversations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('admin_id')->nullable()->references('id')->on('admins');
             $table->foreignId('delivery_id')->nullable()->references('id')->on('deliveries');
+            $table->foreignId('restaurant_id')->nullable()->references('id')->on('restaurants');
+            $table->foreignId('admin_id')->nullable()->references('id')->on('admins');
+            $table->enum('deleted_by', ['delivery', 'restaurant', 'admin'])->nullable();
             $table->timestamps();
         });
     }

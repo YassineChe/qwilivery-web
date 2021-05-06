@@ -17,7 +17,7 @@
                                 :src="
                                     tempAvatar
                                         ? tempAvatar
-                                        : `/images/restaurants_logo/${guard.logo}`
+                                        : `/images/avatars/${guard.avatar}`
                                 "
                             />
                         </v-avatar>

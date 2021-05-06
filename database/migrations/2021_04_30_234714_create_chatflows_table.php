@@ -15,9 +15,9 @@ class CreateChatflowsTable extends Migration
     {
         Schema::create('chatflows', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('conversation_id')->references('id')->on('conversations');
-            $table->enum('from', ['admin', 'delivery']);
-            $table->enum('to', ['admin', 'delivery']);
+            $table->foreignId('conversation_id')->references('id')->on('converstions');
+            $table->enum('from', ['delivery', 'restaurant', 'admin']);
+            $table->enum('to', ['delivery', 'restaurant', 'admin']);
             $table->text('message');
             $table->timestamp('seen_at')->nullable();
             $table->timestamps();

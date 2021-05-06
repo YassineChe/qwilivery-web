@@ -13,6 +13,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ConversationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,15 +36,15 @@ Route::post('/register/delivery', [AuthController::class, 'regiterDelivery']);
 //? Admin api routes
 Route::middleware("auth:admin")->group(function () {
     //* Delivery Man stuff
-    Route::post('/approved/delivery-man', [AdminController::class, 'approvedDeliveryMan']); //approuve delivery man
-    Route::delete('/delete/delivery-man', [AdminController::class, 'deleteDeliveryMan']); //delete delivery man
-    Route::patch('/block/delivery-man', [AdminController::class, 'blockDeliveryMan']); //block delivery man
-    Route::get('/fetch/deliveries', [AdminController::class, 'fetchDeliveries']); //  Fetch delivery men no blocked.
-    Route::get('/fetch/deliveries/restricted', [AdminController::class, 'fetchRestrictedDeliveries']); // Deliveries with more info (whos out service..)
-    Route::patch('/unblock/delivery-man', [AdminController::class, 'unblockDeliveryMan']); // Unblock DeliveryMan
-    Route::post('/add/delivery-man', [AdminController::class, 'addDeliveryMan']); //Add DeliveryMan
-    Route::post('/edit/delivery-man', [AdminController::class, 'editDeliveryMan']); //Edit DeliveryMan
-    Route::put('/add/delivery/to/order', [AdminController::class, 'addDeliveryToOrder']);
+    Route::post('/approved/delivery-man', [DeliveryController::class, 'approvedDeliveryMan']); //approuve delivery man
+    Route::delete('/delete/delivery-man', [DeliveryController::class, 'deleteDeliveryMan']); //delete delivery man
+    Route::patch('/block/delivery-man', [DeliveryController::class, 'blockDeliveryMan']); //block delivery man
+    Route::get('/fetch/deliveries', [DeliveryController::class, 'fetchDeliveries']); //  Fetch delivery men no blocked.
+    Route::get('/fetch/deliveries/restricted', [DeliveryController::class, 'fetchRestrictedDeliveries']); // Deliveries with more info (whos out service..)
+    Route::patch('/unblock/delivery-man', [DeliveryController::class, 'unblockDeliveryMan']); // Unblock DeliveryMan
+    Route::post('/add/delivery-man', [DeliveryController::class, 'addDeliveryMan']); //Add DeliveryMan
+    Route::post('/edit/delivery-man', [DeliveryController::class, 'editDeliveryMan']); //Edit DeliveryMan
+    Route::put('/add/delivery/to/order', [DeliveryController::class, 'addDeliveryToOrder']);
 
     //* Restaurant stuff
     Route::get('/fetch/restaurants', [RestaurantController::class, 'fetchRestaurants']); // Fetch Restaurants
@@ -58,6 +59,9 @@ Route::middleware("auth:admin")->group(function () {
     Route::get('/fetch/count/restaurants', [StatisticController::class, 'countRestaurants']); // How much restaurant
     Route::get('/fetch/count/delivered', [StatisticController::class, 'countDelivered']); // How much delivered menu
     Route::get('/fetch/count/reports/unseen', [StatisticController::class, 'countReportsUnseen']); // How much delivered menu
+
+    //! Delete itttttttt
+    Route::get('/fetch/restaurant/and/deliveries', [AdminController::class, 'fetchRestaurantsAndDeliveries']);
     
     //* Historic stuff
     Route::get('/fetch/historic', [OrderController::class, 'fetchHistoric']); //List of Historic orders
@@ -71,7 +75,8 @@ Route::middleware("auth:admin")->group(function () {
     Route::delete('/delete/report/{report_id}', [ReportController::class, 'deleteReport']); // Delete report
 
     //* Chat stuff
-    Route::post('/admin/send/message', [ChatController::class, 'sendMessageByAdmin']); //Message sent by admin
+    Route::post('/admin/send/message', [ChatController::class, 'sendMsgFromMsger']); //Message sent by admin from messenger
+    Route::post('/admin/send/msg/out/msger', [ChatController::class, 'sendMsgOutMsger']); // Messsage sent by admin out messenger
     Route::get('/fetch/chatflow/delivery/{delivery_id}', [ChatController::class, 'fetchChatFlowByDeliveryID']); // Fetching chatflow by delivery id
 });
 
@@ -85,6 +90,9 @@ Route::middleware("auth:delivery")->group(function () {
     Route::get('/download/file', [DeliveryController::class, "downloadFile"]); // Download permit
     //Used in mobile
     Route::get('/fetch/orders/to/deliver', [OrderController::class, 'orderToDeliver']); // Fetch order to deliver
+    //* Chat stuff
+    Route::post('/delivery/send/message', [ChatController::class, 'sendMsgFromMsgerDelivery']);
+
 });
 
 //? Restaurant api routes
@@ -121,4 +129,8 @@ Route::middleware("auth:admin,delivery,restaurant")->group(function () {
     Route::get('/fetch/authenticated/guard', [CommonController::class, 'fetchAuthenticatedGuard']); // Fetch authenticated guard
     Route::get('/fetch/orders/{pre_order_id}', [OrderController::class, 'fetchOrderByPreOrderID']); // Fetch Order by PreOrder ID
     Route::post('/add/report', [ReportController::class, 'addReport']); // Add new report
+
+    //* Chat stuff
+    Route::get('/fetch/conversations', [ConversationController::class, 'fetchConversations']);
+    Route::get('/fetch/chatflow/{conversation_id}', [ConversationController::class, 'fetchChatflowAdminCnvId']);
 });

@@ -54,6 +54,13 @@ let getters = {
     chatflows: state => {
         return state.chatflows;
     },
+    conversations: state => {
+        return state.conversations;
+    },
+    /** PERSONS **/
+    persons: state => {
+        return state.persons;
+    },
     //handle result
     callback: state => result => {
         return typeof result === "object"

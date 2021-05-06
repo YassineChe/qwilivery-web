@@ -118,13 +118,23 @@
                         Accueil
                     </v-list-item-title>
                 </v-list-item>
-                <!-- Historic -->
+                <!-- Historic & Chat -->
+                <v-subheader>Chat & Historique</v-subheader>
                 <v-list-item :to="{ name: 'delivery-historic' }">
                     <v-list-item-icon>
                         <v-icon>mdi-history</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>
                         Historique
+                    </v-list-item-title>
+                </v-list-item>
+                <!-- Chat -->
+                <v-list-item :to="{ name: 'delivery-messenger' }">
+                    <v-list-item-icon>
+                        <v-icon>mdi-chat-outline</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>
+                        Boite de messagrie
                     </v-list-item-title>
                 </v-list-item>
                 <!-- Guide -->

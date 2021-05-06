@@ -121,7 +121,7 @@ class RestaurantController extends Controller
         try{
             //Avatar handler
             if (\Auth::guard('restaurant')->user()->logo != $request->logo){
-                $logo =  storeUploaded(public_path() . '/images/restaurants_logo', $request->logo);
+                $logo =  storeUploaded(public_path() . '/images/avatars', $request->logo);
             }
             else{
                 $logo = \Auth::guard('restaurant')->user()->logo;
@@ -135,7 +135,7 @@ class RestaurantController extends Controller
                     'address'      => $request->address,
                     'lat'          => $request->lat,
                     'lng'          => $request->lng,
-                    'logo'        => $logo
+                    'avatar'       => $logo
                 ])
             )
             return dataToResponse('success', 'Succès ', 'Mise à jour du profil réussie', false, 200);

@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Delivery;
 use App\Models\PreOrder;
 use App\Models\Admin;
+use App\Models\Restaurant;
 //Requests
 use Illuminate\Http\Request;
 use App\Http\Requests\DeliveryRequest;
@@ -60,147 +61,40 @@ class AdminController extends Controller
         }
     }
 
-    //* Approuve delivery man
-    public function approvedDeliveryMan(Request $request){
-        try {
-            if (
-                Delivery::where('id', $request->delivery_id)
-                        ->update(['approved_at' => \Carbon\Carbon::now()])
-                ) {
-                return dataToResponse('success', 'Succès ', 'La mise à jour a réussi', false, 200);
-            }
-        } catch (\Exception $e) {
-            handleLogs($e);
-        }
-    }
-    
-    //! Delete delivery man (need a softdelete)
-    public function deleteDeliveryMan(Request $request){
-        try {
-            if (Delivery::where('id', $request->delivery_id)->delete()) {
-                return dataToResponse('success', 'Succès ', 'La suppression est un succès 👍', true, 200);
-            }
-        } catch (\Exception $e) {
-            handleLogs($e);
-        }
-    }
-
-    //* Block delivery man
-    public function blockDeliveryMan(Request $request){
-        try {
-            if (Delivery::where('id', $request->delivery_id)->update(["blocked_at" => \Carbon\Carbon::now()])) {
-                return dataToResponse('success', 'Succès ', 'Livreur a été bloqué ❌', true, 200);
-            }
-        } catch (\Exception $e) {
-            handleLogs($e);
-        }
-    }
-
-    //* Unblock delivery man
-    public function unblockDeliveryMan(Request $request){
-        try {
-            if (Delivery::where('id', $request->delivery_id)->update(['blocked_at' => null]))
-                return dataToResponse('success', 'Succès ', 'Débloquer avec succès ✅', true, 200);
-        } catch (\Exception $e) {
-            handleLogs($e);
-        }
-    }
-
-    //* Fetch delivery men.
-    public function fetchDeliveries()
-    {
-        return
-            response(
-                Delivery::orderBy('id', 'DESC')->get(),
-                200
-            );
-    }
-
-    //* Fetch delivery men with more information like whos in service ? or not!
-    public function fetchRestrictedDeliveries(){
+    //* Fetch restaurant and deliveries
+    public function fetchRestaurantsAndDeliveries(){
         try{
-            return  
-                response(Delivery::whereNull('blocked_at')
-                            ->with(['pre_order' => function($q){
-                                $q->select('id', 'delivery_id');
-                            }])
-                            ->get()
-                    , 200
-                );
+            $restaurants = collect(self::fetchRestaurants());
+            $deliveries  = collect(self::fetchDeliveries());
+
+            //Combiane them here
+            return response($restaurants->merge($deliveries), 200);
         }
         catch(\Exception $e){
             handleLogs($e);
         }
     }
 
-    //* Add dilivery man to spefic order
-    public function addDeliveryToOrder(Request $request){
+    public function fetchDeliveries(){
         try{
-            $preorder = PreOrder::select('id', 'delivery_id')
-                                    ->whereNull('delivery_id')
-                                    ->where('id', (int)$request->pre_order_id)->first();
-            if ($preorder)
-                if( $preorder->update(['delivery_id' => (int)$request->delivery_id]) )
-                    return dataToResponse('success', 'Succès ', 'Livreur a été affecté avec succès 👍', true, 200);
+            return Delivery::select('id', 'first_name', 'last_name', 'avatar', \DB::raw("'delivery' as type"))
+                    ->take(5)
+                    ->get();
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }              
+    }
 
-            return dataToResponse('error', 'Erreur ', 'Un autre livreur s\'occupant de cette commande', true, 422);
+    public function fetchRestaurants(){
+        try{
+            return Restaurant::select('id', 'name', 'avatar', \DB::raw("'restaurant' as type"))
+                    ->take(5)
+                    ->get();
         }
         catch(\Exception $e){
             handleLogs($e);
         }
     }
 
-    //* Add delivery men.
-    public function addDeliveryMan(DeliveryRequest $request){
-        //Generate random password.
-        $generetedPassword = \Str::random(6);
-        //Upload data to server.
-        $fileName =  storeUploaded(public_path() . '/images/permits', $request->permit);
-        //Store data
-        $delivery = Delivery::Create([
-            'first_name'   => $request->first_name,
-            'last_name'    => $request->last_name,
-            'email'        => $request->email,
-            'password'     => \Hash::make($generetedPassword),
-            'experience'   => $request->experience,
-            'permit'       => $fileName,
-            'phone_number' => $request->phone_number,
-        ]);
-        //Notify Delivery
-        if ($delivery)
-            $delivery->notify(new NotifyDeliveryAccount(["password" => $generetedPassword, "email" => $request->email]));
-
-        return dataToResponse('success', 'Succès ', 'Un E-mail a été envoyé au livreur avec les informations d\'identification 👍', true, 200);
-    }
-
-    //* Add delivery men.
-    public function editDeliveryMan(Request $request){
-
-        $delivery = Delivery::where('id', $request->id)->first();
-
-        if ($request->permit != $delivery->permit) {
-            try {
-                $fileName =  storeUploaded(public_path() . '/images/permits', $request->permit);
-                // delete old permit 
-                unlink("images/permits/" . $delivery->permit);
-            } catch (\Exception $e) {
-                handleLogs($e);
-            }
-        } else $fileName = $delivery->permit;
-
-        //Generate random password.
-        $generetedPassword = \Str::random(6);
-        //Store data
-        $delivery = Delivery::where('id', $request->id)->update([
-            'first_name'   => $request->first_name,
-            'last_name'    => $request->last_name,
-            'email'        => $request->email,
-            'password'     => \Hash::make($generetedPassword),
-            'experience'   => $request->experience,
-            'permit'       => $fileName,
-            'phone_number' => $request->phone_number,
-        ]);
-        
-        return dataToResponse('success', 'Succès ', 'La modification a réussi ', true, 200);
-    }
 }

@@ -63,6 +63,8 @@
                 :headers="headers"
                 :items="restaurants"
                 :search="search"
+                :loading="isBusy('fetch-restaurants')"
+                :disabled="isBusy('fetch-restaurants')"
                 disable-sort
                 item-key="id"
             >
@@ -70,7 +72,7 @@
                 <template v-slot:[`item.logo`]="{ item }">
                     <v-avatar size="40">
                         <img
-                            :src="`/images/restaurants_logo/${item.logo}`"
+                            :src="`/images/avatars/${item.avatar}`"
                             alt="John"
                         />
                     </v-avatar>
@@ -153,7 +155,7 @@
                             Bloquer
                         </v-tooltip>
 
-                        <!-- Block -->
+                        <!-- unBlock -->
                         <v-tooltip top>
                             <template v-slot:activator="{ on, attrs }">
                                 <v-btn
@@ -180,7 +182,7 @@
                                     color="primary"
                                     fab
                                     x-small
-                                    @click="unblockRestaurant(item.id)"
+                                    @click="handleChat(item.id)"
                                 >
                                     <v-icon> mdi-chat </v-icon>
                                 </v-btn>
@@ -198,6 +200,7 @@
 //Components
 import Headline from "../pieces/Headline";
 import HandleRestaurant from "../pieces/HandleRestaurant";
+import HandleChat from "../pieces/HandleChat";
 //libs
 import { mapState } from "vuex";
 
@@ -300,11 +303,29 @@ export default {
                 title: "Ajouter nouveau restaurant"
             });
         },
+        //* Edit Resataurant
         editRestaurant: function(restaurant) {
             this.$dialog.show(HandleRestaurant, {
                 dataToEdit: restaurant, // Props
                 title: "Modifier le restaurant"
             });
+        },
+        //* Send message
+        handleChat: function(restaurant_id) {
+            this.$dialog.show(HandleChat, {
+                guard_id: restaurant_id,
+                guard: "restaurant"
+            });
+        },
+        //* The famous isBusy funtion haha
+        isBusy: function(fetcher) {
+            try {
+                return this.$store.getters.expected(fetcher).status == "busy"
+                    ? true
+                    : false;
+            } catch (error) {
+                return false;
+            }
         }
     },
     watch: {
@@ -407,6 +428,38 @@ export default {
                         timeout: 3000
                     });
                     //Clear expected
+                    this.$store.commit("CLEAR_EXPECTED");
+                }
+            }
+
+            // Send message
+            {
+                let expected = this.$store.getters.expected("send-message");
+
+                if (expected != undefined) {
+                    if (expected.status === "success") {
+                        this.$store.commit("CLEAR_EXPECTED");
+                        this.$dialog.notify.success(
+                            expected.result.subMessage,
+                            {
+                                position: "top-right",
+                                timeout: 3000
+                            }
+                        );
+                    }
+                    if (expected.status === "error") {
+                        this.$store.getters.callback(
+                            expected.result.subMessage
+                        );
+
+                        this.$dialog.notify.warning(
+                            expected.result.subMessage,
+                            {
+                                position: "top-right",
+                                timeout: 3000
+                            }
+                        );
+                    }
                     this.$store.commit("CLEAR_EXPECTED");
                 }
             }

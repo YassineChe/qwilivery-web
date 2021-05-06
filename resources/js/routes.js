@@ -24,6 +24,7 @@ import DeliveryHome from "./components/delivery/Home";
 import DeliveryDashboard from "./components/delivery/Dashboard";
 import DeliveryProfile from "./components/delivery/Profile";
 import DeliveryHistoric from "./components/delivery/Historic";
+import DeliveryMessenger from "./components/delivery/Messenger";
 
 //* Restaurant
 import RestaurantHome from "./components/restaurant/Home";
@@ -175,6 +176,12 @@ const deliveryRoutes = {
             path: "/guide",
             name: "guide",
             component: Guide,
+            meta: { guard: "delivery" }
+        },
+        {
+            path: "/messenger",
+            name: "delivery-messenger",
+            component: DeliveryMessenger,
             meta: { guard: "delivery" }
         }
     ]

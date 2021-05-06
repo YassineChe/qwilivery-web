@@ -117,6 +117,13 @@ let mutations = {
     /************** CHATFLOWS **************/
     FETCH_CHATFLOWS(state, chatflows) {
         return (state.chatflows = chatflows);
+    },
+    FETCH_CONVERSATIONS(state, conversations) {
+        return (state.conversations = conversations);
+    },
+    /************** PERSONS ************* */
+    FETCH_PERSONS(state, persons) {
+        return (state.persons = persons);
     }
 };
 export default mutations;

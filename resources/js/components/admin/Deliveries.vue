@@ -63,6 +63,8 @@
                 :headers="headers"
                 :items="deliveries"
                 :search="search"
+                :loading="isBusy('fetch-deliveries')"
+                :disabled="isBusy('fetch-deliveries')"
                 disable-sort
                 item-key="id"
             >
@@ -193,6 +195,7 @@
                                     color="primary"
                                     fab
                                     x-small
+                                    @click="handleChat(item.id)"
                                 >
                                     <v-icon> mdi-chat </v-icon>
                                 </v-btn>
@@ -210,6 +213,7 @@
 //Components
 import Headline from "../pieces/Headline";
 import HandleDelivery from "../pieces/HandleDelivery";
+import HandleChat from "../pieces/HandleChat";
 //libs
 import { mapState } from "vuex";
 
@@ -358,6 +362,12 @@ export default {
                     }
                 });
             }
+        },
+        handleChat: function(restaurant_id) {
+            this.$dialog.show(HandleChat, {
+                guard_id: restaurant_id,
+                guard: "delivery"
+            });
         },
         //* The famous isBusy funtion haha
         isBusy: function(fetcher) {
@@ -515,7 +525,6 @@ export default {
                                 timeout: 3000
                             }
                         );
-
                         this.init();
                     }
                     if (expected.status === "error") {
@@ -528,6 +537,38 @@ export default {
                             });
                         }
                     }
+                }
+            }
+
+            // Send message
+            {
+                let expected = this.$store.getters.expected("send-message");
+
+                if (expected != undefined) {
+                    if (expected.status === "success") {
+                        this.$store.commit("CLEAR_EXPECTED");
+                        this.$dialog.notify.success(
+                            expected.result.subMessage,
+                            {
+                                position: "top-right",
+                                timeout: 3000
+                            }
+                        );
+                    }
+                    if (expected.status === "error") {
+                        this.$store.getters.callback(
+                            expected.result.subMessage
+                        );
+
+                        this.$dialog.notify.warning(
+                            expected.result.subMessage,
+                            {
+                                position: "top-right",
+                                timeout: 3000
+                            }
+                        );
+                    }
+                    this.$store.commit("CLEAR_EXPECTED");
                 }
             }
         }
