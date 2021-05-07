@@ -9,4 +9,5 @@ class Chatflow extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
 }

@@ -39,7 +39,18 @@ class Conversation extends Model
 
     //* Relationshp undread messages
     public function unread_messages(){
-        //Selecting id, converation (because we don't want to overlad the server the data will be counted)
-        return $this->hasMany(Chatflow::class)->whereNull('seen_at')->select('id', 'conversation_id');
+
+
+        if (\Auth::guard('admin')->check())
+            $guard = 'admin';
+
+        if (\Auth::guard('delivery')->check())
+            $guard = 'delivery';
+
+        if (\Auth::guard('restaurant')->check())
+            $guard = 'restaurant';
+
+        //Selecting id, converation (because we don't want to overlad the server the data will be counted) 
+        return $this->hasMany(Chatflow::class)->where('to', $guard)->whereNull('seen_at');
     }
 }

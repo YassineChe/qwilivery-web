@@ -22,10 +22,14 @@ class MessageSent implements ShouldBroadcastNow
      */
 
     public $chatflow;
+    public $recipient_id;
+    public $guard;
 
-    public function __construct(Chatflow $chatflow)
+    public function __construct(Chatflow $chatflow, $recipient_id, $guard)
     {
         $this->chatflow = $chatflow;
+        $this->recipient_id = $recipient_id;
+        $this->guard = $guard;
     }
 
     /**

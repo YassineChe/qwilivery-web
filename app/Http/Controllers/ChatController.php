@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Chatflow;
 use App\Models\Conversation;
+use App\Events\MessageSent;
 
 class ChatController extends Controller
 {
@@ -17,12 +18,25 @@ class ChatController extends Controller
                                         ->first();
 
             if($conversation){
-                Chatflow::create([
+                $chatflow = Chatflow::create([
                     'conversation_id' => $conversation->id,
                     'from' => 'admin',
                     'to'   => $request->to,
                     'message' => $request->message,
                 ]);
+
+                switch($request->to){
+                    case 'restaurant':
+                        $recipient_id = $conversation->restaurant_id;
+                        $guard = 'restaurant';
+                        break;
+                    case 'delivery':
+                        $recipient_id = $conversation->delivery_id;
+                        $guard   = 'delivery';
+                        break;
+                }
+
+                event(new MessageSent($chatflow, $recipient_id, $guard));
             }
         }
         catch(\Exception $e){
@@ -44,14 +58,27 @@ class ChatController extends Controller
             }
 
             if($conversation){
-                Chatflow::create([
+                
+                $chatflow = Chatflow::create([
                     'conversation_id' => $conversation->id,
                     'from' => 'admin',
                     'to'   => $request->guard,
                     'message' => $request->message,
                 ]);
+                
 
-                //Brodcasting event
+                switch($chatflow->to){
+                    case 'restaurant':
+                        $recipient_id = $conversation->restaurant_id;
+                        $guard = 'restaurant';
+                        break;
+                    case 'delivery':
+                        $recipient_id = $conversation->delivery_id;
+                        $guard   = 'delivery';
+                        break;
+                }
+
+                event(new MessageSent($chatflow, $recipient_id, $guard));
                 
                 // Success message
                 return dataToResponse('success', 'Succès !', "Message envoyé", false, 200);
@@ -70,7 +97,6 @@ class ChatController extends Controller
             $conversation = Conversation::where('admin_id', authIdFromGuard('admin'))
                     ->where('delivery_id', (int)$delivery_id)
                     ->with('chatflows')
-
                     ->first();
 
             if (!$conversation) return response([], 200);
@@ -90,12 +116,43 @@ class ChatController extends Controller
                         ->first();
 
         if ($conversation){
-            Chatflow::create([
+            $chatflow = Chatflow::create([
                 'conversation_id' => $conversation->id,
                 'from' => 'delivery',
                 'to'   => $request->to,
                 'message' => $request->message,
             ]);
+
+            switch($request->to){
+                case 'restaurant':
+                    $recipient_id = $conversation->restaurant_id;
+                    $guard = 'restaurant';
+                break;
+                case 'admin':
+                    $recipient_id = $conversation->admin_id;
+                    $guard   = 'admin';
+                break;
+            }
+
+            event(new MessageSent($chatflow, $recipient_id, $guard));
+
+        }
+    }
+
+    //* Mark all as read
+    public function markAllAsRead(Request $request){
+        try{
+            $cnv = Conversation::select('id')
+                            ->where('id', (int)$request->conversation_id)
+                            ->where(getConnectedGuard().'_id', authIdFromGuard(getConnectedGuard()))
+                            ->first();
+
+            Chatflow::where('conversation_id', $cnv->id)
+                        ->where('to', getConnectedGuard())
+                        ->update(['seen_at' => \Carbon\Carbon::now()]);
+        }
+        catch(\Exception $e){
+            handleLogs($e);
         }
     }
 }

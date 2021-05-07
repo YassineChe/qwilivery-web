@@ -10,9 +10,17 @@ class ConversationController extends Controller
     //* Fetch admin conversation
     public function fetchConversations(){
         try{
+            $connectedGuard = getConnectedGuard();
             return
                 response(Conversation::where(getConnectedGuard().'_id', authIdFromGuard(getConnectedGuard()))
-                            ->with(['delivery', 'restaurant', 'last_message'])
+                            ->with([
+                                'delivery', 
+                                'restaurant', 
+                                'admin',
+                                'last_message', 
+                                'unread_messages'
+                            ])
+                            ->withCount('unread_messages')
                             ->get(), 
                 200);
         }

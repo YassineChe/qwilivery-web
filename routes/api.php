@@ -133,4 +133,10 @@ Route::middleware("auth:admin,delivery,restaurant")->group(function () {
     //* Chat stuff
     Route::get('/fetch/conversations', [ConversationController::class, 'fetchConversations']);
     Route::get('/fetch/chatflow/{conversation_id}', [ConversationController::class, 'fetchChatflowAdminCnvId']);
+    Route::patch('/mark/as/read', [ChatController::class, 'markAllAsRead']);
+
+    Route::post('/broadcasting/auth', function(Request $request){
+        return \Broadcast::auth($request);
+    });
+
 });

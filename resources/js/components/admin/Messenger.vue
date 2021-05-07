@@ -71,6 +71,13 @@
                                             {{ cnv.last_message.message }}
                                         </v-list-item-subtitle>
                                     </v-list-item-content>
+                                    <v-list-item-action
+                                        v-if="cnv.unread_messages_count > 0"
+                                    >
+                                        <v-chip color="error" small pill>{{
+                                            cnv.unread_messages_count
+                                        }}</v-chip>
+                                    </v-list-item-action>
                                 </v-list-item>
                             </template>
                         </v-data-iterator>
@@ -207,7 +214,6 @@ export default {
                     this.$store.dispatch("postData", {
                         path: "/api/admin/send/message",
                         data: {
-                            exist: true,
                             message: this.message,
                             conversation_id: this.selectedConversation.id,
                             from: this.guard,
@@ -267,8 +273,74 @@ export default {
             }, 50);
         }
     },
+    watch: {
+        expected() {
+            {
+                let expected = this.$store.getters.expected("fetch-chatflows");
+
+                if (expected != undefined && expected.status === "success") {
+                    this.$store.commit("CLEAR_EXPECTED");
+                    this.$store.dispatch("patchData", {
+                        path: `/api/mark/as/read`,
+                        data: { conversation_id: this.selectedConversation.id },
+                        related: "mark-as-read"
+                    });
+
+                    this.conversations.map(conversion => {
+                        if (conversion.id == this.selectedConversation.id)
+                            conversion.unread_messages_count = 0;
+                    });
+                }
+            }
+        }
+    },
     created() {
         this.init();
+    },
+    mounted() {
+        let pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
+            cluster: "eu"
+        });
+
+        //Subscribe to the channel we specified in our Adonis Application
+        let channel = pusher.subscribe("new-message-sent-channel");
+
+        channel.bind("new-message-sent", data => {
+            //Check that this guard belongs to him
+            if (
+                data.chatflow.to == this.$auth.guard() &&
+                this.$store.getters.guard.id == data.recipient_id
+            ) {
+                if (
+                    this.selectedConversation != null &&
+                    this.selectedConversation.id ==
+                        data.chatflow.conversation_id
+                ) {
+                    this.chatflows.push(data.chatflow);
+                    this.scrollToBottom();
+                } else {
+                    this.conversations.map(conversion => {
+                        if (conversion.id == data.chatflow.conversation_id)
+                            conversion.unread_messages_count++;
+                    });
+                }
+
+                // change last message
+                let idx = this.conversations.indexOf(
+                    this.conversations.find(
+                        conversation =>
+                            conversation.id == data.chatflow.conversation_id
+                    )
+                );
+
+                if (~idx) {
+                    this.conversations[idx].last_message["message"] =
+                        data.chatflow.message;
+                } else {
+                    this.init();
+                }
+            }
+        });
     }
 };
 </script>
