@@ -2,7 +2,7 @@
     <v-card>
         <v-toolbar color="primary white--text" elevation="0">
             <v-toolbar-title v-if="!isMobile">
-                ({{ 0 }}) Conversation(s)
+                ({{ conversations.length }}) Conversation(s)
             </v-toolbar-title>
         </v-toolbar>
         <v-row class="no-gutters">
@@ -15,6 +15,17 @@
                             disable-pagination
                             hide-default-footer
                         >
+                            <!-- loading -->
+                            <template v-slot:loading>
+                                <v-container fill-height fluid>
+                                    <v-row align="center" justify="center">
+                                        <v-progress-circular
+                                            indeterminate
+                                            width="3"
+                                        ></v-progress-circular>
+                                    </v-row>
+                                </v-container>
+                            </template>
                             <!-- No data -->
                             <template v-slot:no-data>
                                 <div class="text-center grey--text mt-2">
