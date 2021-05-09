@@ -88,8 +88,10 @@ Route::middleware("auth:delivery")->group(function () {
     Route::get('/fetch/delivery/historic', [OrderController::class, 'fetchDeliveryHistory']); // Fetch delivery historic
     Route::get('/fetch/delivered/by/delivery', [StatisticController::class, 'countDelivedForDelivery']); // Statistic for delivery boy
     Route::get('/download/file', [DeliveryController::class, "downloadFile"]); // Download permit
-    //Used in mobile
+    //Used in mobile and web
     Route::get('/fetch/orders/to/deliver', [OrderController::class, 'orderToDeliver']); // Fetch order to deliver
+    Route::patch('/apply/order', [OrderController::class, 'applyOrder']);
+    Route::get('/fetch/inprogress/orders', [OrderController::class, 'fetchInprogressOrders']);
     //* Chat stuff
     Route::post('/delivery/send/message', [ChatController::class, 'sendMsgFromMsgerDelivery']);
 

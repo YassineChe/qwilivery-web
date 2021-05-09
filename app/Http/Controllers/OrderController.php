@@ -211,4 +211,38 @@ class OrderController extends Controller
         }
     }
 
+    //* Apply Order
+    public function applyOrder(Request $request){
+        try{
+            $preorder = PreOrder::select('id')
+                                where('id', (int)$request->id)
+                                ->whereNull('delivery_id')
+                                ->whereNull('delivered_at')
+                                ->first();
+
+            if (!$preorder){
+                if(PreOrder::where('id', (int)$request->id)->update(['delivery_id' => authIdFromGuard('delivery')]))
+                    return dataToResponse('success', 'Succès', 'Effectué avec succès', 'Effectué avec succès', true, 200);
+                return dataToResponse('error', 'Erreur','effectué avec succès', 'Effectué avec succès', true, 200);
+            }
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
+    //* Fetch current order
+    public function fetchInprogressOrders(){
+        try{
+            return response(PreOrder::where('delivery_id', authIdFromGuard('delivery'))
+                                ->whereNull('delivered_at')
+                                ->get()
+                        , 200
+                    );
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
 }
