@@ -214,8 +214,6 @@ class OrderController extends Controller
     //* Apply Order
     public function applyOrder(Request $request){
         try{
-
-            return $request;
             $preorder = PreOrder::select('id')
                                 ->where('id', (int)$request->id)
                                 ->whereNull('delivery_id')
