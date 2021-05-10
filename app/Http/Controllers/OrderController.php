@@ -225,7 +225,7 @@ class OrderController extends Controller
                 if(PreOrder::where('id', (int)$request->id)->update(['delivery_id' => authIdFromGuard('delivery')]))
                     return dataToResponse('success', 'Succès','Effectué avec succès', true, 200);
 
-            return dataToResponse('error', 'Erreur','Cet ordre déjà pris', true, 200);
+            return dataToResponse('error', 'Erreur','Cet ordre déjà pris', true, 422);
         }
         catch(\Exception $e){
             handleLogs($e);
