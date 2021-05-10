@@ -250,9 +250,9 @@ class OrderController extends Controller
     public function deliveredOrder(Request $request){
         try{
             if(
-                PreOrder::where('delivery_id', authIdFromGuard('delivery'))
-                                ->where('id', (int)$request->id)
-                                ->update(['delivered_at', \Carbon\Carbon::now()])
+                PreOrder::where('id', (int)$request->id)
+                                ->where('delivery_id', authIdFromGuard('delivery'))
+                                ->update(['delivered_at' => \Carbon\Carbon::now()])
                 )
                 return dataToResponse('success', 'Succès','Commande livrée', true, 200);
         }
