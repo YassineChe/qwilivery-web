@@ -68,31 +68,31 @@
                 disable-sort
                 item-key="id"
             >
-                <template v-slot:[`item.name`]="{ item }" v-if="deliveries">
+                <template v-slot:[`item.name`]="{ item }">
                     <v-icon color="error" v-if="item.blocked_at != null"
                         >mdi-cancel</v-icon
                     >
                     <span>{{ item.first_name + " " + item.last_name }}</span>
                 </template>
 
-                <template v-slot:[`item.avatar`]="{ item }" v-if="deliveries">
+                <template v-slot:[`item.avatar`]="{ item }">
                     <v-avatar size="40">
                         <img :src="`/images/avatars/${item.avatar}`" />
                     </v-avatar>
                 </template>
 
-                <template v-slot:[`item.status`]="{ item }" v-if="deliveries">
-                    <v-chip v-if="!item.status">
+                <template v-slot:[`item.status`]="{ item }">
+                    <v-chip v-if="item.approved_at == null">
                         <v-switch
-                            v-model="item.status"
+                            v-model="item.approved_at"
                             @change="editApprovement(item.id)"
                             color="primary"
                         ></v-switch>
                     </v-chip>
-                    <v-chip color="success" v-else> approuvé(e) </v-chip>
+                    <v-chip color="success" v-else> Approuvé(e) </v-chip>
                 </template>
 
-                <template v-slot:[`item.actions`]="{ item }" v-if="deliveries">
+                <template v-slot:[`item.actions`]="{ item }">
                     <v-speed-dial
                         :v-model="true"
                         direction="left"
