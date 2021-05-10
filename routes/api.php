@@ -90,7 +90,7 @@ Route::middleware("auth:delivery")->group(function () {
     Route::get('/download/file', [DeliveryController::class, "downloadFile"]); // Download permit
     //Used in mobile and web
     Route::get('/fetch/orders/to/deliver', [OrderController::class, 'orderToDeliver']); // Fetch order to deliver
-    Route::patch('/apply/order', [OrderController::class, 'applyOrder']);
+    Route::post('/apply/order', [OrderController::class, 'applyOrder']);
     Route::get('/fetch/inprogress/orders', [OrderController::class, 'fetchInprogressOrders']);
     //* Chat stuff
     Route::post('/delivery/send/message', [ChatController::class, 'sendMsgFromMsgerDelivery']);
