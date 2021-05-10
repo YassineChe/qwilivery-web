@@ -131,7 +131,7 @@
                                                 }}
                                             </span>
                                             <span v-else>
-                                                joindre votre permis (PNG)
+                                                joindre votre permis (PNG, JPG)
                                             </span>
                                         </v-btn>
                                         <input

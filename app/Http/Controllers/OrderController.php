@@ -147,7 +147,7 @@ class OrderController extends Controller
             return response(
                 PreOrder::where('delivery_id', authIdFromGuard('delivery'))
                     ->with(['restaurant' => function($q){
-                        $q->select('id', 'name');
+                        $q->select('id', 'name')->withTrashed();
                     }])
                     ->orderBy('id', 'ASC')
                     ->take(5)
@@ -182,7 +182,7 @@ class OrderController extends Controller
             return response(
                 PreOrder::where('delivery_id', authIdFromGuard('delivery'))
                     ->with(['restaurant' => function($q){
-                        $q->select('id', 'name');
+                        $q->select('id', 'name')->withTrashed();
                     }])
                     ->orderBy('id', 'ASC')
                     ->take(5)
@@ -203,7 +203,7 @@ class OrderController extends Controller
                     ->with('restaurant', 'orders')
                     ->orderBy('id', 'DESC')
                     ->get()
-                , 
+                ,
                 200)
             ;
         }catch(\Exception $e){
@@ -259,5 +259,20 @@ class OrderController extends Controller
         catch(\Exception $e){
             handleLogs($e);
         }
-    }    
+    } 
+
+
+    public function fetchDeliveredOrder(){
+        try{
+            return response(PreOrder::where('delivery_id', authIdFromGuard('delivery'))
+                                ->whereNotNull('delivered_at')
+                                ->with(['orders', 'restaurant'])
+                                ->get()
+                        , 200
+                    );
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
 }

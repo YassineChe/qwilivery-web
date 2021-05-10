@@ -119,7 +119,7 @@
                     >
                         <v-icon left>mdi-cloud-upload</v-icon>
                         <span v-if="!delivery.fileName"
-                            >joindre permis (PNG)</span
+                            >joindre permis (PNG, JPG)</span
                         >
                         <span v-else>{{ delivery.fileName.name }}</span>
                     </v-btn>

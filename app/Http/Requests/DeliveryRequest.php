@@ -28,7 +28,7 @@ class DeliveryRequest extends FormRequest
             'last_name'  => 'required',
             'email'      => 'required|email|unique:restaurants|unique:admins|unique:deliveries',
             'experience' => 'required|numeric',
-            'permit'    => 'required|mimes:png|max:10000"',
+            'permit'    => 'required|mimes:png,jpg,jpeg|max:10000"',
             // 'avatar'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ];
