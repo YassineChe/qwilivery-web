@@ -237,6 +237,7 @@ class OrderController extends Controller
         try{
             return response(PreOrder::where('delivery_id', authIdFromGuard('delivery'))
                                 ->whereNull('delivered_at')
+                                ->with(['orders', 'restaurant'])
                                 ->get()
                         , 200
                     );
