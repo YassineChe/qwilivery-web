@@ -92,6 +92,7 @@ Route::middleware("auth:delivery")->group(function () {
     Route::get('/fetch/orders/to/deliver', [OrderController::class, 'orderToDeliver']); // Fetch order to deliver
     Route::post('/apply/order', [OrderController::class, 'applyOrder']);
     Route::get('/fetch/inprogress/orders', [OrderController::class, 'fetchInprogressOrders']);
+    Route::get('/delivred/order', [OrderController::class, 'deliveredOrder']); // This will set order as delivred
     //* Chat stuff
     Route::post('/delivery/send/message', [ChatController::class, 'sendMsgFromMsgerDelivery']);
 
