@@ -214,17 +214,18 @@ class OrderController extends Controller
     //* Apply Order
     public function applyOrder(Request $request){
         try{
+
             $preorder = PreOrder::select('id')
                                 ->where('id', (int)$request->id)
                                 ->whereNull('delivery_id')
                                 ->whereNull('delivered_at')
                                 ->first();
 
-            if (!$preorder){
+            if ($preorder)
                 if(PreOrder::where('id', (int)$request->id)->update(['delivery_id' => authIdFromGuard('delivery')]))
-                    return dataToResponse('success', 'Succès', 'Effectué avec succès', 'Effectué avec succès', true, 200);
-                return dataToResponse('error', 'Erreur','effectué avec succès', 'Effectué avec succès', true, 200);
-            }
+                    return dataToResponse('success', 'Succès','Effectué avec succès', true, 200);
+
+            return dataToResponse('error', 'Erreur','Cet ordre déjà pris', true, 200);
         }
         catch(\Exception $e){
             handleLogs($e);
