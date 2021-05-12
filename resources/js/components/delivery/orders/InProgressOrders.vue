@@ -10,6 +10,7 @@
                     <v-list-item :key="idx">
                         <v-list-item-content>
                             <v-timeline align-top dense>
+                                <!-- From to -->
                                 <v-timeline-item
                                     color="warning"
                                     icon="mdi-store"
@@ -31,7 +32,34 @@
                                         </div>
                                     </div>
                                 </v-timeline-item>
-                                <!--  -->
+                                <v-timeline-item class="mb-4" hide-dot>
+                                    <GmapMap
+                                        :center="{
+                                            lat: parseFloat(
+                                                preorder.restaurant.lat
+                                            ),
+                                            lng: parseFloat(
+                                                preorder.restaurant.lng
+                                            )
+                                        }"
+                                        :zoom="13"
+                                        map-type-id="terrain"
+                                        style="width: 80%; height: 200px"
+                                    >
+                                        <GmapMarker
+                                            :position="{
+                                                lat: parseFloat(
+                                                    preorder.restaurant.lat
+                                                ),
+                                                lng: parseFloat(
+                                                    preorder.restaurant.lng
+                                                )
+                                            }"
+                                            :clickable="true"
+                                        />
+                                    </GmapMap>
+                                </v-timeline-item>
+                                <!-- to -->
                                 <v-timeline-item
                                     icon="mdi-map-marker"
                                     color="warning"
@@ -49,17 +77,17 @@
                             <v-tooltip top>
                                 <template v-slot:activator="{ on, attrs }">
                                     <v-btn
+                                        @click="orderDelivered(preorder.id)"
                                         v-bind="attrs"
                                         v-on="on"
                                         color="warning"
                                         fab
                                         small
-                                        @click="orderDelivered(preorder.id)"
                                     >
                                         <v-icon>mdi-moped</v-icon>
                                     </v-btn>
                                 </template>
-                                <span>Livrée</span>
+                                <span>Livrée ?</span>
                             </v-tooltip>
                         </v-list-item-action>
                     </v-list-item>
