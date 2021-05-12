@@ -35,19 +35,12 @@
                                 <v-timeline-item
                                     class="mb-4"
                                     hide-dot
-                                    v-if="
-                                        preorder.restaurant.lat &&
-                                            preorder.restaurant.lng
-                                    "
+                                    v-if="preorder.lat && preorder.lng"
                                 >
                                     <GmapMap
                                         :center="{
-                                            lat: parseFloat(
-                                                preorder.restaurant.lat
-                                            ),
-                                            lng: parseFloat(
-                                                preorder.restaurant.lng
-                                            )
+                                            lat: parseFloat(preorder.lat),
+                                            lng: parseFloat(preorder.lng)
                                         }"
                                         :zoom="13"
                                         map-type-id="terrain"
@@ -55,12 +48,8 @@
                                     >
                                         <GmapMarker
                                             :position="{
-                                                lat: parseFloat(
-                                                    preorder.restaurant.lat
-                                                ),
-                                                lng: parseFloat(
-                                                    preorder.restaurant.lng
-                                                )
+                                                lat: parseFloat(preorder.lat),
+                                                lng: parseFloat(preorder.lng)
                                             }"
                                             :clickable="true"
                                         />
