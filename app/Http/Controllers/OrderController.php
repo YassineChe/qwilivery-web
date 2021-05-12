@@ -89,9 +89,11 @@ class OrderController extends Controller
         try{
             return response(
                 PreOrder::whereNull('delivered_at')->whereNull('delivery_id')
-                    ->with(['orders', 'restaurant'])
-                        ->get()
-                        , 200
+                    ->with(['orders', 'restaurant' => function($q){
+                        $q->withTrashed();
+                    }])
+                    ->get()
+                    , 200
             );
         }
         catch(\Exception $e){
@@ -211,8 +213,8 @@ class OrderController extends Controller
         }
     }
 
-    //* Apply Order
-    public function applyOrder(Request $request){
+    //* Take order in charge
+    public function takeOrderInCharge(Request $request){
         try{
 
             $preorder = PreOrder::select('id')
@@ -237,7 +239,9 @@ class OrderController extends Controller
         try{
             return response(PreOrder::where('delivery_id', authIdFromGuard('delivery'))
                                 ->whereNull('delivered_at')
-                                ->with(['orders', 'restaurant'])
+                                ->with(['orders', 'restaurant' => function($q){
+                                    return $q->withTrashed();
+                                }])
                                 ->get()
                         , 200
                     );

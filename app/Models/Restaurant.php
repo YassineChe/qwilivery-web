@@ -34,8 +34,8 @@ class Restaurant extends Authenticatable
     }
 
     //? Setter (Address)
-    public function setAddressAttribute($value){
-        $this->attributes['address'] = strtoupper($value);
+    public function getAddressAttribute($value){
+        return strtoupper($value);
     }
 
     /**

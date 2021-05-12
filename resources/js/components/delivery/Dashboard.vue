@@ -109,7 +109,6 @@
             >
                 <v-subheader>Tableau de bord</v-subheader>
                 <!-- Home  -->
-
                 <v-list-item :to="{ name: 'delivery-home' }">
                     <v-list-item-icon>
                         <v-icon>mdi-home</v-icon>
@@ -118,8 +117,17 @@
                         Accueil
                     </v-list-item-title>
                 </v-list-item>
-                <!-- Historic & Chat -->
-                <v-subheader>Chat & Historique</v-subheader>
+                <!-- App -->
+                <v-subheader>App</v-subheader>
+                <v-list-item :to="{ name: 'delivery-orders' }">
+                    <v-list-item-icon>
+                        <v-icon>mdi-moped</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>
+                        Commandes
+                    </v-list-item-title>
+                </v-list-item>
+                <!-- Historic -->
                 <v-list-item :to="{ name: 'delivery-historic' }">
                     <v-list-item-icon>
                         <v-icon>mdi-history</v-icon>

@@ -88,9 +88,9 @@ Route::middleware("auth:delivery")->group(function () {
     Route::get('/fetch/delivery/historic', [OrderController::class, 'fetchDeliveryHistory']); // Fetch delivery historic
     Route::get('/fetch/delivered/by/delivery', [StatisticController::class, 'countDelivedForDelivery']); // Statistic for delivery boy
     Route::get('/download/file', [DeliveryController::class, "downloadFile"]); // Download permit
-    //Used in mobile and web
+    //
     Route::get('/fetch/orders/to/deliver', [OrderController::class, 'orderToDeliver']); // Fetch order to deliver
-    Route::post('/apply/order', [OrderController::class, 'applyOrder']);
+    Route::post('/order/take/in/charge', [OrderController::class, 'takeOrderInCharge']); // Take in charge
     Route::get('/fetch/inprogress/orders', [OrderController::class, 'fetchInprogressOrders']);
     Route::get('/fetch/delivered/orders', [OrderController::class, 'fetchDeliveredOrder']);
     Route::post('/delivered/order', [OrderController::class, 'deliveredOrder']); // This will set order as delivred
