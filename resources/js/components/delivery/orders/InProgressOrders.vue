@@ -78,21 +78,50 @@
                             </v-timeline>
                         </v-list-item-content>
                         <v-list-item-action>
-                            <v-tooltip top>
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-btn
-                                        @click="orderDelivered(preorder.id)"
-                                        v-bind="attrs"
-                                        v-on="on"
-                                        color="warning"
-                                        fab
-                                        small
-                                    >
-                                        <v-icon>mdi-moped</v-icon>
-                                    </v-btn>
-                                </template>
-                                <span>Livrée ?</span>
-                            </v-tooltip>
+                            <v-layout row>
+                                <v-flex>
+                                    <v-tooltip top>
+                                        <template
+                                            v-slot:activator="{ on, attrs }"
+                                        >
+                                            <v-btn
+                                                @click="
+                                                    orderDelivered(preorder.id)
+                                                "
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                color="warning"
+                                                fab
+                                                small
+                                            >
+                                                <v-icon>mdi-moped</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>Livrée ?</span>
+                                    </v-tooltip>
+                                </v-flex>
+                                <v-flex ml-2>
+                                    <v-tooltip top>
+                                        <template
+                                            v-slot:activator="{ on, attrs }"
+                                        >
+                                            <v-btn
+                                                @click="
+                                                    orderDetails(preorder.id)
+                                                "
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                color="info"
+                                                fab
+                                                small
+                                            >
+                                                <v-icon>mdi-food</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>Commande(s)</span>
+                                    </v-tooltip>
+                                </v-flex>
+                            </v-layout>
                         </v-list-item-action>
                     </v-list-item>
                 </template>
@@ -101,6 +130,7 @@
     </v-card>
 </template>
 <script>
+import ViewOrderList from "../../pieces/ViewOrderList";
 import { mapState } from "vuex";
 export default {
     computed: {
@@ -125,6 +155,12 @@ export default {
                 path: "/api/delivered/order",
                 data: { id: preorder_id },
                 related: "make-order-delivered"
+            });
+        },
+        //* View order details
+        orderDetails: function(pre_order_id) {
+            this.$dialog.show(ViewOrderList, {
+                preOrderId: pre_order_id
             });
         },
         //* The famous isBusy funtion haha

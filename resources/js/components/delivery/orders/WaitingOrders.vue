@@ -78,23 +78,54 @@
                                 </v-timeline-item>
                             </v-timeline>
                         </v-list-item-content>
-
+                        <!-- Actions -->
                         <v-list-item-action>
-                            <v-tooltip top>
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-btn
-                                        @click="takeInCharge(preorder.id)"
-                                        v-bind="attrs"
-                                        v-on="on"
-                                        color="error"
-                                        fab
-                                        small
-                                    >
-                                        <v-icon>mdi-moped-electric</v-icon>
-                                    </v-btn>
-                                </template>
-                                <span>Prendre en charge</span>
-                            </v-tooltip>
+                            <v-layout row>
+                                <v-flex>
+                                    <v-tooltip top>
+                                        <template
+                                            v-slot:activator="{ on, attrs }"
+                                        >
+                                            <v-btn
+                                                @click="
+                                                    takeInCharge(preorder.id)
+                                                "
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                color="error"
+                                                fab
+                                                small
+                                            >
+                                                <v-icon
+                                                    >mdi-moped-electric</v-icon
+                                                >
+                                            </v-btn>
+                                        </template>
+                                        <span>Prendre en charge</span>
+                                    </v-tooltip>
+                                </v-flex>
+                                <v-flex ml-2>
+                                    <v-tooltip top>
+                                        <template
+                                            v-slot:activator="{ on, attrs }"
+                                        >
+                                            <v-btn
+                                                @click="
+                                                    orderDetails(preorder.id)
+                                                "
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                color="info"
+                                                fab
+                                                small
+                                            >
+                                                <v-icon>mdi-food</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>Commande(s)</span>
+                                    </v-tooltip>
+                                </v-flex>
+                            </v-layout>
                         </v-list-item-action>
                     </v-list-item>
                 </template>
@@ -103,7 +134,10 @@
     </v-card>
 </template>
 <script>
+import ViewOrderList from "../../pieces/ViewOrderList";
 import { mapState } from "vuex";
+import moment from "moment";
+moment.locale("fr");
 // import { gmapApi } from "vue2-google-maps";
 
 export default {
@@ -130,6 +164,16 @@ export default {
                 path: "/api/order/take/in/charge",
                 data: { id: preorder_id },
                 related: "take-in-charge"
+            });
+        },
+        //* Parse to date
+        parseToDate: function(date) {
+            return moment(date).format("MM/D/YYYY H:mm");
+        },
+        //* View order details
+        orderDetails: function(pre_order_id) {
+            this.$dialog.show(ViewOrderList, {
+                preOrderId: pre_order_id
             });
         },
         //* The famous isBusy funtion haha
