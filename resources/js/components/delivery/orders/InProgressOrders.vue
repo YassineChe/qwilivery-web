@@ -32,7 +32,14 @@
                                         </div>
                                     </div>
                                 </v-timeline-item>
-                                <v-timeline-item class="mb-4" hide-dot>
+                                <v-timeline-item
+                                    class="mb-4"
+                                    hide-dot
+                                    v-if="
+                                        preorder.restaurant.lat &&
+                                            preorder.restaurant.lng
+                                    "
+                                >
                                     <GmapMap
                                         :center="{
                                             lat: parseFloat(
