@@ -48,12 +48,8 @@
                                     >
                                         <GmapMarker
                                             :position="{
-                                                lat: parseFloat(
-                                                    preorder.restaurant.lat
-                                                ),
-                                                lng: parseFloat(
-                                                    preorder.restaurant.lng
-                                                )
+                                                lat: parseFloat(preorder.lat),
+                                                lng: parseFloat(preorder.lng)
                                             }"
                                             :clickable="true"
                                         />
@@ -100,8 +96,11 @@
 </template>
 <script>
 import { mapState } from "vuex";
+// import { gmapApi } from "vue2-google-maps";
+
 export default {
     computed: {
+        // google: gmapApi,
         ...mapState(["expected"]),
         //* Get Order to be deliver
         preorders: function() {
@@ -109,9 +108,6 @@ export default {
         }
     },
     methods: {
-        clear: function() {
-            alert("cc");
-        },
         //*
         init: function() {
             this.$store.dispatch("fetchData", {
@@ -168,6 +164,7 @@ export default {
         }
     },
     created() {
+        // var directionsService = new google.maps.DirectionsService();
         this.$store.commit("CLEAR_EXPECTED");
         this.init();
     }
