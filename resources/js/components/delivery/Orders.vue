@@ -17,11 +17,11 @@
         </v-row>
         <v-card class="mt-5">
             <v-tabs centered grow>
-                <v-tab>
+                <v-tab @change="initWaitingOrders()">
                     <v-icon left> mdi-timer-sand </v-icon>
                     En attente
                 </v-tab>
-                <v-tab>
+                <v-tab @change="initInProgressOrders()">
                     <v-icon left> mdi-moped </v-icon>
                     En cours
                 </v-tab>
@@ -45,6 +45,24 @@ export default {
         Headline,
         WaitingOrders,
         InProgressOrders
+    },
+    methods: {
+        initWaitingOrders: function() {
+            this.$store.commit("FETCH_PREORDERS", []);
+            this.$store.dispatch("fetchData", {
+                path: "/api/fetch/orders/to/deliver",
+                mutation: "FETCH_PREORDERS",
+                related: "fetch-wait-orders"
+            });
+        },
+        initInProgressOrders: function() {
+            this.$store.commit("FETCH_PREORDERS", []);
+            this.$store.dispatch("fetchData", {
+                path: "/api/fetch/inprogress/orders",
+                mutation: "FETCH_PREORDERS",
+                related: "fetch-inprogress"
+            });
+        }
     }
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
     <v-card
-        :loading="isBusy('fetch-wait-orders')"
-        :disabled="isBusy('fetch-wait-orders')"
+        :loading="isBusy('fetch-inprogress')"
+        :disabled="isBusy('fetch-inprogress')"
     >
         <v-card-text>
             <v-list>
@@ -27,8 +27,7 @@
                                             }}</strong
                                         >
                                         <div>
-                                            Lorem, ipsum dolor sit amet
-                                            consectetur adipisicing elit.
+                                            {{ preorder.restaurant.address }}
                                         </div>
                                     </div>
                                 </v-timeline-item>
@@ -85,7 +84,7 @@ export default {
             this.$store.dispatch("fetchData", {
                 path: "/api/fetch/inprogress/orders",
                 mutation: "FETCH_PREORDERS",
-                related: "fetch-wait-orders"
+                related: "fetch-inprogress"
             });
         },
         //* Take in charge
