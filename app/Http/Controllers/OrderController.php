@@ -76,8 +76,8 @@ class OrderController extends Controller
                     $orders = Order::where('pre_order_id', (int)$pre_order_id)->with('variant')->get();
                 break;
             }
-
-            return response($orders, 200);
+            
+            return response($orders ? $orders: [], 200);
         }
         catch(\Exception $e){
             handleLogs($e);

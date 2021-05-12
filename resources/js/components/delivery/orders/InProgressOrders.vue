@@ -73,6 +73,12 @@
                                         <div>
                                             {{ preorder.address }}
                                         </div>
+                                        <span class="grey--text">
+                                            Date de commande:
+                                            {{
+                                                parseToDate(preorder.created_at)
+                                            }}
+                                        </span>
                                     </div>
                                 </v-timeline-item>
                             </v-timeline>
@@ -132,6 +138,8 @@
 <script>
 import ViewOrderList from "../../pieces/ViewOrderList";
 import { mapState } from "vuex";
+import moment from "moment";
+moment.locale("fr");
 export default {
     computed: {
         ...mapState(["expected"]),
@@ -148,6 +156,10 @@ export default {
                 mutation: "FETCH_PREORDERS",
                 related: "fetch-inprogress"
             });
+        },
+        //* Parse to date
+        parseToDate: function(date) {
+            return moment(date).format("MM/D/YYYY H:mm");
         },
         //* Take in charge
         orderDelivered: function(preorder_id) {

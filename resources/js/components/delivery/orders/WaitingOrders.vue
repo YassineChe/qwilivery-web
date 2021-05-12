@@ -74,6 +74,12 @@
                                         <div>
                                             {{ preorder.address }}
                                         </div>
+                                        <span class="grey--text">
+                                            Date de commande:
+                                            {{
+                                                parseToDate(preorder.created_at)
+                                            }}
+                                        </span>
                                     </div>
                                 </v-timeline-item>
                             </v-timeline>
