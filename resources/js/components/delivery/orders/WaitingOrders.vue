@@ -5,7 +5,15 @@
     >
         <v-card-text>
             <v-list>
-                <template v-for="(preorder, idx) in preorders">
+                <div
+                    class="text-center"
+                    v-if="!isBusy('fetch-inprogress') && preorders.length == 0"
+                >
+                    <img src="/images/svg/no-data.svg" width="250px" />
+                    <p>Aucune commande trouvée</p>
+                </div>
+
+                <template v-for="(preorder, idx) in preorders" v-else>
                     <v-divider :key="idx * 265" v-if="idx > 0"></v-divider>
                     <v-list-item :key="idx">
                         <v-list-item-content>

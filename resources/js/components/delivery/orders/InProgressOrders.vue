@@ -5,7 +5,15 @@
     >
         <v-card-text>
             <v-list>
-                <template v-for="(preorder, idx) in preorders">
+                <div
+                    class="text-center"
+                    v-if="!isBusy('fetch-inprogress') && preorders.length == 0"
+                >
+                    <img src="/images/svg/no-data.svg" width="250px" />
+                    <p>Aucune commande trouvée</p>
+                </div>
+
+                <template v-for="(preorder, idx) in preorders" v-else>
                     <v-divider :key="idx * 265" v-if="idx > 0"></v-divider>
                     <v-list-item :key="idx">
                         <v-list-item-content>
@@ -116,7 +124,7 @@ export default {
             this.$store.dispatch("postData", {
                 path: "/api/delivered/order",
                 data: { id: preorder_id },
-                related: "take-in-charge"
+                related: "make-order-delivered"
             });
         },
         //* The famous isBusy funtion haha
@@ -134,7 +142,9 @@ export default {
         expected() {
             //Delete Order
             {
-                let expected = this.$store.getters.expected("take-in-charge");
+                let expected = this.$store.getters.expected(
+                    "make-order-delivered"
+                );
                 if (expected != undefined) {
                     if (expected.status === "success") {
                         this.$dialog.notify.success(
