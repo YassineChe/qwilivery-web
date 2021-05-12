@@ -56,28 +56,7 @@ class OrderController extends Controller
     //* Orders (This function is common between Restaurabt and admin with instruction)
     public function fetchOrderByPreOrderID($pre_order_id){
         try{
-
-            switch(getConnectedGuard()){
-                case 'restaurant':
-                    $isAuthorized = PreOrder::select('id')->where('id', $pre_order_id)
-                                            ->where('restaurant_id', authIdFromGuard('restaurant'))
-                                            ->first();
-                    if ($isAuthorized)
-                        $orders = Order::where('pre_order_id', (int)$pre_order_id)->with('variant')->get();
-                break;
-                case 'delivery':
-                    $isAuthorized = PreOrder::select('id')->where('id', $pre_order_id)
-                                            ->where('delivery_id', authIdFromGuard('delivery'))
-                                            ->first();
-                    if ($isAuthorized)
-                        $orders = Order::where('pre_order_id', (int)$pre_order_id)->with('variant')->get();
-                break;
-                case 'admin': 
-                    $orders = Order::where('pre_order_id', (int)$pre_order_id)->with('variant')->get();
-                break;
-            }
-            
-            return response($orders ? $orders: [], 200);
+            return response(Order::where('pre_order_id', (int)$pre_order_id)->with('variant')->get(), 200);
         }
         catch(\Exception $e){
             handleLogs($e);
