@@ -24,7 +24,11 @@
             <v-col cols="12" sm="12" md="4" lg="4" class="my-0 py-0">
                 <v-card tile class="fill-height" flat>
                     <v-container fill-height fluid>
-                        <v-row align="center" justify="center" class="pa-10">
+                        <v-row
+                            align="center"
+                            justify="center"
+                            class="pa-10 ma-0"
+                        >
                             <v-col align="center">
                                 <!-- Login  -->
                                 <v-layout column v-if="!restPasword">

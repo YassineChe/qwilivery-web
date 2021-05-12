@@ -1,12 +1,12 @@
 <template>
     <v-container fluid fill-height class="background ma-0 pa-0">
         <v-row class="fill-height">
-            <v-col cols="12" sm="1" md="7" lg="8" v-if="!isMobile">
+            <v-col cols="12" sm="8" md="8" lg="8" v-if="!isMobile">
                 <v-container fill-height fluid>
                     <v-row align="center" justify="center">
                         <v-col align="center">
                             <v-img
-                                src="images/svg/register.svg"
+                                src="/images/svg/register.svg"
                                 height="450px"
                                 width="550px"
                             />
@@ -14,17 +14,18 @@
                     </v-row>
                 </v-container>
             </v-col>
-            <v-col cols="12" sm="12" md="5" lg="4" class="my-0 py-0">
+
+            <v-col cols="12" sm="12" md="5" lg="4">
                 <v-card tile class="fill-height" flat>
                     <v-container fill-height fluid>
                         <v-row align="center" justify="center" class="pa-10">
                             <v-col align="center">
                                 <!-- Login  -->
-                                <v-layout column v-if="!restPasword">
-                                    <v-flex mt-5>
-                                        <!-- HeadLine -->
+                                <v-row>
+                                    <!-- HeadLine -->
+                                    <v-col cols="12">
                                         <Headline
-                                            headline="Pour créer votre compte surs Ready2Go👋"
+                                            headline="Créez votre compte 👋"
                                             :headline-classes="[
                                                 'text-h5',
                                                 'grey--text text--darken-2'
@@ -34,16 +35,15 @@
                                                 <span
                                                     class="grey--text text--darken-1"
                                                 >
-                                                    veuillez remplir le
-                                                    formulaire ci-dessous. Vous
-                                                    receverez un email
-                                                    d'activation et votre mot de
-                                                    passe par email.
+                                                    Assurez-vous d'insérer un
+                                                    e-mail valide, vous recevrez
+                                                    un e-mail de confirmation
                                                 </span>
                                             </template>
                                         </Headline>
-                                    </v-flex>
-                                    <v-flex mt-5>
+                                    </v-col>
+                                    <!-- First name -->
+                                    <v-col cols="6">
                                         <v-text-field
                                             dense
                                             hide-details="auto"
@@ -51,8 +51,9 @@
                                             label="Nom"
                                             v-model="credentials.first_name"
                                         ></v-text-field>
-                                    </v-flex>
-                                    <v-flex mt-5>
+                                    </v-col>
+                                    <!-- Last name -->
+                                    <v-col cols="6">
                                         <v-text-field
                                             dense
                                             hide-details="auto"
@@ -60,8 +61,29 @@
                                             label="Prénom"
                                             v-model="credentials.last_name"
                                         ></v-text-field>
-                                    </v-flex>
-                                    <v-flex mt-5>
+                                    </v-col>
+                                    <!-- Phone number -->
+                                    <v-col cols="12">
+                                        <v-text-field
+                                            dense
+                                            hide-details="auto"
+                                            outlined
+                                            label="numéro de téléphone"
+                                            v-model="credentials.phone_number"
+                                        ></v-text-field>
+                                    </v-col>
+                                    <!-- Email -->
+                                    <v-col cols="12">
+                                        <v-text-field
+                                            dense
+                                            hide-details="auto"
+                                            outlined
+                                            label="E-mail"
+                                            v-model="credentials.email"
+                                        ></v-text-field>
+                                    </v-col>
+                                    <!-- Experience -->
+                                    <v-col cols="12">
                                         <v-text-field
                                             dense
                                             hide-details="auto"
@@ -70,25 +92,9 @@
                                             type="number"
                                             v-model="credentials.experience"
                                         ></v-text-field>
-                                    </v-flex>
-                                    <v-flex mt-5>
-                                        <v-text-field
-                                            dense
-                                            hide-details="auto"
-                                            outlined
-                                            label="numéro de téléphone"
-                                            v-model="credentials.phone_number"
-                                        ></v-text-field> </v-flex
-                                    ><v-flex mt-5>
-                                        <v-text-field
-                                            dense
-                                            hide-details="auto"
-                                            outlined
-                                            label="E-mail"
-                                            v-model="credentials.email"
-                                        ></v-text-field>
-                                    </v-flex>
-                                    <v-flex mt-5>
+                                    </v-col>
+                                    <!-- Password -->
+                                    <v-col cols="12">
                                         <v-text-field
                                             dense
                                             hide-details="auto"
@@ -97,8 +103,9 @@
                                             label="Mot de passe"
                                             v-model="credentials.password"
                                         ></v-text-field>
-                                    </v-flex>
-                                    <v-flex mt-5>
+                                    </v-col>
+                                    <!-- Confrim password -->
+                                    <v-col>
                                         <v-text-field
                                             dense
                                             hide-details="auto"
@@ -107,8 +114,9 @@
                                             label="Mot de passe"
                                             v-model="credentials.confirm"
                                         ></v-text-field>
-                                    </v-flex>
-                                    <v-flex mt-5>
+                                    </v-col>
+                                    <!-- Add permit -->
+                                    <v-col cols="12">
                                         <v-btn
                                             block
                                             elevation="5"
@@ -140,8 +148,8 @@
                                             type="file"
                                             id="png-permit"
                                         />
-                                    </v-flex>
-                                    <v-flex mt-5>
+                                    </v-col>
+                                    <v-col cols="12">
                                         <v-btn
                                             color="primary"
                                             block
@@ -151,19 +159,17 @@
                                         >
                                             s'inscrire
                                         </v-btn>
-                                    </v-flex>
-                                    <v-flex mt-5>
+                                    </v-col>
+                                    <v-col cols="12">
                                         <v-divider />
-                                    </v-flex>
-                                    <v-flex mt-3>
                                         <small>
                                             <router-link to="login"
-                                                >se connecter à un compte
+                                                >Se connecter à un compte
                                                 existant</router-link
                                             >
                                         </small>
-                                    </v-flex>
-                                </v-layout>
+                                    </v-col>
+                                </v-row>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -187,16 +193,12 @@ export default {
                 first_name: "",
                 last_name: "",
                 experience: "",
-                email: "admin@mail.com",
-                password: "123456",
-                avatar: "avatar.png",
+                email: "",
+                password: "",
+                avatar: "",
                 phone_number: ""
             },
-            folder: {},
-            field: {},
-            file: "",
-            restPasword: false,
-            emailRest: ""
+            file: ""
         };
     },
     computed: {

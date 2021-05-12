@@ -138,7 +138,7 @@ class AuthController extends Controller
             return dataToResponse('error', 'Erreur!', [['le mot de passe ne correspond pas']], false, 422);
         }
         // Retrieving necessary data
-        $fileName =  storeUploaded(public_path() . '/files', $request->permit);
+        $fileName =  storeUploaded(public_path() . '/images/permits', $request->permit);
 
         $delivery =  Delivery::create([
             "first_name"   => $request->first_name,
