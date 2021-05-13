@@ -23,14 +23,17 @@ class DeliveryRequest extends FormRequest
      */
     public function rules()
     {   
+
+        try{$id = $this->request->get('id');
+        }catch(\Exception $e){ $id = ''; }
+
         return [
             'first_name' => 'required',
             'last_name'  => 'required',
             'email'      => 'required|email|unique:restaurants|unique:admins|unique:deliveries',
             'experience' => 'required|numeric',
-            'permit'    => 'required|mimes:png,jpg,jpeg|max:10000"',
-            // 'avatar'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-
+            'phone_number' => "required|regex:/[0-9]{10}/|unique:deliveries|unique:restaurants,phone_number,{$this->request->get('id')}",
+            'permit'    => 'required|mimes:png,jpg,jpeg|max:1024"',
         ];
     }
 }

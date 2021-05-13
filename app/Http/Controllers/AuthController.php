@@ -145,7 +145,7 @@ class AuthController extends Controller
             "last_name"    => $request->last_name,
             "avatar"       => "avatar.png",
             "email"        => $request->email,
-            "password"     => \hash::make($request->password),
+            "password"     => \Hash::make($request->password),
             "experience"   => $request->experience,
             "permit"       => $fileName,
             "phone_number" => $request->phone_number,
