@@ -16,26 +16,6 @@
             </v-col>
         </v-row>
 
-        <!-- Buttons actions -->
-        <v-row class="mt-5">
-            <v-col :align="!isMobile ? 'right' : ''">
-                <v-tooltip top>
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                            v-bind="attrs"
-                            v-on="on"
-                            color="primary"
-                            :block="isMobile"
-                            @click="init()"
-                        >
-                            <v-icon>mdi-refresh</v-icon>
-                        </v-btn>
-                    </template>
-                    <span>Rafraîchir</span>
-                </v-tooltip>
-            </v-col>
-        </v-row>
-
         <v-card class="mt-5">
             <v-tabs :vertical="!isMobile">
                 <v-tab>
