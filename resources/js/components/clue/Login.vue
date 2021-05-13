@@ -76,7 +76,7 @@
                                             type="password"
                                             outlined
                                             label="Mot de passe"
-                                            placeholder="your@email.com"
+                                            placeholder="Mot de passe"
                                             v-model="credentials.password"
                                         ></v-text-field>
                                     </v-flex>
