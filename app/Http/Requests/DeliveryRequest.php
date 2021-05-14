@@ -30,10 +30,10 @@ class DeliveryRequest extends FormRequest
         return [
             'first_name' => 'required',
             'last_name'  => 'required',
-            'email'      => 'required|email|unique:restaurants|unique:admins|unique:deliveries',
-            'experience' => 'required|numeric',
+            'email'      => "required|email|unique:admins|unique:deliveries|unique:restaurants,email,{$this->request->get('id')}",
             'phone_number' => "required|regex:/[0-9]{10}/|unique:deliveries|unique:restaurants,phone_number,{$this->request->get('id')}",
-            'permit'    => 'required|mimes:png,jpg,jpeg|max:1024"',
+            'experience'   => 'required|numeric',
+            'permit'       => 'required|mimes:png,jpg,jpeg|max:1024"',
         ];
     }
 }

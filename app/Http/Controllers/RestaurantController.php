@@ -116,15 +116,31 @@ class RestaurantController extends Controller
         }
     }
 
+    //* Approuve delivery man
+    public function approveRestaurant(Request $request){
+        try {
+            if (
+                Restaurant::where('id', $request->restaurant_id)
+                        ->update(['approved_at' => \Carbon\Carbon::now()])
+                ) {
+                return dataToResponse('success', 'Succès ', 'Mis à jour avec succés', false, 200);
+            }
+            return dataToResponse('error', 'Erreur ! ', 'Something went wrong!', false, 422);
+        } catch (\Exception $e) {
+            handleLogs($e);
+        }
+    }
+
+
     //* Edit Profile Information
     public function editProfile(Request $request){
         try{
             //Avatar handler
-            if (\Auth::guard('restaurant')->user()->logo != $request->logo){
-                $logo =  storeUploaded(public_path() . '/images/avatars', $request->logo);
+            if (\Auth::guard('restaurant')->user()->avatar != $request->logo){
+                $avatar =  storeUploaded(public_path() . '/images/avatars', $request->logo);
             }
             else{
-                $logo = \Auth::guard('restaurant')->user()->logo;
+                $avatar = \Auth::guard('restaurant')->user()->avatar;
             }
             
             if(

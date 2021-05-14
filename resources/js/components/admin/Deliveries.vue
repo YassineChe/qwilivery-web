@@ -75,23 +75,26 @@
                     <span>{{ item.first_name + " " + item.last_name }}</span>
                 </template>
 
+                <!-- Avatar -->
                 <template v-slot:[`item.avatar`]="{ item }">
                     <v-avatar size="40">
                         <img :src="`/images/avatars/${item.avatar}`" />
                     </v-avatar>
                 </template>
 
-                <template v-slot:[`item.status`]="{ item }">
+                <!-- Approve -->
+                <template v-slot:[`item.approved_at`]="{ item }">
                     <v-chip v-if="item.approved_at == null">
                         <v-switch
                             v-model="item.approved_at"
-                            @change="editApprovement(item.id)"
+                            @change="approveDelivery(item.id)"
                             color="primary"
                         ></v-switch>
                     </v-chip>
                     <v-chip color="success" v-else> Approuvé(e) </v-chip>
                 </template>
 
+                <!-- Actions -->
                 <template v-slot:[`item.actions`]="{ item }">
                     <v-speed-dial
                         :v-model="true"
@@ -227,7 +230,7 @@ export default {
             headers: [
                 { value: "avatar", text: "Photo" },
                 { value: "name", text: "NOM ET PRÉNOM" },
-                { value: "status", text: "APPROUVER" },
+                { value: "approved_at", text: "APPROUVER" },
                 { value: "email", text: "EMAIL" },
                 { value: "phone_number", text: "TÉLÉPHONE" },
                 { value: "actions" }
@@ -276,12 +279,12 @@ export default {
             });
         },
         // * Edit approvement delivery man.
-        editApprovement(delivery_id) {
+        approveDelivery(delivery_id) {
             this.$store.commit("CLEAR_EXPECTED");
             this.$store.dispatch("postData", {
                 path: `/api/approved/delivery-man`,
                 data: { delivery_id: delivery_id },
-                related: `edit-approvement`
+                related: `approve-delivery`
             });
         },
         //* Delete delivery
@@ -384,7 +387,7 @@ export default {
         expected() {
             //* Approuve delivery
             {
-                let expected = this.$store.getters.expected("edit-approvement");
+                let expected = this.$store.getters.expected("approve-delivery");
                 if (expected != undefined) {
                     if (expected.status === "success") {
                         this.$dialog.notify.success(

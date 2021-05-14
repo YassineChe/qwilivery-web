@@ -8,13 +8,16 @@ use App\Models\Restaurant;
 use App\Models\Delivery;
 use App\Models\Password_reset;
 use App\Http\Requests\DeliveryRequest;
+//Request
+use App\Http\Requests\RequestRestaurant;
 //Notifications
 use App\Notifications\ResetEmail;
-use App\Notifications\ConfirmAccountMail;
+use App\Notifications\WelcomeNewAccount;
+use App\Notifications\NotifyAdminNewDelivery;
+use App\Notifications\NotifyAdminNewRestaurant;
 
 class AuthController extends Controller
 {
-
     //* This will authenticated only delivery man (FOR MOBILE)
     public function deliveryLogin(Request $request){
         $delivery = Delivery::where('email', $request->email)->first();
@@ -67,10 +70,17 @@ class AuthController extends Controller
             return dataToResponse('error', 'Erreur!', 'Le mot de passe est erroné', false, 422);
         } else if ($restaurant) {
             if (\Hash::check($request->password, $restaurant->password)) {
+
+                if ($restaurant->approved_at == null)
+                    return dataToResponse('error', 'Erreur!', 'Votre compte n\'a pas encore été approuvé', false, 422);
+
                 return response([
                     'guard' => 'restaurant',
                     'token' => $restaurant->createToken('restaurant-api', ['restaurant-stuff'])->plainTextToken
                 ]);
+            }
+            else{
+                return response($request, 422);
             }
             //Wrong password!
             return dataToResponse('error', 'Erreur!', 'Le mot de passe est erroné', false, 422);
@@ -128,31 +138,77 @@ class AuthController extends Controller
     }
 
     //* Create new Delivery  (DeliveryRequest)
-    public function regiterDelivery(DeliveryRequest $request)
-    {
-        $request->validate([
-            'password'   => 'required|min:6',
-        ]);
-        // Check if password is much
-        if ($request->password !== $request->confirm) {
-            return dataToResponse('error', 'Erreur!', [['le mot de passe ne correspond pas']], false, 422);
+    public function regiterDelivery(DeliveryRequest $request){
+        try{
+            // Check if password is much
+            if ($request->password !== $request->confirm) {
+                return dataToResponse('error', 'Erreur!', [['le mot de passe ne correspond pas']], false, 422);
+            }
+            // Retrieving necessary data
+            $fileName =  storeUploaded(public_path() . '/images/permits', $request->permit);
+
+            $delivery =  Delivery::create([
+                "first_name"   => $request->first_name,
+                "last_name"    => $request->last_name,
+                "avatar"       => "avatar.png",
+                "email"        => $request->email,
+                "password"     => \Hash::make($request->password),
+                "experience"   => $request->experience,
+                "permit"       => $fileName,
+                "phone_number" => $request->phone_number,
+            ]);
+
+            // Try Send Email
+            try{
+                //Notify registred
+                $delivery->notify(new WelcomeNewAccount($delivery->last_name));
+                //Get admin
+                $admin = Admin::where('id', 1)->first();
+                //Notify admin
+                $admin->notify(new NotifyAdminNewDelivery($delivery));
+            }
+            catch(\Exception $e){
+                handleLogs($e);
+            }
+            
+            return dataToResponse('success', 'success!', 'Votre compte a été créé avec succès', false, 200);
+
+        }catch(\Exception $e){
+            handleLogs($e);
         }
-        // Retrieving necessary data
-        $fileName =  storeUploaded(public_path() . '/images/permits', $request->permit);
+    }
 
-        $delivery =  Delivery::create([
-            "first_name"   => $request->first_name,
-            "last_name"    => $request->last_name,
-            "avatar"       => "avatar.png",
-            "email"        => $request->email,
-            "password"     => \Hash::make($request->password),
-            "experience"   => $request->experience,
-            "permit"       => $fileName,
-            "phone_number" => $request->phone_number,
-        ]);
-        // send email.
-        $delivery->notify(new ConfirmAccountMail($delivery->email, $delivery->token));
+    //* Register new restaurant
+    public function registerRestaurant(RequestRestaurant $request){
+        try{
 
-        return dataToResponse('success', 'success!', 'Votre compte a été créé avec succès', false, 200);
+            $restaurant = Restaurant::Create([
+                'name'         => $request->name,
+                'email'        => $request->email,
+                'password'     => \Hash::make($request->password),
+                'phone_number' => $request->phone_number,
+                'address'      => $request->address,
+                'lat'          => $request->lat,
+                'lng'          => $request->lng,
+            ]);
+
+            // Try Send Email
+            try{
+                //Notify registred
+                $restaurant->notify(new WelcomeNewAccount($restaurant->name));
+                //Get admin
+                $admin = Admin::where('id', 1)->first();
+                //Notify admin
+                $admin->notify(new NotifyAdminNewRestaurant($restaurant));
+            }
+            catch(\Exception $e){
+                handleLogs($e);
+            }
+
+            return dataToResponse('success', 'success!', 'Votre compte a été créé avec succès', false, 200);
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
     }
 }

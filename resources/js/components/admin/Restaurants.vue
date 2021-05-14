@@ -86,6 +86,18 @@
                     <span>{{ item.name }}</span>
                 </template>
 
+                <!-- Approve -->
+                <template v-slot:[`item.approved_at`]="{ item }">
+                    <v-chip v-if="item.approved_at == null">
+                        <v-switch
+                            v-model="item.approved_at"
+                            @change="approveRestaurant(item.id)"
+                            color="primary"
+                        ></v-switch>
+                    </v-chip>
+                    <v-chip color="success" v-else> Approuvé(e) </v-chip>
+                </template>
+
                 <!-- Tax -->
                 <template v-slot:[`item.rate`]="{ item }">
                     <span>{{ item.rate }}$</span>
@@ -214,6 +226,7 @@ export default {
             headers: [
                 { value: "logo", text: "LOGO" },
                 { value: "name", text: "NOM DU RESTAURANT" },
+                { value: "approved_at", text: "APPROUVER" },
                 { value: "email", text: "EMAIL" },
                 { value: "phone_number", text: "TÉLÉPHONE" },
                 { value: "address", text: "ADRESSE" },
@@ -303,6 +316,15 @@ export default {
                 title: "Ajouter nouveau restaurant"
             });
         },
+        // * Edit approvement delivery man.
+        approveRestaurant(restaurant_id) {
+            this.$store.commit("CLEAR_EXPECTED");
+            this.$store.dispatch("postData", {
+                path: `/api/approved/restaurant`,
+                data: { restaurant_id: restaurant_id },
+                related: `approve-restaurant`
+            });
+        },
         //* Edit Resataurant
         editRestaurant: function(restaurant) {
             this.$dialog.show(HandleRestaurant, {
@@ -330,6 +352,34 @@ export default {
     },
     watch: {
         expected() {
+            //* Approuve restaurant
+            {
+                let expected = this.$store.getters.expected(
+                    "approve-restaurant"
+                );
+                if (expected != undefined) {
+                    if (expected.status === "success") {
+                        this.$dialog.notify.success(
+                            expected.result.subMessage,
+                            {
+                                position: "top-right",
+                                timeout: 3000
+                            }
+                        );
+                    }
+                    if (expected.status === "error") {
+                        this.$dialog.notify.warning(
+                            expected.result.subMessage,
+                            {
+                                position: "top-right",
+                                timeout: 3000
+                            }
+                        );
+                    }
+
+                    this.$store.commit("CLEAR_EXPECTED");
+                }
+            }
             // Add Restaurant
             {
                 let expected = this.$store.getters.expected("add-restaurant");

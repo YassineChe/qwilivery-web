@@ -32,6 +32,7 @@ Route::post("/login", [AuthController::class, "login"]);
 Route::post('/reset/password', [AuthController::class, 'createRestLink']);
 Route::post('/reset-password', [AuthController::class, 'restPassword']);
 Route::post('/register/delivery', [AuthController::class, 'regiterDelivery']);
+Route::post('/register/restaurant', [AuthController::class, 'registerRestaurant']);
 
 //? Admin api routes
 Route::middleware("auth:admin")->group(function () {
@@ -47,6 +48,7 @@ Route::middleware("auth:admin")->group(function () {
     Route::put('/add/delivery/to/order', [DeliveryController::class, 'addDeliveryToOrder']);
 
     //* Restaurant stuff
+    Route::post('/approved/restaurant', [RestaurantController::class, 'approveRestaurant']); //approuve delivery man
     Route::get('/fetch/restaurants', [RestaurantController::class, 'fetchRestaurants']); // Fetch Restaurants
     Route::post('/add/restaurant', [RestaurantController::class, 'addRestaurant']); //Add restaurant
     Route::delete('/delete/restaurant', [RestaurantController::class, 'deleteRestaurant']); // Delete Restaurant
@@ -144,3 +146,10 @@ Route::middleware("auth:admin,delivery,restaurant")->group(function () {
     });
 
 });
+
+// Route::get('/test/email', function(){
+//     $admin = App\Models\Admin::where('id', 1)->first();
+//     $restaurant = App\Models\Restaurant::where('id', 2)->first();
+//     if ($admin)
+//         $admin->notify(new App\Notifications\NotifyAdminNewRestaurant($restaurant));
+// });

@@ -118,13 +118,13 @@ class DeliveryController extends Controller
                 Delivery::where('id', $request->delivery_id)
                         ->update(['approved_at' => \Carbon\Carbon::now()])
                 ) {
-                return dataToResponse('success', 'Succès ', 'La mise à jour a réussi', false, 200);
+                return dataToResponse('success', 'Succès ', 'Mis à jour avec succés', false, 200);
             }
+            return dataToResponse('error', 'Erreur ! ', 'Something went wrong!', false, 422);
         } catch (\Exception $e) {
             handleLogs($e);
         }
     }
-
 
     //* Add dilivery man to spefic order
     public function addDeliveryToOrder(Request $request){

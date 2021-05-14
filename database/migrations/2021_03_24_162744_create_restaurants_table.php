@@ -22,11 +22,10 @@ class CreateRestaurantsTable extends Migration
             $table->string('address');
             $table->string('lat')->nullable();
             $table->string('lng')->nullable();
-            $table->string('logo')->default('restaurant.png');
-            $table->double('rate');
+            $table->string('avatar')->default('restaurant.png');
+            $table->double('rate')->nullable();
             $table->timestamp('approved_at')->nullable();
             $table->timestamp('blocked_at')->nullable();
-            $table->timestamp('verified_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

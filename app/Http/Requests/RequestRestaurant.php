@@ -35,7 +35,9 @@ class RequestRestaurant extends FormRequest
             'email'   => "required|email|unique:admins|unique:deliveries|unique:restaurants,email,{$this->request->get('id')}",
             'phone_number'  => "required|regex:/[0-9]{10}/|unique:deliveries|unique:restaurants,phone_number,{$this->request->get('id')}",
             'address' => 'required|max:200',
-            'rate'    => 'required|integer',
+            'lat'     => 'required',
+            'lng'     => 'required',
+            'rate'    => 'integer',
         ];
     }
 }
