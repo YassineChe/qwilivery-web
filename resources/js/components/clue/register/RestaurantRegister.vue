@@ -180,12 +180,12 @@ export default {
         return {
             focusHere: { lat: 45.482858, lng: -73.63715 },
             restaurant: {
-                name: "Elfaro",
-                email: "ysn.cheddadi@gmail.org",
-                phone_number: "0645951148",
-                address: "this is a test adresse",
-                password: "123465",
-                confirm: "123465",
+                name: "",
+                email: "",
+                phone_number: "",
+                address: "",
+                password: "",
+                confirm: "",
                 lat: null,
                 lng: null
             }
@@ -233,7 +233,9 @@ export default {
                                 timeout: 3000
                             }
                         );
-                        //Push this route
+
+                        // Clear expected
+                        this.$store.commit("CLEAR_EXPECTED");
                         this.$router.push("login");
                     }
                     if (expected.status === "error") {
@@ -245,10 +247,15 @@ export default {
                                 timeout: 3000
                             });
                         }
+                        // Clear expected
+                        this.$store.commit("CLEAR_EXPECTED");
                     }
                 }
             }
         }
+    },
+    created() {
+        this.$store.commit("CLEAR_EXPECTED");
     }
 };
 </script>

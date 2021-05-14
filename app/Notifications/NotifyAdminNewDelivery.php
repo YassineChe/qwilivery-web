@@ -47,10 +47,10 @@ class NotifyAdminNewDelivery extends Notification
                     ->subject(config('app.name').' | Nouveau livreur 🛵')
                     ->greeting('Bonjour, '. $notifiable->last_name .' !')
                     ->line('Un nouveau livreur s\'est inscrit sur '. config('app.name'))
-                    ->line('Nom complet: '. $this->delivery->first_name .' '. $this->delivery->last_name .' \n'
-                    .'E-mail: '. $this->delivery->email .'\n'
-                    .'Numéro téléphone: '. $this->delivery->phone_number .'\n'
-                    .'Expérience: '. $this->delivery->experience );
+                    ->line('Nom complet: '. $this->delivery->first_name .' '. $this->delivery->last_name)
+                    ->line('E-mail: '. $this->delivery->email)
+                    ->line('Numéro téléphone: '. $this->delivery->phone_number)
+                    ->line('Expérience: '. $this->delivery->experience);
     }
 
     /**

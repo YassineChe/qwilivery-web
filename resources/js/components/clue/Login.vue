@@ -31,76 +31,105 @@
                         >
                             <v-col align="center">
                                 <!-- Login  -->
-                                <v-layout column v-if="!restPasword">
-                                    <v-flex mt-5>
-                                        <!-- HeadLine -->
-                                        <Headline
-                                            headline="Bienvenue, Qwilivery👋"
-                                            :headline-classes="[
-                                                'text-h5',
-                                                'grey--text text--darken-2'
-                                            ]"
-                                        >
-                                            <template #subheadline>
-                                                <span
-                                                    class="grey--text text--darken-1"
-                                                >
-                                                    Connectez-vous à votre
-                                                    compte
-                                                </span>
-                                            </template>
-                                        </Headline>
-                                    </v-flex>
-                                    <v-flex mt-5>
-                                        <v-text-field
-                                            dense
-                                            hide-details="auto"
-                                            outlined
-                                            label="E-mail"
-                                            placeholder="your@email.com"
-                                            v-model="credentials.email"
-                                        ></v-text-field>
-                                    </v-flex>
-                                    <v-flex mt-3 align-self-end>
-                                        <v-btn
-                                            text
-                                            small
-                                            @click="restPasword = !restPasword"
-                                            >Mot de passe oublié ?</v-btn
-                                        >
-                                    </v-flex>
-                                    <v-flex mt-1>
-                                        <v-text-field
-                                            dense
-                                            hide-details="auto"
-                                            type="password"
-                                            outlined
-                                            label="Mot de passe"
-                                            placeholder="Mot de passe"
-                                            v-model="credentials.password"
-                                        ></v-text-field>
-                                    </v-flex>
-                                    <v-flex mt-5>
-                                        <v-btn
-                                            color="primary"
-                                            block
-                                            elevation="0"
-                                            @click="doLogin()"
-                                            >Se Connecter</v-btn
-                                        >
-                                    </v-flex>
-                                    <v-flex mt-5>
-                                        <v-divider />
-                                    </v-flex>
-                                    <v-flex mt-3>
-                                        <small>
-                                            Vous n'avez pas un compte?
-                                            <router-link to="register"
-                                                >Créer un compte</router-link
+                                <validation-observer
+                                    ref="observer"
+                                    v-slot="{ invalid }"
+                                >
+                                    <v-layout column v-if="!restPasword">
+                                        <v-flex mt-5>
+                                            <!-- HeadLine -->
+                                            <Headline
+                                                headline="Bienvenue, Qwilivery👋"
+                                                :headline-classes="[
+                                                    'text-h5',
+                                                    'grey--text text--darken-2'
+                                                ]"
                                             >
-                                        </small>
-                                    </v-flex>
-                                </v-layout>
+                                                <template #subheadline>
+                                                    <span
+                                                        class="grey--text text--darken-1"
+                                                    >
+                                                        Connectez-vous à votre
+                                                        compte
+                                                    </span>
+                                                </template>
+                                            </Headline>
+                                        </v-flex>
+                                        <v-flex mt-5>
+                                            <validation-provider
+                                                v-slot="{
+                                                    errors
+                                                }"
+                                                name="E-mail"
+                                                rules="required|max:50"
+                                            >
+                                                <v-text-field
+                                                    :error-messages="errors"
+                                                    dense
+                                                    hide-details="auto"
+                                                    outlined
+                                                    label="E-mail"
+                                                    placeholder="your@email.com"
+                                                    v-model="credentials.email"
+                                                ></v-text-field>
+                                            </validation-provider>
+                                        </v-flex>
+                                        <v-flex mt-3 align-self-end>
+                                            <v-btn
+                                                text
+                                                small
+                                                @click="
+                                                    restPasword = !restPasword
+                                                "
+                                                >Mot de passe oublié ?</v-btn
+                                            >
+                                        </v-flex>
+                                        <v-flex mt-1>
+                                            <validation-provider
+                                                v-slot="{
+                                                    errors
+                                                }"
+                                                name="Ancien mot de passe"
+                                                rules="required|min:6|max:50"
+                                            >
+                                                <v-text-field
+                                                    :error-messages="errors"
+                                                    dense
+                                                    hide-details="auto"
+                                                    type="password"
+                                                    outlined
+                                                    label="Mot de passe"
+                                                    placeholder="Mot de passe"
+                                                    v-model="
+                                                        credentials.password
+                                                    "
+                                                ></v-text-field>
+                                            </validation-provider>
+                                        </v-flex>
+                                        <v-flex mt-5>
+                                            <v-btn
+                                                color="primary"
+                                                block
+                                                elevation="0"
+                                                :disabled="invalid"
+                                                @click="doLogin()"
+                                                >Se Connecter</v-btn
+                                            >
+                                        </v-flex>
+                                        <v-flex mt-5>
+                                            <v-divider />
+                                        </v-flex>
+                                        <v-flex mt-3>
+                                            <small>
+                                                Vous n'avez pas un compte?
+                                                <router-link to="register"
+                                                    >Créer un
+                                                    compte</router-link
+                                                >
+                                            </small>
+                                        </v-flex>
+                                    </v-layout>
+                                </validation-observer>
 
                                 <!-- Mot de passe oublié? -->
                                 <v-layout column v-if="restPasword">
@@ -239,6 +268,7 @@ export default {
                                 timeout: 5000
                             }
                         );
+                        this.$store.commit("CLEAR_EXPECTED");
                     }
                     if (expected.status === "error") {
                         this.$dialog.notify.warning(
@@ -248,6 +278,7 @@ export default {
                                 timeout: 5000
                             }
                         );
+                        this.$store.commit("CLEAR_EXPECTED");
                     }
                 }
             }
@@ -262,10 +293,14 @@ export default {
                                 timeout: 5000
                             }
                         );
+                        this.$store.commit("CLEAR_EXPECTED");
                     }
                 }
             }
         }
+    },
+    created() {
+        this.$store.commit("CLEAR_EXPECTED");
     }
 };
 </script>

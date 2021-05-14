@@ -113,7 +113,7 @@
                                         errors
                                     }"
                                     name="E-mail"
-                                    rules="required|max:50"
+                                    rules="required|email|max:50"
                                 >
                                     <v-text-field
                                         v-model="guard.email"
