@@ -146,10 +146,3 @@ Route::middleware("auth:admin,delivery,restaurant")->group(function () {
     });
 
 });
-
-// Route::get('/test/email', function(){
-//     $admin = App\Models\Admin::where('id', 1)->first();
-//     $restaurant = App\Models\Restaurant::where('id', 2)->first();
-//     if ($admin)
-//         $admin->notify(new App\Notifications\NotifyAdminNewRestaurant($restaurant));
-// });

@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Requests\DeliveryRequest;
 use App\Models\Delivery;
 use App\Models\PreOrder;
+//Notifications
+use App\Notifications\NotifyAccountApproved;
 
 class DeliveryController extends Controller
 {
-
     //* Edit password
     public function editPassword(Request $request){
         try{
@@ -114,11 +115,16 @@ class DeliveryController extends Controller
     //* Approuve delivery man
     public function approvedDeliveryMan(Request $request){
         try {
-            if (
-                Delivery::where('id', $request->delivery_id)
-                        ->update(['approved_at' => \Carbon\Carbon::now()])
-                ) {
-                return dataToResponse('success', 'Succès ', 'Mis à jour avec succés', false, 200);
+            $delivery = Delivery::where('id', $request->delivery_id)->first();
+            if ($delivery->update(['approved_at' => \Carbon\Carbon::now()])) {
+                try{
+                    $delivery->notify(new NotifyAccountApproved($delivery->last_name));
+                }
+                catch(\Exception $e){
+                    handleLogs($e);
+                }
+                //Return data!
+                return dataToResponse('success', 'Succès ', 'Approuvé avec succès', false, 200);
             }
             return dataToResponse('error', 'Erreur ! ', 'Something went wrong!', false, 422);
         } catch (\Exception $e) {

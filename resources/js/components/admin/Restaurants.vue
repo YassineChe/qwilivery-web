@@ -90,6 +90,7 @@
                 <template v-slot:[`item.approved_at`]="{ item }">
                     <v-chip v-if="item.approved_at == null">
                         <v-switch
+                            :loading="isBusy('approve-restaurant')"
                             v-model="item.approved_at"
                             @change="approveRestaurant(item.id)"
                             color="primary"

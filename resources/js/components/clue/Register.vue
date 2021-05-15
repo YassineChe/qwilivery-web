@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid fill-height>
+    <v-container fluid fill-height class="background ma-0 pa-0">
         <v-row class="fill-height">
             <v-col cols="12" sm="8" md="8" lg="8" v-if="!isMobile">
                 <v-container fill-height fluid>
@@ -14,7 +14,7 @@
                 </v-container>
             </v-col>
 
-            <v-col cols="12" sm="12" md="5" lg="4">
+            <v-col cols="12" sm="12" md="5" lg="4" class="my-0 py-0">
                 <v-tabs centered v-model="whichTab" icons-and-text grow>
                     <v-tab :key="0"
                         >Livreur

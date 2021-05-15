@@ -84,14 +84,15 @@
 
                 <!-- Approve -->
                 <template v-slot:[`item.approved_at`]="{ item }">
-                    <v-chip v-if="item.approved_at == null">
+                    <v-chip>
                         <v-switch
+                            :loading="isBusy('approve-delivery')"
+                            :disabled="item.approved_at ? true : false"
                             v-model="item.approved_at"
                             @change="approveDelivery(item.id)"
-                            color="primary"
+                            :color="item.approved_at ? 'success' : 'primary'"
                         ></v-switch>
                     </v-chip>
-                    <v-chip color="success" v-else> Approuvé(e) </v-chip>
                 </template>
 
                 <!-- Actions -->
@@ -241,7 +242,6 @@ export default {
         ...mapState(["expected"]),
         //*Get no blocked delivery
         deliveries: function() {
-            console.log(this.$store.getters.deliveries);
             return this.$store.getters.deliveries == null
                 ? []
                 : this.$store.getters.deliveries;
@@ -284,7 +284,7 @@ export default {
             this.$store.dispatch("postData", {
                 path: `/api/approved/delivery-man`,
                 data: { delivery_id: delivery_id },
-                related: `approve-delivery`
+                related: "approve-delivery"
             });
         },
         //* Delete delivery

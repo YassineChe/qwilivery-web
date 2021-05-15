@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\RequestRestaurant;
-
 //Models
 use App\Models\Restaurant;
-
+//Notifications
+use App\Notifications\NotifyAccountApproved;
 use App\Notifications\NotifyRestaurantAccount;
 
 
@@ -119,11 +119,15 @@ class RestaurantController extends Controller
     //* Approuve delivery man
     public function approveRestaurant(Request $request){
         try {
-            if (
-                Restaurant::where('id', $request->restaurant_id)
-                        ->update(['approved_at' => \Carbon\Carbon::now()])
-                ) {
-                return dataToResponse('success', 'Succès ', 'Mis à jour avec succés', false, 200);
+            $restaurant = Restaurant::where('id', $request->restaurant_id)->first();
+            if ($restaurant->update(['approved_at' => \Carbon\Carbon::now()])) {
+                try{
+                    $restaurant->notify(new NotifyAccountApproved($restaurant->name));
+                }
+                catch(\Exception $e){
+                    handleLogs($e);
+                }
+                return dataToResponse('success', 'Succès ', 'Approuvé avec succès', false, 200);
             }
             return dataToResponse('error', 'Erreur ! ', 'Something went wrong!', false, 422);
         } catch (\Exception $e) {
