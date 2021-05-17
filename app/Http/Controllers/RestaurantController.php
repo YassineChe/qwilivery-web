@@ -118,21 +118,21 @@ class RestaurantController extends Controller
 
     //* Approuve delivery man
     public function approveRestaurant(Request $request){
-        try {
+        // try {
             $restaurant = Restaurant::where('id', $request->restaurant_id)->first();
             if ($restaurant->update(['approved_at' => \Carbon\Carbon::now()])) {
-                try{
+                // try{
                     $restaurant->notify(new NotifyAccountApproved($restaurant->name));
-                }
-                catch(\Exception $e){
-                    handleLogs($e);
-                }
+                // }
+                // catch(\Exception $e){
+                    // handleLogs($e);
+                // }
                 return dataToResponse('success', 'Succès ', 'Approuvé avec succès', false, 200);
             }
             return dataToResponse('error', 'Erreur ! ', 'Something went wrong!', false, 422);
-        } catch (\Exception $e) {
-            handleLogs($e);
-        }
+        // } catch (\Exception $e) {
+            // handleLogs($e);
+        // }
     }
 
 

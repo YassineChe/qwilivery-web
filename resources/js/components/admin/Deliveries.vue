@@ -84,15 +84,13 @@
 
                 <!-- Approve -->
                 <template v-slot:[`item.approved_at`]="{ item }">
-                    <v-chip>
-                        <v-switch
-                            :loading="isBusy('approve-delivery')"
-                            :disabled="item.approved_at ? true : false"
-                            v-model="item.approved_at"
-                            @change="approveDelivery(item.id)"
-                            :color="item.approved_at ? 'success' : 'primary'"
-                        ></v-switch>
-                    </v-chip>
+                    <v-switch
+                        :loading="isBusy('approve-delivery')"
+                        :disabled="item.approved_at ? true : false"
+                        v-model="item.approved_at"
+                        @change="approveDelivery(item.id)"
+                        :color="item.approved_at ? 'success' : 'primary'"
+                    ></v-switch>
                 </template>
 
                 <!-- Actions -->
@@ -280,7 +278,6 @@ export default {
         },
         // * Edit approvement delivery man.
         approveDelivery(delivery_id) {
-            this.$store.commit("CLEAR_EXPECTED");
             this.$store.dispatch("postData", {
                 path: `/api/approved/delivery-man`,
                 data: { delivery_id: delivery_id },
@@ -397,6 +394,7 @@ export default {
                                 timeout: 3000
                             }
                         );
+                        this.$store.commit("CLEAR_EXPECTED");
                     }
                     if (expected.status === "error") {
                         this.$dialog.notify.warning(
@@ -406,9 +404,9 @@ export default {
                                 timeout: 3000
                             }
                         );
-                    }
 
-                    this.$store.commit("CLEAR_EXPECTED");
+                        this.$store.commit("CLEAR_EXPECTED");
+                    }
                 }
             }
             //* Delete delivery

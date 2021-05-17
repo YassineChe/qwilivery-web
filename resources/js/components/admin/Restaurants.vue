@@ -88,15 +88,13 @@
 
                 <!-- Approve -->
                 <template v-slot:[`item.approved_at`]="{ item }">
-                    <v-chip v-if="item.approved_at == null">
-                        <v-switch
-                            :loading="isBusy('approve-restaurant')"
-                            v-model="item.approved_at"
-                            @change="approveRestaurant(item.id)"
-                            color="primary"
-                        ></v-switch>
-                    </v-chip>
-                    <v-chip color="success" v-else> Approuvé(e) </v-chip>
+                    <v-switch
+                        :loading="isBusy('approve-restaurant')"
+                        :disabled="item.approved_at ? true : false"
+                        v-model="item.approved_at"
+                        @change="approveRestaurant(item.id)"
+                        :color="item.approved_at ? 'success' : 'primary'"
+                    ></v-switch>
                 </template>
 
                 <!-- Tax -->
@@ -319,11 +317,10 @@ export default {
         },
         // * Edit approvement delivery man.
         approveRestaurant(restaurant_id) {
-            this.$store.commit("CLEAR_EXPECTED");
             this.$store.dispatch("postData", {
                 path: `/api/approved/restaurant`,
                 data: { restaurant_id: restaurant_id },
-                related: `approve-restaurant`
+                related: "approve-restaurant"
             });
         },
         //* Edit Resataurant
@@ -367,6 +364,7 @@ export default {
                                 timeout: 3000
                             }
                         );
+                        this.$store.commit("CLEAR_EXPECTED");
                     }
                     if (expected.status === "error") {
                         this.$dialog.notify.warning(
@@ -376,9 +374,8 @@ export default {
                                 timeout: 3000
                             }
                         );
+                        this.$store.commit("CLEAR_EXPECTED");
                     }
-
-                    this.$store.commit("CLEAR_EXPECTED");
                 }
             }
             // Add Restaurant
