@@ -163,7 +163,7 @@ class AuthController extends Controller
                 //Notify registred
                 $delivery->notify(new WelcomeNewAccount($delivery->last_name));
                 //Get admin
-                $admin = Admin::where('id', 2)->first();
+                $admin = Admin::where('id', 1)->first();
                 //Notify admin
                 $admin->notify(new NotifyAdminNewDelivery($delivery));
             }
@@ -197,7 +197,7 @@ class AuthController extends Controller
                 //Notify registred
                 $restaurant->notify(new WelcomeNewAccount($restaurant->name));
                 //Get admin
-                $admin = Admin::where('id', 2)->first();
+                $admin = Admin::where('id', 1)->first();
                 //Notify admin
                 $admin->notify(new NotifyAdminNewRestaurant($restaurant));
             }
