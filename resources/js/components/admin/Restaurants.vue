@@ -63,8 +63,12 @@
                 :headers="headers"
                 :items="restaurants"
                 :search="search"
-                :loading="isBusy('fetch-restaurants')"
-                :disabled="isBusy('fetch-restaurants')"
+                :loading="
+                    isBusy('fetch-restaurants') || isBusy('approve-restaurant')
+                "
+                :disabled="
+                    isBusy('fetch-restaurants') || isBusy('approve-restaurant')
+                "
                 disable-sort
                 item-key="id"
             >
@@ -89,7 +93,6 @@
                 <!-- Approve -->
                 <template v-slot:[`item.approved_at`]="{ item }">
                     <v-switch
-                        :loading="isBusy('approve-restaurant')"
                         :disabled="item.approved_at ? true : false"
                         v-model="item.approved_at"
                         @change="approveRestaurant(item.id)"
