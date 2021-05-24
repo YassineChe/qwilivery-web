@@ -63,6 +63,30 @@ export default {
                 related: "fetch-inprogress"
             });
         }
+    },
+    mounted() {
+        let pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
+            cluster: "eu"
+        });
+
+        //Subscribe to the channel we specified in our Adonis Application
+        let channel = pusher.subscribe("new-order-channel");
+
+        channel.bind("new-order", data => {
+            alert("new order here");
+            this.$notification.show(
+                "Nouvelle commande",
+                {
+                    body:
+                        "Nouvelle commande à livrer! Cliquez pour voir les détails"
+                },
+                {
+                    onclick: function() {
+                        window.location.href = "/orders";
+                    }
+                }
+            );
+        });
     }
 };
 </script>

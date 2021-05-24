@@ -48,6 +48,14 @@ Vue.use(VuetifyDialog, {
     }
 });
 
+import VueNativeNotification from "vue-native-notification";
+
+Vue.use(VueNativeNotification, {
+    // Automatic permission request before
+    // showing notification (default: true)
+    requestOnNotify: true
+});
+
 //* Auth plugin.
 import Auth from "./apis/Auth";
 Vue.use(Auth);

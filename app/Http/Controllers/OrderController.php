@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\PreOrder;
+//* Notifications
+use App\Events\NewOrder;
 
 class OrderController extends Controller
 {
@@ -28,8 +30,11 @@ class OrderController extends Controller
                         'qty'          => $order['qty']
                     ]);
                 }
-            }
 
+                //All Good 👋 Let's notify deliveries! (No data will bind just for this moment!)
+                event(new NewOrder());
+            }
+            
             return dataToResponse('success', 'Succès', 'La commande a été ajoutée 👍', true, 200);
         }
         catch(\Exception $e){

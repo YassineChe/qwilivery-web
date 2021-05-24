@@ -79,9 +79,6 @@ class AuthController extends Controller
                     'token' => $restaurant->createToken('restaurant-api', ['restaurant-stuff'])->plainTextToken
                 ]);
             }
-            else{
-                return response($request, 422);
-            }
             //Wrong password!
             return dataToResponse('error', 'Erreur!', 'Le mot de passe est erroné', false, 422);
         }
@@ -96,7 +93,7 @@ class AuthController extends Controller
         // Check if email exist in data
         $admin = Admin::where('email', $request->email)->first();
         if ($admin) {
-            if (Password_reset::Where('email', $request->email)->delete());
+            Password_reset::Where('email', $request->email)->delete();
             $admin = Password_reset::create([
                 'email' => $request->email,
                 'token' => \Str::random(60),

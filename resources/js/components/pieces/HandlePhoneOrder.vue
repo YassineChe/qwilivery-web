@@ -325,7 +325,11 @@
                                     </template>
 
                                     <template v-slot:[`item.price`]="{ item }">
-                                        {{ item.qty * item.variant.price }}
+                                        {{
+                                            (
+                                                item.qty * item.variant.price
+                                            ).toFixed()
+                                        }}
                                         $
                                     </template>
                                 </v-data-table>

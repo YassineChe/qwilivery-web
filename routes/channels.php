@@ -18,6 +18,10 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('new-message-sent-channel', function () {
-    \Log:error('ccccc');
+    return true;
+});
+
+Broadcast::channel('new-order-channel', function () {
+    \Log::error('new order');
     return true;
 });

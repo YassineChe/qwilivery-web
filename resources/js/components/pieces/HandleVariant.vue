@@ -60,10 +60,9 @@
                             errors
                         }"
                         name="Prix"
-                        rules="required|numeric"
+                        :rules="{ required: true, regex: /^\d*\.?\d*$/ }"
                     >
                         <v-text-field
-                            type="numeric"
                             dense
                             outlined
                             hide-details="auto"
