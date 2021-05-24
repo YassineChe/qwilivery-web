@@ -317,13 +317,13 @@
                                     >
                                         {{ item.variant.name }}
                                     </template>
-
+                                    <!-- Qty -->
                                     <template v-slot:[`item.qty`]="{ item }">
                                         <v-chip color="info" small>
                                             {{ item.qty }}
                                         </v-chip>
                                     </template>
-
+                                    <!-- Price -->
                                     <template v-slot:[`item.price`]="{ item }">
                                         {{
                                             (
