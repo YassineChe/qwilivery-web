@@ -123,6 +123,7 @@ class MenuController extends Controller
         try {
             Category::where('id', (int)$category_id)->delete();
             Variant::where('category_id', (int)$category_id)->delete();
+            return dataToResponse('success', 'Succès', ['Catégorie supprimé avec succès ❌'], 200);
         } catch (\Exception $e) {
             handleLogs($e);
         }

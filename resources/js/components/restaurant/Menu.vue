@@ -235,7 +235,12 @@ export default {
         return {
             showAction: false,
             search: "",
-            selectedCategory: ""
+            selectedCategory: "",
+            initData: {
+                path: "/api/fetch/categories",
+                mutation: "FETCH_CATEGORIES",
+                related: "fetch-categories"
+            }
         };
     },
     computed: {
@@ -277,13 +282,7 @@ export default {
         //* Init
         init() {
             //* Get all deliveries
-            this.$store.dispatch("multipleFetch", [
-                {
-                    path: "/api/fetch/categories",
-                    mutation: "FETCH_CATEGORIES",
-                    related: "fetch-categories"
-                }
-            ]);
+            this.$store.dispatch("fetchData", this.initData);
         },
         //* Add Category
         addCategory: function() {
@@ -371,7 +370,14 @@ export default {
             {
                 this.$callback.handler(
                     this.$dialog,
-                    this.$store.getters.expected("add-category")
+                    this.$store.getters.expected("add-category"),
+                    {
+                        store: this.$store,
+                        clear: true,
+                        path: this.initData.path,
+                        mutation: this.initData.mutation,
+                        related: this.initData.path
+                    }
                 );
             }
 
@@ -379,7 +385,14 @@ export default {
             {
                 this.$callback.handler(
                     this.$dialog,
-                    this.$store.getters.expected("add-variant")
+                    this.$store.getters.expected("add-variant"),
+                    {
+                        store: this.$store,
+                        clear: true,
+                        path: this.initData.path,
+                        mutation: this.initData.mutation,
+                        related: this.initData.path
+                    }
                 );
             }
 
@@ -387,8 +400,14 @@ export default {
             {
                 this.$callback.handler(
                     this.$dialog,
-                    this.$store.getters.expected("delete-category")
-                    // callagain
+                    this.$store.getters.expected("delete-category"),
+                    {
+                        store: this.$store,
+                        clear: true,
+                        path: this.initData.path,
+                        mutation: this.initData.mutation,
+                        related: this.initData.path
+                    }
                 );
             }
 
@@ -396,7 +415,14 @@ export default {
             {
                 this.$callback.handler(
                     this.$dialog,
-                    this.$store.getters.expected("delete-variant")
+                    this.$store.getters.expected("delete-variant"),
+                    {
+                        store: this.$store,
+                        clear: true,
+                        path: this.initData.path,
+                        mutation: this.initData.mutation,
+                        related: this.initData.path
+                    }
                 );
             }
 
@@ -404,7 +430,14 @@ export default {
             {
                 this.$callback.handler(
                     this.$dialog,
-                    this.$store.getters.expected("edit-variant")
+                    this.$store.getters.expected("edit-variant"),
+                    {
+                        store: this.$store,
+                        clear: true,
+                        path: this.initData.path,
+                        mutation: this.initData.mutation,
+                        related: this.initData.path
+                    }
                 );
             }
         }
