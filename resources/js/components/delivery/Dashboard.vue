@@ -96,6 +96,12 @@
                     <v-list-item>
                         <v-list-item-content>
                             <img src="/images/logo-wt.svg" height="80" />
+                            <h3
+                                class="primary--text text-center"
+                                style="text-shadow: 2px 2px 2px #CCC;"
+                            >
+                                Qwilivery
+                            </h3>
                         </v-list-item-content>
                     </v-list-item>
                 </v-list>
@@ -194,7 +200,9 @@
                 {{ new Date().getFullYear() }} —
                 <strong>
                     <span>Qwilivery - Made</span>
-                    <a class="text-decoration-none" href="https://spveup.com"
+                    <a
+                        class="text-decoration-none"
+                        href="https://www.spoveup.com/"
                         >by Spoveup
                     </a>
                     ❤️

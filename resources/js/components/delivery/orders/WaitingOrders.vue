@@ -147,6 +147,15 @@ moment.locale("fr");
 // import { gmapApi } from "vue2-google-maps";
 
 export default {
+    data() {
+        return {
+            initData: {
+                path: "/api/fetch/orders/to/deliver",
+                mutation: "FETCH_PREORDERS",
+                related: "fetch-wait-orders"
+            }
+        };
+    },
     computed: {
         // google: gmapApi,
         ...mapState(["expected"]),
@@ -158,11 +167,7 @@ export default {
     methods: {
         //*
         init: function() {
-            this.$store.dispatch("fetchData", {
-                path: "/api/fetch/orders/to/deliver",
-                mutation: "FETCH_PREORDERS",
-                related: "fetch-wait-orders"
-            });
+            this.$store.dispatch("fetchData", this.initData);
         },
         //* Take in charge
         takeInCharge: function(preorder_id) {
@@ -195,35 +200,23 @@ export default {
     },
     watch: {
         expected() {
-            //Delete Order
+            //* Take in charge
             {
-                let expected = this.$store.getters.expected("take-in-charge");
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("take-in-charge"),
+                    {
+                        store: this.$store,
+                        clear: true,
+                        path: this.initData.path,
+                        mutation: this.initData.mutation,
+                        related: this.initData.path
                     }
-                    if (expected.status === "error") {
-                        this.$dialog.notify.error(expected.result.subMessage, {
-                            position: "top-right",
-                            timeout: 3000
-                        });
-                    }
-
-                    this.$store.commit("CLEAR_EXPECTED");
-                    this.init();
-                }
+                );
             }
         }
     },
     created() {
-        // var directionsService = new google.maps.DirectionsService();
-        this.$store.commit("CLEAR_EXPECTED");
         this.init();
     }
 };

@@ -298,17 +298,19 @@ export default {
     },
     watch: {
         expected() {
-            this.$callback.handler(
-                this.$dialog,
-                this.$store.getters.expected("delete-report"),
-                {
-                    store: this.$store,
-                    clear: true,
-                    path: this.initData.path,
-                    mutation: this.initData.mutation,
-                    related: this.initData.path
-                }
-            );
+            {
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("delete-report"),
+                    {
+                        store: this.$store,
+                        clear: true,
+                        path: this.initData.path,
+                        mutation: this.initData.mutation,
+                        related: this.initData.path
+                    }
+                );
+            }
         }
     },
     created() {

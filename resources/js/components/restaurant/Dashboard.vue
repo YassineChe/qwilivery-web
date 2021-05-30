@@ -108,6 +108,12 @@
             <v-row>
                 <v-col align="center" class="ma-3">
                     <img src="/images/logo-wt.svg" height="60px" />
+                    <h3
+                        class="primary--text text-center"
+                        style="text-shadow: 2px 2px 2px #CCC;"
+                    >
+                        Qwilivery
+                    </h3>
                 </v-col>
             </v-row>
             <!-- Lisf of content -->
@@ -180,7 +186,9 @@
                 {{ new Date().getFullYear() }} —
                 <strong>
                     <span>Qwilivery - Made</span>
-                    <a class="text-decoration-none" href="https://spveup.com"
+                    <a
+                        class="text-decoration-none"
+                        href="https://www.spoveup.com/"
                         >by Spoveup
                     </a>
                     ❤️

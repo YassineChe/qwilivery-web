@@ -140,7 +140,7 @@ class RestaurantController extends Controller
     public function editProfile(Request $request){
         try{
             //Avatar handler
-            if (\Auth::guard('restaurant')->user()->avatar != $request->logo){
+            if (\Auth::guard('restaurant')->user()->avatar != $request->avatar){
                 $avatar =  storeUploaded(public_path() . '/images/avatars', $request->logo);
             }
             else{
@@ -155,7 +155,7 @@ class RestaurantController extends Controller
                     'address'      => $request->address,
                     'lat'          => $request->lat,
                     'lng'          => $request->lng,
-                    'avatar'       => $logo
+                    'avatar'       => $avatar
                 ])
             )
             return dataToResponse('success', 'Succès ', ['Mise à jour du profil réussie'], 200);

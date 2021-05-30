@@ -141,6 +141,15 @@ import { mapState } from "vuex";
 import moment from "moment";
 moment.locale("fr");
 export default {
+    data() {
+        return {
+            initData: {
+                path: "/api/fetch/inprogress/orders",
+                mutation: "FETCH_PREORDERS",
+                related: "fetch-inprogress"
+            }
+        };
+    },
     computed: {
         ...mapState(["expected"]),
         //* Get Order to be deliver
@@ -151,11 +160,7 @@ export default {
     methods: {
         //* Init
         init: function() {
-            this.$store.dispatch("fetchData", {
-                path: "/api/fetch/inprogress/orders",
-                mutation: "FETCH_PREORDERS",
-                related: "fetch-inprogress"
-            });
+            this.$store.dispatch("fetchData", this.initData);
         },
         //* Parse to date
         parseToDate: function(date) {
@@ -188,36 +193,24 @@ export default {
     },
     watch: {
         expected() {
-            //Delete Order
-            {
-                let expected = this.$store.getters.expected(
-                    "make-order-delivered"
-                );
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                    }
-                    if (expected.status === "error") {
-                        this.$dialog.notify.error(expected.result.subMessage, {
-                            position: "top-right",
-                            timeout: 3000
-                        });
-                    }
+            //* Make order delivered
 
-                    this.$store.commit("CLEAR_EXPECTED");
-                    this.init();
-                }
+            {
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("make-order-delivered"),
+                    {
+                        store: this.$store,
+                        clear: true,
+                        path: this.initData.path,
+                        mutation: this.initData.mutation,
+                        related: this.initData.path
+                    }
+                );
             }
         }
     },
     created() {
-        this.$store.commit("CLEAR_EXPECTED");
         this.init();
     }
 };
