@@ -48,7 +48,7 @@ class MenuController extends Controller
                     'description'   => $request->description,
                 ])
             )
-                return dataToResponse('success', 'Succès', ["msg" => 'La catégorie a été ajoutée avec succès 👍',], true, 200);
+                return dataToResponse('success', 'Succès', ['La catégorie a été ajoutée avec succès 👍'], 200);
         } catch (\Exception $e) {
             handleLogs($e);
         }
@@ -69,7 +69,7 @@ class MenuController extends Controller
                 'category_id' => $request->category_id,
             ]);
 
-            return dataToResponse('success', 'Succès', ["msg" => 'L\'article a été ajoutée avec succès 👍'], true, 200);
+            return dataToResponse('success', 'Succès', ['L\'article a été ajoutée avec succès 👍'], 200);
 
         } catch (\Exception $e) {
             handleLogs($e);
@@ -110,7 +110,7 @@ class MenuController extends Controller
             }
             
             if (Variant::where('id', $request->id)->update($dataToEdit))
-                return dataToResponse('success', 'Succès', ["msg" => 'L\'article modifié avec succès 👍'], true, 200);
+                return dataToResponse('success', 'Succès', ['L\'article modifié avec succès 👍'], 200);
 
         } catch (\Exception $e) {
             handleLogs($e);
@@ -133,7 +133,7 @@ class MenuController extends Controller
     {
         try {
             if(Variant::where('id', $variant_id)->delete())
-                return dataToResponse('success', 'Succès', ["msg" => 'L\'article supprimé avec succès'], true, 200);
+                return dataToResponse('success', 'Succès', ['L\'article supprimé avec succès'], 200);
         } catch (\Exception $e) {
             handleLogs($e);
         }

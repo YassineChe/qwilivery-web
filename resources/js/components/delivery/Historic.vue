@@ -257,15 +257,10 @@ export default {
         expected() {
             //Delete Order
             {
-                let expected = this.$store.getters.expected("delete-order");
-                if (expected != undefined && expected.status === "success") {
-                    this.$store.commit("CLEAR_EXPECTED");
-                    this.$dialog.notify.success(expected.result.subMessage, {
-                        position: "top-right",
-                        timeout: 3000
-                    });
-                    this.init();
-                }
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("delete-order")
+                );
             }
         }
     },

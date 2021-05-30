@@ -387,199 +387,62 @@ export default {
         expected() {
             //* Approuve delivery
             {
-                let expected = this.$store.getters.expected("approve-delivery");
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                        this.$store.commit("CLEAR_EXPECTED");
-                    }
-                    if (expected.status === "error") {
-                        this.$dialog.notify.warning(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-
-                        this.$store.commit("CLEAR_EXPECTED");
-                    }
-                }
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("approve-delivery")
+                );
             }
+
             //* Delete delivery
             {
-                let expected = this.$store.getters.expected(
-                    "delete-delivery-man"
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("delete-delivery-man")
                 );
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        //?  DELETE DELIVERY
-                        this.$store.commit("DELETE_DELIVERY", this.dummy);
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                    }
-                    if (expected.status === "error") {
-                        this.$dialog.notify.warning(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                    }
-                }
             }
+
             //* Block delivery
             {
-                let expected = this.$store.getters.expected(
-                    "block-delivery-man"
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("block-delivery-man")
                 );
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                    }
-                    if (expected.status === "error") {
-                        this.$dialog.notify.warning(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                    }
-                }
             }
+
             //* Unblock delivery
             {
-                let expected = this.$store.getters.expected("unblock-delivery");
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                    }
-                    if (expected.status === "error") {
-                        this.$dialog.notify.warning(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                    }
-                }
-            }
-            //* Add delivery
-            {
-                let expected = this.$store.getters.expected("add-delivery");
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                        this.init();
-                    }
-                    if (expected.status === "error") {
-                        for (const [key, value] of Object.entries(
-                            expected.result.subMessage
-                        )) {
-                            this.$dialog.notify.warning(value[0], {
-                                position: "top-right",
-                                timeout: 5000
-                            });
-                        }
-                    }
-                    this.$store.commit("CLEAR_EXPECTED");
-                }
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("unblock-delivery")
+                );
             }
 
-            // Edit delivery
+            //*  Add delivery
             {
-                let expected = this.$store.getters.expected("edit-delivery");
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                        this.init();
-                    }
-                    if (expected.status === "error") {
-                        for (const [key, value] of Object.entries(
-                            expected.result.subMessage
-                        )) {
-                            this.$dialog.notify.warning(value[0], {
-                                position: "top-right",
-                                timeout: 5000
-                            });
-                        }
-                    }
-                    this.$store.commit("CLEAR_EXPECTED");
-                }
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("add-delivery")
+                );
             }
 
-            // Send message
+            //* Edit delivery
             {
-                let expected = this.$store.getters.expected("send-message");
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("edit-delivery")
+                );
+            }
 
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                    }
-                    if (expected.status === "error") {
-                        this.$store.getters.callback(
-                            expected.result.subMessage
-                        );
-
-                        this.$dialog.notify.warning(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                    }
-                    this.$store.commit("CLEAR_EXPECTED");
-                }
+            //* Send message
+            {
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("send-message")
+                );
             }
         }
     },
     created() {
-        this.$store.commit("CLEAR_EXPECTED");
         this.init();
     }
 };

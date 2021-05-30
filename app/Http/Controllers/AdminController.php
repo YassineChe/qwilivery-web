@@ -36,7 +36,7 @@ class AdminController extends Controller
                     'avatar'       => $avatar
                 ])
             )
-            return dataToResponse('success', 'Succès ', 'Mise à jour du profil réussie', false, 200);
+            return dataToResponse('success', 'Succès ', ['Mise à jour du profil réussie'], 200);
         }
         catch(\Exception $e){
             handleLogs($e);
@@ -51,10 +51,10 @@ class AdminController extends Controller
                 if (\Hash::check($request->old, $admin->makeVisible(['password'])->password)){
                     if ($request->new == $request->cfm){
                         $admin->update(['password' => \Hash::make($request->new)]);
-                        return dataToResponse('success', 'Succès ', 'Mot de passe a été changé avec succès', false, 200);
+                        return dataToResponse('success', 'Succès ', ['Mot de passe a été changé avec succès'], 200);
                     }
                 }
-                return dataToResponse('error', 'Erreur ', 'L\'ancien mot de passe ne correspond pas', false, 422);
+                return dataToResponse('error', 'Erreur ', ['L\'ancien mot de passe ne correspond pas'], 422);
             }
         }catch(\Exception $e){
             handleLogs($e);

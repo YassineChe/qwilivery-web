@@ -258,7 +258,7 @@ export default {
     watch: {
         expected() {
             {
-                // do-login (expected)
+                // reset password (expected)
                 this.$callback.handler(
                     this.$dialog,
                     this.$store.getters.expected("reset-password")

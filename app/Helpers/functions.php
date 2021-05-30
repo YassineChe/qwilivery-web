@@ -1,7 +1,7 @@
 <?php
 
 //? This is for custom Error/Success message
-function dataToResponse($type, $message, $subMessage, $complete, $status)
+function dataToResponse($type, $message, $subMessage, $status, $complete = true)
 {
     return response()->json(
         [

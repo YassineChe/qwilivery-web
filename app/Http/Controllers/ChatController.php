@@ -81,10 +81,10 @@ class ChatController extends Controller
                 event(new MessageSent($chatflow, $recipient_id, $guard));
                 
                 // Success message
-                return dataToResponse('success', 'Succès !', "Message envoyé", false, 200);
+                return dataToResponse('success', 'Succès !', ["Message envoyé"], 200);
             }
             
-            return dataToResponse('error', 'Erreur !', "Quelque chose s'est mal passé, veuillez réessayer le plus tôt possible", false, 422);
+            return dataToResponse('error', 'Erreur !', ["Quelque chose s'est mal passé, veuillez réessayer le plus tôt possible"], 422);
         }
         catch(\Exception $e){
             handleLogs($e);

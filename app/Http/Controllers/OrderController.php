@@ -35,7 +35,7 @@ class OrderController extends Controller
                 event(new NewOrder());
             }
             
-            return dataToResponse('success', 'Succès', 'La commande a été ajoutée 👍', true, 200);
+            return dataToResponse('success', 'Succès', ['La commande a été ajoutée 👍'], 200);
         }
         catch(\Exception $e){
             handleLogs($e);
@@ -103,7 +103,7 @@ class OrderController extends Controller
             }
 
             if ($delete)
-                return dataToResponse('success', 'Succès', 'Commande supprimée avec succès ❌', true, 200); 
+                return dataToResponse('success', 'Succès', ['Commande supprimée avec succès ❌'], 200); 
 
         }
         catch(\Exception $e){
@@ -209,9 +209,9 @@ class OrderController extends Controller
 
             if ($preorder)
                 if(PreOrder::where('id', (int)$request->id)->update(['delivery_id' => authIdFromGuard('delivery')]))
-                    return dataToResponse('success', 'Succès','Effectué avec succès', true, 200);
+                    return dataToResponse('success', 'Succès', ['Effectué avec succès'], 200);
 
-            return dataToResponse('error', 'Erreur','Cet ordre déjà pris', true, 422);
+            return dataToResponse('error', 'Erreur', ['Cet ordre déjà pris'], 422);
         }
         catch(\Exception $e){
             handleLogs($e);
@@ -242,7 +242,7 @@ class OrderController extends Controller
                                 ->where('delivery_id', authIdFromGuard('delivery'))
                                 ->update(['delivered_at' => \Carbon\Carbon::now()])
                 )
-                return dataToResponse('success', 'Succès','Commande livrée', true, 200);
+                return dataToResponse('success', 'Succès', ['Commande livrée'], 200);
         }
         catch(\Exception $e){
             handleLogs($e);

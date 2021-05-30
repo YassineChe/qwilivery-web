@@ -141,28 +141,17 @@ export default {
     watch: {
         expected() {
             {
-                let expected = this.$store.getters.expected("reset-password");
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        this.$store.commit("CLEAR_EXPECTED");
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                email: expected.result.email
-                            }
-                        );
-                        this.$router.push({ name: "login" });
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("reset-password"),
+                    {
+                        router: {
+                            instance: this.$router,
+                            incase: "success",
+                            to: "login"
+                        }
                     }
-                    if (expected.status === "error") {
-                        this.$dialog.notify.warning(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 5000
-                            }
-                        );
-                    }
-                }
+                );
             }
         }
     }

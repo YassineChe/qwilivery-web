@@ -367,115 +367,49 @@ export default {
     },
     watch: {
         expected() {
-            //Add delivery
+            //* Add category
             {
-                let expected = this.$store.getters.expected("add-category");
-                if (expected != undefined) {
-                    //Clear expected
-                    this.$store.commit("CLEAR_EXPECTED");
-                    if (expected.status === "success") {
-                        this.$dialog.notify.success(
-                            expected.result.subMessage["msg"],
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-
-                        this.init();
-                    }
-                    if (expected.status === "error") {
-                        for (const [key, value] of Object.entries(
-                            expected.result.errors
-                        )) {
-                            this.$dialog.notify.warning(value[0], {
-                                position: "top-right",
-                                timeout: 5000
-                            });
-                        }
-                    }
-                }
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("add-category")
+                );
             }
 
-            // Variant added
+            //* Add variant
             {
-                let expected = this.$store.getters.expected("add-variant");
-                if (expected != undefined) {
-                    //Clear expected
-                    this.$store.commit("CLEAR_EXPECTED");
-
-                    if (expected.status === "success") {
-                        this.$dialog.notify.success(
-                            expected.result.subMessage["msg"],
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-
-                        this.init();
-                    }
-                    if (expected.status === "error") {
-                        this.$store.getters
-                            .callback(expected.result.subMessage)
-                            .forEach(error => {
-                                this.$dialog.notify.warning(error, {
-                                    position: "top-right",
-                                    timeout: 3000
-                                });
-                            });
-                    }
-                }
-            }
-            //Delete category
-            {
-                let expected = this.$store.getters.expected("delete-category");
-                if (expected != undefined && expected.status === "success") {
-                    this.init();
-                    //Clear expected
-                    this.$store.commit("CLEAR_EXPECTED");
-                }
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("add-variant")
+                );
             }
 
-            //Delete variant
+            //* Delete category
             {
-                let expected = this.$store.getters.expected("delete-variant");
-                if (expected != undefined && expected.status === "success") {
-                    this.$store.getters
-                        .callback(expected.result.subMessage)
-                        .forEach(error => {
-                            this.$dialog.notify.success(error, {
-                                position: "top-right",
-                                timeout: 3000
-                            });
-                        });
-                    this.init();
-                    //Clear expected
-                    this.$store.commit("CLEAR_EXPECTED");
-                }
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("delete-category")
+                    // callagain
+                );
             }
 
-            //Article edited
+            //* Delete category
             {
-                let expected = this.$store.getters.expected("edit-variant");
-                if (expected != undefined && expected.status === "success") {
-                    this.$store.getters
-                        .callback(expected.result.subMessage)
-                        .forEach(error => {
-                            this.$dialog.notify.success(error, {
-                                position: "top-right",
-                                timeout: 3000
-                            });
-                        });
-                    this.init();
-                    //Clear expected
-                    this.$store.commit("CLEAR_EXPECTED");
-                }
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("delete-variant")
+                );
+            }
+
+            //* Variant Edited
+            {
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("edit-variant")
+                );
             }
         }
     },
     created() {
-        this.$store.commit("CLEAR_EXPECTED");
         this.init();
     }
 };

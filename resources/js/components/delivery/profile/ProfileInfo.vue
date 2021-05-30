@@ -244,22 +244,11 @@ export default {
     },
     watch: {
         expected() {
-            //Delete Order
             {
-                let expected = this.$store.getters.expected("edit-profile");
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-
-                        this.$store.commit("CLEAR_EXPECTED");
-                    }
-                }
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("edit-profile")
+                );
             }
         }
     }

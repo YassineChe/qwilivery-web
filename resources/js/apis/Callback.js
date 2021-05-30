@@ -19,12 +19,11 @@ export default function(Vue) {
                     });
                 });
 
-                //Clear expected here!
                 if (callagain != null) {
                     //Clear the expected!
-                    if (callagain.hasOwnProperty("clear") && callagain.clear) {
+                    if (callagain.hasOwnProperty("clear") && callagain.clear)
                         callagain.store.commit("CLEAR_EXPECTED");
-                    }
+
                     //if the callback has own property called path so wee need to call something!
                     if (callagain.hasOwnProperty("path")) {
                         callagain.store.dispatch("fetchData", {

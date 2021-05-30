@@ -43,7 +43,7 @@ class RestaurantController extends Controller
             if ($restaurant)
                 $restaurant->notify(new NotifyRestaurantAccount(["password" => $generetedPassword, "email" => $request->email]));
 
-            return dataToResponse('success', 'Succès ', 'Un E-mail a été envoyé au restaurant avec les informations d\'identification 👍', true, 200);
+            return dataToResponse('success', 'Succès ', ['Un E-mail a été envoyé au restaurant avec les informations d\'identification 👍'], 200);
         } catch (\Exception $e) {
             handleLogs($e);
         }
@@ -62,7 +62,7 @@ class RestaurantController extends Controller
                 'lng'     => $request->lng,
             ])
         )
-            return dataToResponse('success', 'Succès ', 'Modifié avec succès 👍', true, 200);
+            return dataToResponse('success', 'Succès ', ['Modifié avec succès 👍'], 200);
     }
 
     //* Delete Restaurant
@@ -71,7 +71,7 @@ class RestaurantController extends Controller
             $restaurant = Restaurant::where('id', $request->restaurant_id)->first();
             if ($restaurant) {
                 if ($restaurant->delete())
-                    return dataToResponse('success', 'Succès ', 'Supprimé avec succès 👍', true, 200);
+                    return dataToResponse('success', 'Succès ', ['Supprimé avec succès 👍'], 200);
             }
         } catch (\Exception $e) {
             handleLogs($e);
@@ -82,7 +82,7 @@ class RestaurantController extends Controller
     public function blockRestaurant(Request $request){
         try {
             if (Restaurant::where('id', $request->restaurant_id)->update(['blocked_at' => \Carbon\Carbon::now()]))
-                return dataToResponse('success', 'Succès ', 'Bloquer avec succès ❌', true, 200);
+                return dataToResponse('success', 'Succès ', ['Bloquer avec succès ❌'], 200);
         } catch (\Exception $e) {
             handleLogs($e);
         }
@@ -92,7 +92,7 @@ class RestaurantController extends Controller
     public function unblockRestaurant(Request $request){
         try {
             if (Restaurant::where('id', $request->restaurant_id)->update(['blocked_at' => null]))
-                return dataToResponse('success', 'Succès ', 'Débloquer avec succès ✅', true, 200);
+                return dataToResponse('success', 'Succès ', ['Débloquer avec succès ✅'], 200);
         } catch (\Exception $e) {
             handleLogs($e);
         }
@@ -106,10 +106,10 @@ class RestaurantController extends Controller
                 if (\Hash::check($request->old, $restaurant->makeVisible(['password'])->password)){
                     if ($request->new == $request->cfm){
                         $restaurant->update(['password' => \Hash::make($request->new)]);
-                        return dataToResponse('success', 'Succès ', 'Mot de passe a été changé avec succès', false, 200);
+                        return dataToResponse('success', 'Succès ', ['Mot de passe a été changé avec succès'], 200);
                     }
                 }
-                return dataToResponse('error', 'Erreur ', 'L\'ancien mot de passe ne correspond pas', false, 422);
+                return dataToResponse('error', 'Erreur ', ['L\'ancien mot de passe ne correspond pas'], 422);
             }
         }catch(\Exception $e){
             handleLogs($e);
@@ -127,9 +127,9 @@ class RestaurantController extends Controller
                 catch(\Exception $e){
                     handleLogs($e);
                 }
-                return dataToResponse('success', 'Succès ', 'Approuvé avec succès', false, 200);
+                return dataToResponse('success', 'Succès ', ['Approuvé avec succès'], 200);
             }
-            return dataToResponse('error', 'Erreur ! ', 'Something went wrong!', false, 422);
+            return dataToResponse('error', 'Erreur ! ', ['Something went wrong!'], 422);
         } catch (\Exception $e) {
             handleLogs($e);
         }
@@ -158,7 +158,7 @@ class RestaurantController extends Controller
                     'avatar'       => $logo
                 ])
             )
-            return dataToResponse('success', 'Succès ', 'Mise à jour du profil réussie', false, 200);
+            return dataToResponse('success', 'Succès ', ['Mise à jour du profil réussie'], 200);
         }
         catch(\Exception $e){
             handleLogs($e);

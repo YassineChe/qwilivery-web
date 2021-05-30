@@ -38,7 +38,7 @@ class ReportController extends Controller
                     'description' => $request->description
                 ])
             )
-            return dataToResponse('success', 'Succès ', 'Votre rapport envoyé, nous vous contacterons dans les plus brefs délais', false, 200);
+            return dataToResponse('success', 'Succès ', ['Votre rapport envoyé, nous vous contacterons dans les plus brefs délais'], 200);
         }
         catch(\Exception $e){
             handleLogs($e);
@@ -48,7 +48,7 @@ class ReportController extends Controller
     public function deleteReport($report_id){
         try{
             if(Report::where('id', (int)$report_id)->delete())
-                return dataToResponse('success', 'Succès ', 'Rapport supprimé ❌', false, 200); 
+                return dataToResponse('success', 'Succès ', ['Rapport supprimé ❌'], 200); 
         }catch(\Exception $e){
             handleLogs($e);
         }

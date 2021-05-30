@@ -19,10 +19,10 @@ class DeliveryController extends Controller
                 if (\Hash::check($request->old, $delivery->makeVisible(['password'])->password)){
                     if ($request->new == $request->cfm){
                         $delivery->update(['password' => \Hash::make($request->new)]);
-                        return dataToResponse('success', 'Succès ', 'Mot de passe a été changé avec succès', false, 200);
+                        return dataToResponse('success', 'Succès ', ['Mot de passe a été changé avec succès'], 200);
                     }
                 }
-                return dataToResponse('error', 'Erreur ', 'L\'ancien mot de passe ne correspond pas', false, 422);
+                return dataToResponse('error', 'Erreur ', ['L\'ancien mot de passe ne correspond pas'], 422);
             }
         }catch(\Exception $e){
             handleLogs($e);
@@ -50,7 +50,7 @@ class DeliveryController extends Controller
                     'avatar'       => $avatar
                 ])
             )
-            return dataToResponse('success', 'Succès ', 'Mise à jour du profil réussie', false, 200);
+            return dataToResponse('success', 'Succès ', ['Mise à jour du profil réussie'], 200);
         }
         catch(\Exception $e){
             handleLogs($e);
@@ -77,14 +77,14 @@ class DeliveryController extends Controller
         if ($delivery)
             $delivery->notify(new NotifyDeliveryAccount(["password" => $generetedPassword, "email" => $request->email]));
 
-        return dataToResponse('success', 'Succès ', 'Un E-mail a été envoyé au livreur avec les informations d\'identification 👍', true, 200);
+        return dataToResponse('success', 'Succès ', ['Un E-mail a été envoyé au livreur avec les informations d\'identification 👍'], 200);
     }
 
     //* Unblock delivery man
     public function unblockDeliveryMan(Request $request){
         try {
             if (Delivery::where('id', $request->delivery_id)->update(['blocked_at' => null]))
-                return dataToResponse('success', 'Succès ', 'Débloquer avec succès ✅', true, 200);
+                return dataToResponse('success', 'Succès ', ['Débloquer avec succès ✅'], 200);
         } catch (\Exception $e) {
             handleLogs($e);
         }
@@ -94,7 +94,7 @@ class DeliveryController extends Controller
     public function blockDeliveryMan(Request $request){
         try {
             if (Delivery::where('id', $request->delivery_id)->update(["blocked_at" => \Carbon\Carbon::now()])) {
-                return dataToResponse('success', 'Succès ', 'Livreur a été bloqué ❌', true, 200);
+                return dataToResponse('success', 'Succès ', ['Livreur a été bloqué ❌'], 200);
             }
         } catch (\Exception $e) {
             handleLogs($e);
@@ -105,7 +105,7 @@ class DeliveryController extends Controller
     public function deleteDeliveryMan(Request $request){
         try {
             if (Delivery::where('id', $request->delivery_id)->delete()) {
-                return dataToResponse('success', 'Succès ', 'La suppression est un succès 👍', true, 200);
+                return dataToResponse('success', 'Succès ', ['La suppression est un succès 👍'], 200);
             }
         } catch (\Exception $e) {
             handleLogs($e);
@@ -124,9 +124,9 @@ class DeliveryController extends Controller
                     handleLogs($e);
                 }
                 //Return data!
-                return dataToResponse('success', 'Succès ', 'Approuvé avec succès', false, 200);
+                return dataToResponse('success', 'Succès ', ['Approuvé avec succès'], 200);
             }
-            return dataToResponse('error', 'Erreur ! ', 'Something went wrong!', false, 422);
+            return dataToResponse('error', 'Erreur ! ', ['Something went wrong!'], 422);
         } catch (\Exception $e) {
             handleLogs($e);
         }
@@ -140,9 +140,9 @@ class DeliveryController extends Controller
                                     ->where('id', (int)$request->pre_order_id)->first();
             if ($preorder)
                 if( $preorder->update(['delivery_id' => (int)$request->delivery_id]) )
-                    return dataToResponse('success', 'Succès ', 'Livreur a été affecté avec succès 👍', true, 200);
+                    return dataToResponse('success', 'Succès ', ['Livreur a été affecté avec succès 👍'], 200);
 
-            return dataToResponse('error', 'Erreur ', 'Un autre livreur s\'occupant de cette commande', true, 422);
+            return dataToResponse('error', 'Erreur ', ['Un autre livreur s\'occupant de cette commande'], true, 422);
         }
         catch(\Exception $e){
             handleLogs($e);
@@ -204,6 +204,6 @@ class DeliveryController extends Controller
             'phone_number' => $request->phone_number,
         ]);
         
-        return dataToResponse('success', 'Succès ', 'La modification a réussi ', true, 200);
+        return dataToResponse('success', 'Succès ', ['La modification a réussi'], 200);
     }
 }

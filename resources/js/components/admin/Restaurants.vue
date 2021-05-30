@@ -102,7 +102,7 @@
 
                 <!-- Tax -->
                 <template v-slot:[`item.rate`]="{ item }">
-                    <span>{{ item.rate }}$</span>
+                    <span>{{ item.rate }} {{ item.rate ? "$" : "-" }}</span>
                 </template>
 
                 <!-- Actions -->
@@ -355,164 +355,56 @@ export default {
         expected() {
             //* Approuve restaurant
             {
-                let expected = this.$store.getters.expected(
-                    "approve-restaurant"
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("approve-restaurant"),
+                    { store: this.$store, clear: true }
                 );
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                        this.$store.commit("CLEAR_EXPECTED");
-                    }
-                    if (expected.status === "error") {
-                        this.$dialog.notify.warning(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                        this.$store.commit("CLEAR_EXPECTED");
-                    }
-                }
-            }
-            // Add Restaurant
-            {
-                let expected = this.$store.getters.expected("add-restaurant");
-
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        this.$store.commit("CLEAR_EXPECTED");
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                        this.init();
-                    }
-                    if (expected.status === "error") {
-                        this.$store.getters
-                            .callback(expected.result.subMessage)
-                            .forEach(error => {
-                                this.$dialog.notify.warning(error, {
-                                    position: "top-right",
-                                    timeout: 3000
-                                });
-                            });
-                    }
-                }
             }
 
-            // Edit Restaurant
+            //* Add Restaurant
             {
-                let expected = this.$store.getters.expected("edit-restaurant");
-
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        this.$store.commit("CLEAR_EXPECTED");
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                    }
-                    if (expected.status === "error") {
-                        this.$store.getters
-                            .callback(expected.result.subMessage)
-                            .forEach(error => {
-                                this.$dialog.notify.warning(error, {
-                                    position: "top-right",
-                                    timeout: 3000
-                                });
-                            });
-                    }
-                    //Clear expected
-                    this.$store.commit("CLEAR_EXPECTED");
-                }
-            }
-
-            //Block Restaurant
-            {
-                let expected = this.$store.getters.expected(
-                    "delete-restaurant"
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("add-restaurant"),
+                    { store: this.$store, clear: true }
                 );
-                if (expected != undefined && expected.status === "success") {
-                    this.$dialog.notify.success(expected.result.subMessage, {
-                        position: "top-right",
-                        timeout: 3000
-                    });
-                    //Clear expected
-                    this.$store.commit("CLEAR_EXPECTED");
-                }
             }
 
-            //Block Restaurant
+            //* Edit Restaurant
             {
-                let expected = this.$store.getters.expected("block-restaurant");
-                if (expected != undefined && expected.status === "success") {
-                    this.$dialog.notify.success(expected.result.subMessage, {
-                        position: "top-right",
-                        timeout: 3000
-                    });
-                    //Clear expected
-                    this.$store.commit("CLEAR_EXPECTED");
-                }
-            }
-
-            //Block Restaurant
-            {
-                let expected = this.$store.getters.expected(
-                    "unblock-restaurant"
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("edit-restaurant"),
+                    { store: this.$store, clear: true }
                 );
-                if (expected != undefined && expected.status === "success") {
-                    this.$dialog.notify.success(expected.result.subMessage, {
-                        position: "top-right",
-                        timeout: 3000
-                    });
-                    //Clear expected
-                    this.$store.commit("CLEAR_EXPECTED");
-                }
             }
 
-            // Send message
+            //* Block Restaurant
             {
-                let expected = this.$store.getters.expected("send-message");
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("block-restaurant"),
+                    { store: this.$store, clear: true }
+                );
+            }
 
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        this.$store.commit("CLEAR_EXPECTED");
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                    }
-                    if (expected.status === "error") {
-                        this.$store.getters.callback(
-                            expected.result.subMessage
-                        );
+            //* Unblock Restaurant
+            {
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("unblock-restaurant"),
+                    { store: this.$store, clear: true }
+                );
+            }
 
-                        this.$dialog.notify.warning(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-                    }
-                    this.$store.commit("CLEAR_EXPECTED");
-                }
+            //* Send message
+            {
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("send-message"),
+                    { store: this.$store, clear: true }
+                );
             }
         }
     },
