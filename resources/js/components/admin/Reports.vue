@@ -219,6 +219,15 @@ export default {
         Headline,
         ViewReport
     },
+    data() {
+        return {
+            initData: {
+                path: "/api/fetch/reports",
+                mutation: "FETCH_REPORTS",
+                related: "fetch-reports"
+            }
+        };
+    },
     computed: {
         ...mapState(["expected"]),
         //* Reports deliveries
@@ -244,11 +253,7 @@ export default {
     },
     methods: {
         init: function() {
-            this.$store.dispatch("fetchData", {
-                path: "/api/fetch/reports",
-                mutation: "FETCH_REPORTS",
-                related: "fetch-reports"
-            });
+            this.$store.dispatch("fetchData", this.initData);
         },
         //* Delete report
         deleteReport: function(report_id) {
@@ -293,17 +298,17 @@ export default {
     },
     watch: {
         expected() {
-            {
-                let expected = this.$store.getters.expected("delete-report");
-                if (expected != undefined && expected.status === "success") {
-                    this.$store.commit("CLEAR_EXPECTED");
-                    this.$dialog.message.success(expected.result.subMessage, {
-                        position: "top-right",
-                        timeout: 2000
-                    });
-                    this.init();
+            this.$callback.handler(
+                this.$dialog,
+                this.$store.getters.expected("delete-report"),
+                {
+                    store: this.$store,
+                    clear: true,
+                    path: this.initData.path,
+                    mutation: this.initData.mutation,
+                    related: this.initData.path
                 }
-            }
+            );
         }
     },
     created() {

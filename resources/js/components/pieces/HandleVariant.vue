@@ -128,6 +128,18 @@ export default {
             fileReader.readAsDataURL(e.target.files[0]);
             var extension = e.target.files[0].name.split(".")[1];
 
+            if (
+                extension.toLowerCase() != "jpg" &&
+                extension.toLowerCase() != "jpge" &&
+                extension.toLowerCase() != "png"
+            ) {
+                this.$dialog.notify.error(
+                    "Seuls les formats PNG, JPG, JPGE sont autorisé!"
+                );
+                //Go out 🔳
+                return;
+            }
+
             fileReader.onload = e => {
                 this.variantTempPhoto = e.target.result;
             };

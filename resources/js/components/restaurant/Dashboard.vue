@@ -224,16 +224,15 @@ export default {
     },
     watch: {
         expected() {
-            //Delete Order
             {
-                let expected = this.$store.getters.expected("add-report");
-                if (expected != undefined && expected.status === "success") {
-                    this.$store.commit("CLEAR_EXPECTED");
-                    this.$dialog.notify.success(expected.result.subMessage, {
-                        position: "top-right",
-                        timeout: 3000
-                    });
-                }
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("add-report"),
+                    {
+                        store: this.$store,
+                        clear: true
+                    }
+                );
             }
         }
     },

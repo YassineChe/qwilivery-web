@@ -127,6 +127,11 @@ export default {
     },
     data() {
         return {
+            initData: {
+                path: "/api/fetch/preorders",
+                mutation: "FETCH_PREORDERS",
+                related: "fetch-preorders"
+            },
             search: "",
             headers: [
                 { text: "#REF", value: "id" },
@@ -153,11 +158,7 @@ export default {
     methods: {
         //* Init
         init: function() {
-            this.$store.dispatch("fetchData", {
-                path: "/api/fetch/preorders",
-                mutation: "FETCH_PREORDERS",
-                related: "fetch-preorders"
-            });
+            this.$store.dispatch("fetchData", this.initData);
         },
         //* Parse to date
         parseToDate: function(date) {
@@ -209,37 +210,34 @@ export default {
     },
     watch: {
         expected() {
-            // Add variant
+            //* Add order
             {
-                let expected = this.$store.getters.expected("add-order");
-                if (expected != undefined) {
-                    //Clear expected
-                    this.$store.commit("CLEAR_EXPECTED");
-
-                    if (expected.status === "success") {
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-
-                        this.init();
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("add-order"),
+                    {
+                        store: this.$store,
+                        clear: true,
+                        path: this.initData.path,
+                        mutation: this.initData.mutation,
+                        related: this.initData.path
                     }
-                }
+                );
             }
-            //Delete Order
+
+            //* Delete Order
             {
-                let expected = this.$store.getters.expected("delete-order");
-                if (expected != undefined && expected.status === "success") {
-                    this.$store.commit("CLEAR_EXPECTED");
-                    this.$dialog.notify.success(expected.result.subMessage, {
-                        position: "top-right",
-                        timeout: 3000
-                    });
-                    this.init();
-                }
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("delete-order"),
+                    {
+                        store: this.$store,
+                        clear: true,
+                        path: this.initData.path,
+                        mutation: this.initData.mutation,
+                        related: this.initData.path
+                    }
+                );
             }
         }
     },

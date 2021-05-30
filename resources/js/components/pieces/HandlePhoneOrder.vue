@@ -343,14 +343,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-import * as VueGoogleMaps from "vue2-google-maps";
-
-Vue.use(VueGoogleMaps, {
-    load: {
-        key: "AIzaSyC--vxgbs7A5ZMudBRkcHcyc4fQ_sEr2XQ"
-    }
-});
 export default {
     layout: ["default", { width: 900 }],
     data() {
