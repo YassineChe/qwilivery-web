@@ -22,14 +22,23 @@ export default function(Vue) {
                 //Clear expected here!
                 if (callagain != null) {
                     //Clear the expected!
-                    callagain.store.commit("CLEAR_EXPECTED");
+                    if (callagain.hasOwnProperty("clear") && callagain.clear) {
+                        callagain.store.commit("CLEAR_EXPECTED");
+                    }
                     //if the callback has own property called path so wee need to call something!
                     if (callagain.hasOwnProperty("path")) {
                         callagain.store.dispatch("fetchData", {
+                            clear: true,
                             path: callagain.path,
                             mutation: callagain.mutation,
                             related: callagain.related
                         });
+                    }
+
+                    if (callagain.hasOwnProperty("router")) {
+                        if (callagain.router.incase == expected.result.type) {
+                            callagain.router.instance.push(callagain.router.to);
+                        }
                     }
                 }
             }

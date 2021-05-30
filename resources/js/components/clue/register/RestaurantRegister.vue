@@ -221,41 +221,19 @@ export default {
     watch: {
         expected() {
             {
-                let expected = this.$store.getters.expected(
-                    "do-register-restaurant"
-                );
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        this.$dialog.notify.success(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 3000
-                            }
-                        );
-
-                        // Clear expected
-                        this.$store.commit("CLEAR_EXPECTED");
-                        this.$router.push("login");
-                    }
-                    if (expected.status === "error") {
-                        for (const [key, value] of Object.entries(
-                            expected.result.subMessage
-                        )) {
-                            this.$dialog.notify.warning(value[0], {
-                                position: "top-right",
-                                timeout: 3000
-                            });
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("do-register-restaurant"),
+                    {
+                        router: {
+                            instance: this.$router,
+                            incase: "success",
+                            to: "login"
                         }
-                        // Clear expected
-                        this.$store.commit("CLEAR_EXPECTED");
                     }
-                }
+                );
             }
         }
-    },
-    created() {
-        this.$store.commit("CLEAR_EXPECTED");
     }
 };
 </script>

@@ -240,7 +240,7 @@ export default {
             this.$store.dispatch("postData", {
                 path: "/api/reset/password",
                 data: { email: this.emailRest },
-                related: "reset"
+                related: "reset-password"
                 // redirect_to: "/",
             });
         },
@@ -258,44 +258,19 @@ export default {
     watch: {
         expected() {
             {
-                let expected = this.$store.getters.expected("reset");
-                if (expected != undefined) {
-                    if (expected.status === "success") {
-                        this.$dialog.notify.success(
-                            "Les étapes pour réinitialiser un mot de passe ont été envoyées à votre adresse e-mail.",
-                            {
-                                position: "top-right",
-                                timeout: 5000
-                            }
-                        );
-                        this.$store.commit("CLEAR_EXPECTED");
-                    }
-                    if (expected.status === "error") {
-                        this.$dialog.notify.warning(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 5000
-                            }
-                        );
-                        this.$store.commit("CLEAR_EXPECTED");
-                    }
-                }
+                // do-login (expected)
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("reset-password")
+                );
             }
+
             {
-                let expected = this.$store.getters.expected("do-login");
-                if (expected != undefined) {
-                    if (expected.status === "error") {
-                        this.$dialog.notify.warning(
-                            expected.result.subMessage,
-                            {
-                                position: "top-right",
-                                timeout: 5000
-                            }
-                        );
-                        this.$store.commit("CLEAR_EXPECTED");
-                    }
-                }
+                // do-login (expected)
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("do-login")
+                );
             }
         }
     },
