@@ -71,8 +71,11 @@ class AuthController extends Controller
         } else if ($restaurant) {
             if (\Hash::check($request->password, $restaurant->password)) {
 
+                if ($restaurant->blocked_at != null)
+                    return dataToResponse('warning', 'Erreur!', ['Votre compte a été bloqué par Qwilivery'], 422);
+
                 if ($restaurant->approved_at == null)
-                    return dataToResponse('error', 'Erreur!', ['Votre compte n\'a pas encore été approuvé'], 422);
+                    return dataToResponse('warning', 'Erreur!', ['Votre compte n\'a pas encore été approuvé'], 422);
 
                 return response([
                     'guard' => 'restaurant',
