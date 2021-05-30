@@ -31,6 +31,13 @@ Vue.component("ValidationProvider", ValidationProvider);
 //* Vuetify Dialogs
 import VuetifyDialog from "vuetify-dialog";
 import "vuetify-dialog/dist/vuetify-dialog.css";
+Vue.use(VuetifyDialog, {
+    context: {
+        vuetify,
+        store,
+        router
+    }
+});
 
 //* Google Map API
 import * as VueGoogleMaps from "vue2-google-maps";
@@ -40,16 +47,8 @@ Vue.use(VueGoogleMaps, {
     }
 });
 
-Vue.use(VuetifyDialog, {
-    context: {
-        vuetify,
-        store,
-        router
-    }
-});
-
+//* Local native browser notications
 import VueNativeNotification from "vue-native-notification";
-
 Vue.use(VueNativeNotification, {
     // Automatic permission request before
     // showing notification (default: true)
@@ -59,6 +58,9 @@ Vue.use(VueNativeNotification, {
 //* Auth plugin.
 import Auth from "./apis/Auth";
 Vue.use(Auth);
+
+import Callback from "./apis/Callback";
+Vue.use(Callback, { VuetifyDialog });
 
 new Vue({
     store,
