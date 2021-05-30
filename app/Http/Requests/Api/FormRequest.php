@@ -41,7 +41,7 @@ abstract class FormRequest extends LaravelFormRequest
                 [
                     'type'       => 'error',
                     'message'    => 'Erreur !',
-                    'subMessage' => $errors,
+                    'subMessage' => array_merge(...(array_values($errors))),
                 ],
                 JsonResponse::HTTP_UNPROCESSABLE_ENTITY
             )
