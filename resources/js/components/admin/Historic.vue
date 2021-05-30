@@ -142,9 +142,19 @@
                 <template v-slot:[`item.delivered_at`]="{ item }">
                     <v-chip
                         small
-                        :color="item.delivered_at ? 'success' : 'error'"
-                        v-text="item.delivered_at ? 'Livré' : 'En cours'"
+                        :color="
+                            order_status_color(
+                                item.delivery_id,
+                                item.delivered_at
+                            )
+                        "
                     >
+                        {{
+                            order_status_text(
+                                item.delivery_id,
+                                item.delivered_at
+                            )
+                        }}
                     </v-chip>
                 </template>
                 <!-- Actions -->
@@ -244,6 +254,18 @@ export default {
             this.$dialog.show(SetDeliveryToOrder, {
                 preOrderId: pre_order_id
             });
+        },
+        order_status_text: function(delivery_id, delivered_at) {
+            if (delivery_id == null && delivered_at == null)
+                return "En attente";
+
+            if (delivery_id != null && delivered_at == null) return "En cours";
+            if (delivery_id != null && delivered_at != null) return "Livrée";
+        },
+        order_status_color: function(delivery_id, delivered_at) {
+            if (delivery_id == null && delivered_at == null) return "error";
+            if (delivery_id != null && delivered_at == null) return "warning";
+            if (delivery_id != null && delivered_at != null) return "success";
         },
         //* The famous isBusy funtion haha
         isBusy: function(fetcher) {
