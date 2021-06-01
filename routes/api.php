@@ -34,6 +34,7 @@ Route::post('/reset-password', [AuthController::class, 'restPassword']);
 Route::post('/register/delivery', [AuthController::class, 'regiterDelivery']);
 Route::post('/register/restaurant', [AuthController::class, 'registerRestaurant']);
 
+
 //? Admin api routes
 Route::middleware("auth:admin")->group(function () {
     //* Delivery Man stuff
@@ -141,6 +142,10 @@ Route::middleware("auth:admin,delivery,restaurant")->group(function () {
     Route::get('/fetch/chatflow/{conversation_id}', [ConversationController::class, 'fetchChatflowAdminCnvId']);
     Route::patch('/mark/as/read', [ChatController::class, 'markAllAsRead']);
 
+    //* Logout
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    //* This will check brodcast auth
     Route::post('/broadcasting/auth', function(Request $request){
         return \Broadcast::auth($request);
     });

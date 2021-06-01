@@ -234,7 +234,11 @@ export default {
         },
         //* Logout
         signOut: function() {
-            this.$auth.signOut();
+            this.$store.dispatch("postData", {
+                path: "/api/logout",
+                data: {},
+                related: "do-logout"
+            });
         }
     },
     watch: {
@@ -259,6 +263,14 @@ export default {
             mutation: "FETCH_GUARD",
             related: "fetch-guard"
         });
+    },
+    watch: {
+        expected() {
+            {
+                let expected = this.$store.getters.expected("do-logout");
+                if (expected != undefined) this.$auth.signOut();
+            }
+        }
     },
     created() {
         //Request permision for native native notification!

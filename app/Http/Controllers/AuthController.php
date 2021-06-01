@@ -211,4 +211,15 @@ class AuthController extends Controller
             handleLogs($e);
         }
     }
+
+    //* logout guards
+    public function logout(Request $request){
+        try{
+            //This will delete current token of user!w
+            return \Auth::guard(getConnectedGuard())->user()->currentAccessToken()->delete();
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
 }
