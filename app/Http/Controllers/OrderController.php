@@ -71,14 +71,15 @@ class OrderController extends Controller
     //* Order To deliver (used now only for mobile)
     public function orderToDeliver(){
         try{
-            return response(
-                PreOrder::whereNull('delivered_at')->whereNull('delivery_id')
-                    ->with(['orders', 'restaurant' => function($q){
-                        $q->withTrashed();
-                    }])
-                    ->get()
-                    , 200
-            );
+            return response()
+                    ->json(
+                        PreOrder::whereNull('delivered_at')->whereNull('delivery_id')
+                        ->with(['orders', 'restaurant' => function($q){
+                            $q->withTrashed();
+                        }])
+                        ->get()
+                        , 200
+                    );
         }
         catch(\Exception $e){
             handleLogs($e);
