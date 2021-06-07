@@ -38,7 +38,7 @@
                     color="primary"
                     outlined
                     :block="isMobile"
-                    @click="addPhoneOrder()"
+                    :to="{ name: 'dispatch-order' }"
                 >
                     <v-icon>mdi-plus</v-icon>
                     Ajouter une commande
@@ -210,21 +210,6 @@ export default {
     },
     watch: {
         expected() {
-            //* Add order
-            {
-                this.$callback.handler(
-                    this.$dialog,
-                    this.$store.getters.expected("add-order"),
-                    {
-                        store: this.$store,
-                        clear: true,
-                        path: this.initData.path,
-                        mutation: this.initData.mutation,
-                        related: this.initData.path
-                    }
-                );
-            }
-
             //* Delete Order
             {
                 this.$callback.handler(

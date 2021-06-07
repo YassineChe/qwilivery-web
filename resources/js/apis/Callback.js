@@ -36,7 +36,9 @@ export default function(Vue) {
 
                     if (callagain.hasOwnProperty("router")) {
                         if (callagain.router.incase == expected.result.type) {
-                            callagain.router.instance.push(callagain.router.to);
+                            callagain.router.instance.push({
+                                name: callagain.router.to
+                            });
                         }
                     }
                 }

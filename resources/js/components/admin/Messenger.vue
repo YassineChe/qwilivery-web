@@ -29,13 +29,13 @@
                             <!-- No data -->
                             <template v-slot:no-data>
                                 <div class="text-center grey--text mt-2">
-                                    Aucun livreur trouvé
+                                    Aucune conversation disponible
                                 </div>
                             </template>
                             <!-- No Result -->
                             <template v-slot:no-results>
                                 <div class="text-center grey--text mt-2">
-                                    Aucun livreur trouvé
+                                    Aucune conversation disponible
                                 </div>
                             </template>
                             <template v-slot="{ items }">

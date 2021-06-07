@@ -33,6 +33,7 @@ import RestaurantDashboard from "./components/restaurant/Dashboard";
 import Menu from "./components/restaurant/Menu";
 import PhoneOrder from "./components/restaurant/PhoneOrder";
 import RestaurantProfile from "./components/restaurant/Profile";
+import DispatchPhoneOrder from "./components/restaurant/DispatchPhoneOrder";
 
 Vue.use(VueRouter);
 
@@ -141,6 +142,12 @@ const restaurantRoutes = {
             path: "/profile",
             name: "restaurant-profile",
             component: RestaurantProfile,
+            meta: { guard: "restaurant" }
+        },
+        {
+            path: "/new-order",
+            name: "dispatch-order",
+            component: DispatchPhoneOrder,
             meta: { guard: "restaurant" }
         }
     ]

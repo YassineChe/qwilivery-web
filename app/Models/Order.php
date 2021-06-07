@@ -14,4 +14,5 @@ class Order extends Model
     public function variant(){
         return $this->belongsTo(Variant::class);
     }
+
 }

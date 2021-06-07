@@ -43,15 +43,19 @@ Vue.use(VuetifyDialog, {
 import * as VueGoogleMaps from "vue2-google-maps";
 Vue.use(VueGoogleMaps, {
     load: {
-        key: "AIzaSyBriQ2VfQyXzswFnsiLB8NkjmOejl77FmA"
+        key: process.env.MIX_GOOGLE_MAPS_API,
+        libraries: "places"
     }
+});
+
+import VuetifyGoogleAutocomplete from "vuetify-google-autocomplete";
+Vue.use(VuetifyGoogleAutocomplete, {
+    vueGoogleMapsCompatibility: true
 });
 
 //* Local native browser notications
 import VueNativeNotification from "vue-native-notification";
 Vue.use(VueNativeNotification, {
-    // Automatic permission request before
-    // showing notification (default: true)
     requestOnNotify: true
 });
 

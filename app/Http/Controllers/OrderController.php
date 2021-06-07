@@ -17,6 +17,8 @@ class OrderController extends Controller
                 'fullname'      => $request->fullname,
                 'phone_number'  => $request->phone_number,
                 'restaurant_id' => authIdFromGuard('restaurant'),
+                'shipping_cost' => $request->shipping_cost,
+                'tax'           => $request->tax,
                 'address'  => $request->address,
                 'lat'      => $request->lat,
                 'lng'      => $request->lng,
@@ -61,7 +63,27 @@ class OrderController extends Controller
     //* Orders (This function is common between Restaurabt and admin with instruction)
     public function fetchOrderByPreOrderID($pre_order_id){
         try{
-            return response(Order::where('pre_order_id', (int)$pre_order_id)->with('variant')->get(), 200);
+
+            $collection = PreOrder::where('id', (int)$pre_order_id)->with(['orders', 'orders.variant'])->first();
+
+            $orders = [
+                'pre_order' => [
+                    'tax' => $collection->tax,
+                    'shipping_cost' => $collection->shipping_cost,
+                ],
+                'variants' => [],
+            ];
+
+            if ($collection->orders != null){
+                foreach ($collection->orders as $order) {
+                    array_push($orders['variants'], $order);
+                }
+            }
+
+
+            return response($orders, 200);
+
+            // return response(Order::where('pre_order_id', (int)$pre_order_id)->with('variant', )->get(), 200);
         }
         catch(\Exception $e){
             handleLogs($e);
