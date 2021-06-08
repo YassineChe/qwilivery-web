@@ -73,7 +73,6 @@ export default {
         let channel = pusher.subscribe("new-order-channel");
 
         channel.bind("new-order", data => {
-            alert("new order here");
             this.$notification.show(
                 "Nouvelle commande",
                 {

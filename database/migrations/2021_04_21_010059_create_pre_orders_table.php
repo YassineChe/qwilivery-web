@@ -20,8 +20,8 @@ class CreatePreOrdersTable extends Migration
             $table->text('fullname');
             $table->text('phone_number');
             $table->text('address')->nullable();
-            $table->double('shipping_cost')->nullable();
-            $table->double('tax')->nullable();
+            $table->float('shipping_cost')->nullable();
+            $table->float('tax')->nullable();
             $table->text('lat')->nullable();
             $table->text('lng')->nullable();
             $table->timestamp('delivered_at')->nullable();
