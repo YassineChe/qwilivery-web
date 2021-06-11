@@ -66,22 +66,23 @@ class OrderController extends Controller
 
             $collection = PreOrder::where('id', (int)$pre_order_id)->with(['orders', 'orders.variant'])->first();
 
-            $orders = [
-                'pre_order' => [
-                    'tax' => $collection->tax,
-                    'shipping_cost' => $collection->shipping_cost,
-                ],
-                'variants' => [],
-            ];
+            // return $collection;
+            // $orders = [
+            //     'pre_order' => [
+            //         'tax' => $collection->tax,
+            //         'shipping_cost' => $collection->shipping_cost,
+            //     ],
+            //     'variants' => [],
+            // ];
 
-            if ($collection->orders != null){
-                foreach ($collection->orders as $order) {
-                    array_push($orders['variants'], $order);
-                }
-            }
+            // if ($collection->orders != null){
+            //     foreach ($collection->orders as $order) {
+            //         array_push($orders['variants'], $order);
+            //     }
+            // }
 
 
-            return response($orders, 200);
+            return response($collection, 200);
 
             // return response(Order::where('pre_order_id', (int)$pre_order_id)->with('variant', )->get(), 200);
         }
@@ -272,7 +273,7 @@ class OrderController extends Controller
         }
     } 
 
-
+    //* Fetch delivered Order
     public function fetchDeliveredOrder(){
         try{
             return response(PreOrder::where('delivery_id', authIdFromGuard('delivery'))
@@ -286,4 +287,5 @@ class OrderController extends Controller
             handleLogs($e);
         }
     }
+
 }

@@ -9,7 +9,7 @@
         <v-data-table
             dense
             :headers="headers"
-            :items="orders.variants"
+            :items="orders.orders"
             hide-default-footer
             :loading="isBusy('fetch-orders')"
             loading-text="Chargement en cours..."
@@ -37,41 +37,73 @@
                 <v-chip small color="info">{{ item.qty }}</v-chip>
             </template>
         </v-data-table>
-        <v-row v-if="orders.pre_order" justify="center" class="mt-3" no-gutters>
-            <v-col cols="12" align="right"
-                >Frais de livraison :
-                <strong> {{ orders.pre_order.shipping_cost }} $</strong>
-            </v-col>
-            <v-col cols="12" align="right"
-                >Total HT:
-                <strong> {{ prixHt }} $</strong>
-            </v-col>
-            <v-col cols="12" align="right"
-                >Total TCC:
-                <strong>
-                    {{
-                        (
-                            (prixHt * orders.pre_order.tax) / 100 +
-                            prixHt
-                        ).toFixed(2)
-                    }}
-                    $</strong
-                >
-            </v-col>
-            <v-col cols="12" align="right">
-                total à payer :
-                <strong>
-                    {{
-                        (
-                            (prixHt * orders.pre_order.tax) / 100 +
-                            prixHt +
-                            orders.pre_order.shipping_cost
-                        ).toFixed(2)
-                    }}
-                    $</strong
-                >
-            </v-col>
-        </v-row>
+
+        <v-chip-group show-arrows>
+            <!-- Livraison cost -->
+            <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-chip v-bind="attrs" v-on="on">
+                        <v-icon left small>
+                            mdi-moped
+                        </v-icon>
+                        <span>{{ orders.shipping_cost }} $</span>
+                    </v-chip>
+                </template>
+                <span>Frais de livraison</span>
+            </v-tooltip>
+            <!-- TOTAL HT -->
+            <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-chip v-bind="attrs" v-on="on">
+                        <v-icon left small>
+                            mdi-currency-usd
+                        </v-icon>
+                        <span>{{ prixHt }} $ (HT)</span>
+                    </v-chip>
+                </template>
+                <span>Total HT</span>
+            </v-tooltip>
+            <!-- TOTAL TCC -->
+            <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-chip v-bind="attrs" v-on="on">
+                        <v-icon left small>
+                            mdi-currency-usd
+                        </v-icon>
+                        <span
+                            >{{
+                                ((prixHt * orders.tax) / 100 + prixHt).toFixed(
+                                    2
+                                )
+                            }}
+                            $ (TTC)</span
+                        >
+                    </v-chip>
+                </template>
+                <span>Total TTC</span>
+            </v-tooltip>
+            <!-- TOTAL TCC -->
+            <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-chip v-bind="attrs" v-on="on">
+                        <v-icon left small>
+                            mdi-currency-usd
+                        </v-icon>
+                        <span>
+                            {{
+                                (
+                                    (prixHt * orders.tax) / 100 +
+                                    prixHt +
+                                    orders.shipping_cost
+                                ).toFixed(2)
+                            }}
+                            $ (TTC)</span
+                        >
+                    </v-chip>
+                </template>
+                <span>Total à payer</span>
+            </v-tooltip>
+        </v-chip-group>
     </dialogCard>
 </template>
 
@@ -98,8 +130,8 @@ export default {
         // ttc
         prixHt: function() {
             let total = 0;
-            if (this.orders.variants) {
-                this.orders.variants.forEach(variant => {
+            if (this.orders.orders) {
+                this.orders.orders.forEach(variant => {
                     total += variant.variant.price * variant.qty;
                 });
             }
