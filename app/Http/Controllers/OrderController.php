@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+
+use Kutia\Larafirebase\Facades\Larafirebase;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\PreOrder;
 //* Notifications
 use App\Events\NewOrder;
+use App\Models\DeviceToken;
 
 class OrderController extends Controller
 {
@@ -35,6 +38,25 @@ class OrderController extends Controller
 
                 //All Good 👋 Let's notify deliveries! (No data will bind just for this moment!)
                 event(new NewOrder());
+
+                $tokenCollections = DeviceToken::select('token')->get();
+
+                if ($tokenCollections){
+
+                $tokens = [];
+
+                foreach ($tokenCollections as $deliveryToken) {
+                    array_push($tokens, $deliveryToken->token);
+                }
+                
+                Larafirebase::withTitle('Test Title')
+                    ->withBody('Halouuuma test')
+                    // ->withImage('https://firebase.google.com/images/social.png')
+                    // ->withClickAction('admin/notifications')
+                    ->withPriority('high')
+                    ->sendNotification($tokens);
+                }
+                
             }
             
             return dataToResponse('success', 'Succès', ['La commande a été ajoutée 👍'], 200);
@@ -64,22 +86,7 @@ class OrderController extends Controller
     public function fetchOrderByPreOrderID($pre_order_id){
         try{
 
-            $collection = PreOrder::where('id', (int)$pre_order_id)->with(['orders', 'orders.variant'])->first();
-
-            // return $collection;
-            // $orders = [
-            //     'pre_order' => [
-            //         'tax' => $collection->tax,
-            //         'shipping_cost' => $collection->shipping_cost,
-            //     ],
-            //     'variants' => [],
-            // ];
-
-            // if ($collection->orders != null){
-            //     foreach ($collection->orders as $order) {
-            //         array_push($orders['variants'], $order);
-            //     }
-            // }
+            $collection = PreOrder::where('id', (int)$pre_order_id)->with(['orders', 'restaurant', 'orders.variant'])->first();
 
 
             return response($collection, 200);

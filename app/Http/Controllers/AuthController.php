@@ -7,8 +7,9 @@ use App\Models\Admin;
 use App\Models\Restaurant;
 use App\Models\Delivery;
 use App\Models\Password_reset;
-use App\Http\Requests\DeliveryRequest;
+use App\Models\DeviceToken;
 //Request
+use App\Http\Requests\DeliveryRequest;
 use App\Http\Requests\RequestRestaurant;
 //Notifications
 use App\Notifications\ResetEmail;
@@ -20,12 +21,21 @@ class AuthController extends Controller
 {
     //* This will authenticated only delivery man (FOR MOBILE)
     public function deliveryLogin(Request $request){
+
         $delivery = Delivery::where('email', $request->email)->first();
         if ($delivery){
             if (\Hash::check($request->password, $delivery->password)) {
 
                 if ($delivery->approved_at == null)
                     return dataToResponse('error', 'Erreur!', ['Votre compte n\'a pas encore été approuvé'], 422);
+
+                //OKAY LET HADNLE DEVICE TOKEN!
+                $deliveryDeviceToken = DeviceToken::where('id', $delivery->id)->first();
+
+                if (!$deliveryDeviceToken)
+                    DeviceToken::create(['delivery_id' => $delivery->id, 'token' => $request->deviceToken]);
+                else
+                    $deliveryDeviceToken->update(['token' => $request->token]);
 
                 return response([
                     'first_name' => $delivery->first_name,
