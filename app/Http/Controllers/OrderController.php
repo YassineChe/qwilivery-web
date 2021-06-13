@@ -49,8 +49,8 @@ class OrderController extends Controller
                     array_push($tokens, $deliveryToken->token);
                 }
                 
-                Larafirebase::withTitle('Test Title')
-                    ->withBody('Halouuuma test')
+                Larafirebase::withTitle('Nouvelle commande')
+                    ->withBody('Vous avez une nouvelle commande à livrer, appuyez sur pour plus d\'informations')
                     // ->withImage('https://firebase.google.com/images/social.png')
                     // ->withClickAction('admin/notifications')
                     ->withPriority('high')
