@@ -75,7 +75,7 @@
                                         errors
                                     }"
                                     name="Prénom"
-                                    rules="required|max:50"
+                                    rules="required|min:10|max:10"
                                 >
                                     <v-text-field
                                         :error-messages="errors"
