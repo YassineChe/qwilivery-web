@@ -30,7 +30,7 @@ class AuthController extends Controller
                     return dataToResponse('error', 'Erreur!', ['Votre compte n\'a pas encore été approuvé'], 422);
 
                 //OKAY LET HADNLE DEVICE TOKEN!
-                $deliveryDeviceToken = DeviceToken::where('id', $delivery->id)->first();
+                $deliveryDeviceToken = DeviceToken::where('delivery_id', $delivery->id)->first();
 
                 if (!$deliveryDeviceToken)
                     DeviceToken::create(['delivery_id' => $delivery->id, 'token' => $request->deviceToken]);
