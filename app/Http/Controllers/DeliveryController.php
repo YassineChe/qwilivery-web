@@ -8,6 +8,7 @@ use App\Models\Delivery;
 use App\Models\PreOrder;
 //Notifications
 use App\Notifications\NotifyAccountApproved;
+use App\Notifications\NotifyDeliveryAccount;
 
 class DeliveryController extends Controller
 {
