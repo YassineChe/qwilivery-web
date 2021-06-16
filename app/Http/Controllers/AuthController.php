@@ -32,12 +32,10 @@ class AuthController extends Controller
                 //OKAY LET HADNLE DEVICE TOKEN!
                 $deliveryDeviceToken = DeviceToken::where('delivery_id', $delivery->id)->first();
 
-                \Log::error($request->token);
-
                 if (!$deliveryDeviceToken)
                     DeviceToken::create(['delivery_id' => $delivery->id, 'token' => $request->deviceToken]);
                 else
-                    $deliveryDeviceToken->update(['token' => $request->token]);
+                    $deliveryDeviceToken->update(['token' => $request->deviceToken]);
 
                 return response([
                     'first_name' => $delivery->first_name,
