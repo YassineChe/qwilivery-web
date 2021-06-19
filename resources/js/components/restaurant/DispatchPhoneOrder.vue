@@ -307,8 +307,12 @@
                                 <v-btn
                                     color="primary"
                                     outlined
-                                    @click="cstep++"
-                                    :disabled="invalid"
+                                    @click="
+                                        order.orders.length > 0 ? cstep++ : ''
+                                    "
+                                    :disabled="
+                                        invalid || !order.orders.length > 0
+                                    "
                                     rounded
                                 >
                                     Suivant

@@ -280,7 +280,7 @@ export default {
         rander() {
             document.getElementById("png-permit").click();
         },
-        // Overlly
+        //* The famous is busy function
         isBusy: function(fetcher) {
             try {
                 return this.$store.getters.expected(fetcher).status == "busy"

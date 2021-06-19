@@ -82,6 +82,7 @@
                                         elevation="0"
                                         :disabled="invalid"
                                         @click="doLogin()"
+                                        :loading="isBusy('do-login')"
                                         >Se Connecter</v-btn
                                     >
                                 </v-flex>
@@ -189,10 +190,9 @@ export default {
         //* Login
         doLogin: function() {
             this.$store.dispatch("signin", {
-                path: "/api/login",
+                path: `/api/login`,
                 data: this.credentials,
-                related: "do-login"
-                // redirect_to: "/",
+                related: `do-login`
             });
         },
 
@@ -202,10 +202,9 @@ export default {
                 path: "/api/reset/password",
                 data: { email: this.emailRest },
                 related: "reset-password"
-                // redirect_to: "/",
             });
         },
-        // Overlly
+        //* The famous is busy function
         isBusy: function(fetcher) {
             try {
                 return this.$store.getters.expected(fetcher).status == "busy"
