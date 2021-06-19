@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class CommonController extends Controller
 {
     //? Chech for authenticated guard
-    public function fetchAuthenticatedGuard(Request $request)
+    public function fetchAuthenticatedGuard()
     {
         try {
             return response(
