@@ -113,7 +113,7 @@
                                         errors
                                     }"
                                     name="Expérience"
-                                    rules="required|numeric|min:10|max:10"
+                                    rules="required|numeric|min:1|max:2"
                                 >
                                     <v-text-field
                                         :error-messages="errors"
