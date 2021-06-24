@@ -96,6 +96,60 @@
                     >
                     </v-chip>
                 </template>
+                <!-- Delivery man -->
+                <template v-slot:[`item.delivery`]="{ item }">
+                    <v-avatar size="40" v-if="item.delivery != null">
+                        <v-menu>
+                            <template v-slot:activator="{ on, attrs }">
+                                <img
+                                    :src="
+                                        `/images/avatars/${item.delivery.avatar}`
+                                    "
+                                    v-bind="attrs"
+                                    v-on="on"
+                                />
+                            </template>
+                            <v-card>
+                                <v-list>
+                                    <v-list-item>
+                                        <v-list-item-icon>
+                                            <v-icon
+                                                v-text="'mdi-moped'"
+                                            ></v-icon>
+                                        </v-list-item-icon>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{
+                                                    `${item.delivery.last_name} ${item.delivery.first_name}`
+                                                }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Nom complet
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <!--  -->
+                                    <v-list-item>
+                                        <v-list-item-icon>
+                                            <v-icon
+                                                v-text="'mdi-phone'"
+                                            ></v-icon>
+                                        </v-list-item-icon>
+
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{ item.delivery.phone_number }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                Téléphone
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-list>
+                            </v-card>
+                        </v-menu>
+                    </v-avatar>
+                </template>
                 <!-- Order Date -->
                 <template v-slot:[`item.created_at`]="{ item }">
                     {{ parseToDate(item.created_at) }}
@@ -140,6 +194,7 @@ export default {
                 { text: "Adresse", value: "address" },
                 { text: "Article(s)", value: "orders" },
                 { text: "Livré", value: "delivered_at" },
+                { text: "Livreur", value: "delivery" },
                 { text: "Date de commande", value: "created_at" },
                 { text: "Actions", value: "actions" }
             ]

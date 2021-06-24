@@ -72,7 +72,7 @@ class OrderController extends Controller
             return
                 response(
                     PreOrder::where('restaurant_id', authIdFromGuard('restaurant'))
-                    ->with('orders')
+                    ->with(['orders', 'delivery'])
                     ->orderBy('id', 'DESC')
                     ->get()
                     , 200
