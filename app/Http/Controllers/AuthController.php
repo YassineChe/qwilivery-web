@@ -117,6 +117,32 @@ class AuthController extends Controller
             return response(['email' => $admin->email, 'status' => true]);
         }
 
+        $delivery = Delivery::where('email', $request->email)->first();
+        if ($delivery) {
+            Password_reset::Where('email', $request->email)->delete();
+            $delivery = Password_reset::create([
+                'email' => $request->email,
+                'token' => \Str::random(60),
+            ]);
+            // Send email 
+            $delivery->notify(new ResetEmail($delivery->email, $delivery->token));
+
+            return response(['email' => $admin->email, 'status' => true]);
+        }
+
+        $restaurant = Restaurant::where('email', $request->email)->first();
+        if ($restaurant) {
+            Password_reset::Where('email', $request->email)->delete();
+            $restaurant = Password_reset::create([
+                'email' => $request->email,
+                'token' => \Str::random(60),
+            ]);
+            // Send email 
+            $delivery->notify(new ResetEmail($restaurant->email, $restaurant->token));
+
+            return response(['email' => $admin->email, 'status' => true]);
+        }
+
         // If email does not exist
         return dataToResponse('error', 'Erreur!', ['Ces identifiants ne correspondent pas à nos enregistrements'], 422);
     }
@@ -137,10 +163,28 @@ class AuthController extends Controller
         $time = \Carbon\Carbon::parse($reset->created_at)->addMinutes(10);
 
         if (\Carbon\Carbon::now() <= $time) {
-
+            
             $admin = Admin::where('email', $reset->email)->first();
+
             if ($admin) {
                 $admin->update(['password' => \Hash::make($request->password)]);
+                $reset->delete();
+                return dataToResponse('success', 'success!', ['le mot de passe a été mis à jour avec succès'], 200);
+            }
+
+            $delivery = Delivery::where('email', $reset->email)->first();
+
+            if ($delivery) {
+                $delivery->update(['password' => \Hash::make($request->password)]);
+                $reset->delete();
+                return dataToResponse('success', 'success!', ['le mot de passe a été mis à jour avec succès'], 200);
+            }
+
+
+            $restaurant = Restaurant::where('email', $reset->email)->first();
+
+            if ($restaurant) {
+                $restaurant->update(['password' => \Hash::make($request->password)]);
                 $reset->delete();
                 return dataToResponse('success', 'success!', ['le mot de passe a été mis à jour avec succès'], 200);
             }
