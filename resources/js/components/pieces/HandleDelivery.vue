@@ -1,6 +1,6 @@
 <template>
     <validation-observer ref="observer" v-slot="{ invalid }">
-        <dialogCard title="Ajouter nouveau livreur" :actions="actions(invalid)">
+        <dialogCard title="Livreur informations" :actions="actions(invalid)">
             <v-row>
                 <!--  Last Name -->
                 <v-col cols="6">
