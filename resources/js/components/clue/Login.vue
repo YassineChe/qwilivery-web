@@ -134,7 +134,7 @@
                                     color="primary"
                                     block
                                     elevation="0"
-                                    :loading="isBusy('reset')"
+                                    :loading="isBusy('reset-password')"
                                     @click="restPassword()"
                                     >Envoyer un lien de réinitialisation</v-btn
                                 >
@@ -221,7 +221,14 @@ export default {
                 // reset password (expected)
                 this.$callback.handler(
                     this.$dialog,
-                    this.$store.getters.expected("reset-password")
+                    this.$store.getters.expected("reset-password"),
+                    {
+                        router: {
+                            instance: this.$router,
+                            incase: "success",
+                            to: "login"
+                        }
+                    }
                 );
             }
 

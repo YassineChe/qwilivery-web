@@ -114,7 +114,7 @@ class AuthController extends Controller
             // Send email 
             $admin->notify(new ResetEmail($admin->email, $admin->token));
 
-            return response(['email' => $admin->email, 'status' => true]);
+            return dataToResponse('success', 'Success', ['Un email a été envoyé avec un lien pour réinitialiser votre mot de passe'], 200);
         }
 
         $delivery = Delivery::where('email', $request->email)->first();
@@ -127,7 +127,7 @@ class AuthController extends Controller
             // Send email 
             $delivery->notify(new ResetEmail($delivery->email, $delivery->token));
 
-            return response(['email' => $admin->email, 'status' => true]);
+            return dataToResponse('success', 'Success', ['Un email a été envoyé avec un lien pour réinitialiser votre mot de passe'], 200);
         }
 
         $restaurant = Restaurant::where('email', $request->email)->first();
@@ -140,7 +140,7 @@ class AuthController extends Controller
             // Send email 
             $delivery->notify(new ResetEmail($restaurant->email, $restaurant->token));
 
-            return response(['email' => $admin->email, 'status' => true]);
+            return dataToResponse('success', 'Success', ['Un email a été envoyé avec un lien pour réinitialiser votre mot de passe'], 200);
         }
 
         // If email does not exist
