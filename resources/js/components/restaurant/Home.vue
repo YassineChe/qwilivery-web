@@ -8,6 +8,7 @@
                     description="Commade(s) téléphoniques"
                     icon="mdi-phone-forward"
                     color="primary"
+                    :to="{ name: 'restaurant-order' }"
                 />
             </v-col>
 
@@ -18,6 +19,7 @@
                     description="Commade(s) livrées"
                     icon="mdi-moped-electric"
                     color="info"
+                    :to="{ name: 'restaurant-order' }"
                 />
             </v-col>
 
@@ -28,6 +30,7 @@
                     description="Menu"
                     icon="mdi-silverware"
                     color="warning"
+                    :to="{ name: 'menu' }"
                 />
             </v-col>
 

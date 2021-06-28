@@ -1,5 +1,5 @@
 <template>
-    <v-card :color="color" flat :loading="loading" :disabled="loading">
+    <v-card :color="color" flat :loading="loading" :disabled="loading" :to="to">
         <template slot="progress">
             <v-progress-linear color="white" indeterminate></v-progress-linear>
         </template>
@@ -25,6 +25,7 @@
 <script>
 export default {
     props: {
+        to: { require: false },
         loading: { default: false },
         text: { required: true },
         description: { required: true },
