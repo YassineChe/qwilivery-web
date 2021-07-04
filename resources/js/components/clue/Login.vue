@@ -223,6 +223,8 @@ export default {
                     this.$dialog,
                     this.$store.getters.expected("reset-password"),
                     {
+                        store: this.$store,
+                        clear: true,
                         router: {
                             instance: this.$router,
                             incase: "success",
@@ -236,7 +238,11 @@ export default {
                 // do-login (expected)
                 this.$callback.handler(
                     this.$dialog,
-                    this.$store.getters.expected("do-login")
+                    this.$store.getters.expected("do-login"),
+                    {
+                        store: this.$store,
+                        clear: true
+                    }
                 );
             }
         }
