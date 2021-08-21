@@ -235,12 +235,7 @@ export default {
         return {
             showAction: false,
             search: "",
-            selectedCategory: "",
-            initData: {
-                path: "/api/fetch/categories",
-                mutation: "FETCH_CATEGORIES",
-                related: "fetch-categories"
-            }
+            selectedCategory: ""
         };
     },
     computed: {
@@ -282,7 +277,11 @@ export default {
         //* Init
         init() {
             //* Get all deliveries
-            this.$store.dispatch("fetchData", this.initData);
+            this.$store.dispatch("fetchData", {
+                path: `/api/fetch/categories`,
+                mutation: `FETCH_CATEGORIES`,
+                related: `fetch-categories`
+            });
         },
         //* Add Category
         addCategory: function() {
@@ -374,9 +373,12 @@ export default {
                     {
                         store: this.$store,
                         clear: true,
-                        path: this.initData.path,
-                        mutation: this.initData.mutation,
-                        related: this.initData.path
+                        execute: {
+                            incase: "success",
+                            func: () => {
+                                this.init();
+                            }
+                        }
                     }
                 );
             }
@@ -389,9 +391,12 @@ export default {
                     {
                         store: this.$store,
                         clear: true,
-                        path: this.initData.path,
-                        mutation: this.initData.mutation,
-                        related: this.initData.path
+                        execute: {
+                            incase: "success",
+                            func: () => {
+                                this.init();
+                            }
+                        }
                     }
                 );
             }
@@ -404,9 +409,12 @@ export default {
                     {
                         store: this.$store,
                         clear: true,
-                        path: this.initData.path,
-                        mutation: this.initData.mutation,
-                        related: this.initData.path
+                        execute: {
+                            incase: "success",
+                            func: () => {
+                                this.init();
+                            }
+                        }
                     }
                 );
             }
@@ -419,9 +427,12 @@ export default {
                     {
                         store: this.$store,
                         clear: true,
-                        path: this.initData.path,
-                        mutation: this.initData.mutation,
-                        related: this.initData.path
+                        execute: {
+                            incase: "success",
+                            func: () => {
+                                this.init();
+                            }
+                        }
                     }
                 );
             }
@@ -434,9 +445,12 @@ export default {
                     {
                         store: this.$store,
                         clear: true,
-                        path: this.initData.path,
-                        mutation: this.initData.mutation,
-                        related: this.initData.path
+                        execute: {
+                            incase: "success",
+                            func: () => {
+                                this.init();
+                            }
+                        }
                     }
                 );
             }

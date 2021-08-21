@@ -57,6 +57,9 @@ let getters = {
     conversations: state => {
         return state.conversations;
     },
+    expresses: state=>{
+        return state.expresses;
+    },
     /** PERSONS **/
     persons: state => {
         return state.persons;

@@ -114,6 +114,10 @@ let mutations = {
     FETCH_REPORTS(state, reports) {
         return (state.reports = reports);
     },
+    /************** EXPRESS DELIVERIES **************/
+    EXPRESS_DELIVERIES(state, expresses){
+        return (state.expresses = expresses);
+    },
     /************** CHATFLOWS **************/
     FETCH_CHATFLOWS(state, chatflows) {
         return (state.chatflows = chatflows);

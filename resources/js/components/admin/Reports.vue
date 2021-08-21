@@ -219,15 +219,6 @@ export default {
         Headline,
         ViewReport
     },
-    data() {
-        return {
-            initData: {
-                path: "/api/fetch/reports",
-                mutation: "FETCH_REPORTS",
-                related: "fetch-reports"
-            }
-        };
-    },
     computed: {
         ...mapState(["expected"]),
         //* Reports deliveries
@@ -253,7 +244,11 @@ export default {
     },
     methods: {
         init: function() {
-            this.$store.dispatch("fetchData", this.initData);
+            this.$store.dispatch("fetchData", {
+                path: `/api/fetch/reports`,
+                mutation: `FETCH_REPORTS`,
+                related: `fetch-reports`
+            });
         },
         //* Delete report
         deleteReport: function(report_id) {
@@ -305,9 +300,12 @@ export default {
                     {
                         store: this.$store,
                         clear: true,
-                        path: this.initData.path,
-                        mutation: this.initData.mutation,
-                        related: this.initData.path
+                        execute: {
+                            incase: "success",
+                            func: () => {
+                                this.init();
+                            }
+                        }
                     }
                 );
             }

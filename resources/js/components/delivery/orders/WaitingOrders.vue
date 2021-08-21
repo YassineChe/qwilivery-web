@@ -147,15 +147,6 @@ moment.locale("fr");
 // import { gmapApi } from "vue2-google-maps";
 
 export default {
-    data() {
-        return {
-            initData: {
-                path: "/api/fetch/orders/to/deliver",
-                mutation: "FETCH_PREORDERS",
-                related: "fetch-wait-orders"
-            }
-        };
-    },
     computed: {
         // google: gmapApi,
         ...mapState(["expected"]),
@@ -167,7 +158,11 @@ export default {
     methods: {
         //*
         init: function() {
-            this.$store.dispatch("fetchData", this.initData);
+            this.$store.dispatch("fetchData", {
+                path: `/api/fetch/orders/to/deliver`,
+                mutation: `FETCH_PREORDERS`,
+                related: `fetch-wait-orders`
+            });
         },
         //* Take in charge
         takeInCharge: function(preorder_id) {
@@ -208,9 +203,12 @@ export default {
                     {
                         store: this.$store,
                         clear: true,
-                        path: this.initData.path,
-                        mutation: this.initData.mutation,
-                        related: this.initData.path
+                        execute: {
+                            incase: "success",
+                            func: () => {
+                                this.init();
+                            }
+                        }
                     }
                 );
             }

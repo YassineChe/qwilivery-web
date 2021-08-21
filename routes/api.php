@@ -124,6 +124,9 @@ Route::middleware("auth:restaurant")->group(function () {
     Route::get('/fetch/count/restaurant/categories', [StatisticController::class, 'countCategoriesByRestaurant']);
     Route::get('/fetch/count/restaurant/preorder', [StatisticController::class, 'countPreOrdersByRestaurant']);
     Route::get('/fetch/count/restaurant/delivered', [StatisticController::class, 'countDelivredByRestaurant']);
+    //Express delivery
+    Route::get('/fetch/express/deliveries', [RestaurantController::class, 'fetchExpressDelivery']);
+    Route::post('/call/express/delivery', [RestaurantController::class, 'callExpressDelivery']);
 });
 
 //? Common api routes between (Restaurant, Admin)

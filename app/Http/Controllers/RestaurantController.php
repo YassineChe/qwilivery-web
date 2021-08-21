@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 use App\Http\Requests\RequestRestaurant;
 //Models
 use App\Models\Restaurant;
+use App\Models\ExpressDelivery;
+use App\Models\DeviceToken;
 //Notifications
 use App\Notifications\NotifyAccountApproved;
 use App\Notifications\NotifyRestaurantAccount;
+use Kutia\Larafirebase\Facades\Larafirebase;
 
 
 class RestaurantController extends Controller
@@ -159,6 +162,53 @@ class RestaurantController extends Controller
                 ])
             )
             return dataToResponse('success', 'Succès ', ['Mise à jour du profil réussie'], 200);
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+    
+    //* Call express delivery
+    public function callExpressDelivery(){
+        try{
+            return dataToResponse('success', 'Succès', ['Un livreur arrivera dans instants.'], 200);
+            if(
+                ExpressDelivery::create(['restaurant_id' => authIdFromGuard('restaurant')])
+            ){  
+
+                //Get devices tokens
+                $tokenCollections = DeviceToken::select('token')->get();
+                // Push notification to deliveries
+                if ($tokenCollections){
+
+                    $tokens = [];
+    
+                    foreach ($tokenCollections as $deliveryToken) {
+                        array_push($tokens, $deliveryToken->token);
+                    }
+                    
+                    // Larafirebase::withTitle('Express livreur ⚡️')
+                    //     ->withBody(guardData('restaurant')->name. ' demande un livreur Express..')
+                    //     // ->withImage('https://firebase.google.com/images/social.png')
+                    //     // ->withClickAction('admin/notifications')
+                    //     ->withPriority('high')
+                    //     ->sendNotification($tokens);
+                    }
+                //Reponse a messages
+                return dataToResponse('success', 'Succès', ['Un livreur arrivera dans instants.'], 200);
+            }
+
+            return dataToResponse('error', 'Erreur ! ', ['Something went wrong!'], 422);
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
+    //* Fetch express delivery calls
+    public function fetchExpressDelivery(){
+        try{
+            return response(ExpressDelivery::with('delivery')->get(), 200);
         }
         catch(\Exception $e){
             handleLogs($e);

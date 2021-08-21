@@ -26,6 +26,7 @@ class PreOrder extends Model
         return $this->belongsTo(Restaurant::class);
     }
 
+    //* Relationship delivery
     public function delivery(){
         return $this->belongsTo(Delivery::class);
     }

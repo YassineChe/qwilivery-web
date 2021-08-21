@@ -141,15 +141,6 @@ import { mapState } from "vuex";
 import moment from "moment";
 moment.locale("fr");
 export default {
-    data() {
-        return {
-            initData: {
-                path: "/api/fetch/inprogress/orders",
-                mutation: "FETCH_PREORDERS",
-                related: "fetch-inprogress"
-            }
-        };
-    },
     computed: {
         ...mapState(["expected"]),
         //* Get Order to be deliver
@@ -160,7 +151,11 @@ export default {
     methods: {
         //* Init
         init: function() {
-            this.$store.dispatch("fetchData", this.initData);
+            this.$store.dispatch("fetchData", {
+                path: `/api/fetch/inprogress/orders`,
+                mutation: `FETCH_PREORDERS`,
+                related: `fetch-inprogress`
+            });
         },
         //* Parse to date
         parseToDate: function(date) {
@@ -202,9 +197,12 @@ export default {
                     {
                         store: this.$store,
                         clear: true,
-                        path: this.initData.path,
-                        mutation: this.initData.mutation,
-                        related: this.initData.path
+                        execute: {
+                            incase: "success",
+                            func: () => {
+                                this.init();
+                            }
+                        }
                     }
                 );
             }

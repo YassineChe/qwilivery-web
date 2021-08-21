@@ -184,11 +184,6 @@ export default {
     },
     data() {
         return {
-            initData: {
-                path: "/api/fetch/historic",
-                mutation: "FETCH_PREORDERS",
-                related: "fetch-historic"
-            },
             search: "",
             headers: [
                 { text: "#REF", value: "id" },
@@ -217,7 +212,11 @@ export default {
     methods: {
         //* Init
         init: function() {
-            this.$store.dispatch("fetchData", this.initData);
+            this.$store.dispatch("fetchData", {
+                path: `/api/fetch/historic`,
+                mutation: `FETCH_PREORDERS`,
+                related: `fetch-historic`
+            });
         },
         //* View order details
         orderDetails: function(pre_order_id) {
@@ -288,9 +287,12 @@ export default {
                     {
                         store: this.$store,
                         clear: true,
-                        path: this.initData.path,
-                        mutation: this.initData.mutation,
-                        related: this.initData.path
+                        execute: {
+                            incase: "success",
+                            func: () => {
+                                this.init();
+                            }
+                        }
                     }
                 );
             }

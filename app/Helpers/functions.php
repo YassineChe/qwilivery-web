@@ -45,6 +45,16 @@ function handleLogs($e)
     \Log::error($e);
 }
 
+//? Will get the guard data
+function guardData($guard){
+    try{
+        return Auth::guard($guard)->user();
+    }
+    catch(\Exception $e){
+        return null;
+    }
+}
+
 //? Guard ID from field
 function guardIdField()
 {

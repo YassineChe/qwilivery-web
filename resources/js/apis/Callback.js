@@ -4,42 +4,50 @@ export default function(Vue) {
             dialog,
             expected,
             callagain = null,
-            timeout = 3000,
+            timeout = 5000,
             position = "top-right"
         ) => {
-            if (
-                expected != undefined &&
-                typeof expected.result == "object" &&
-                expected.result.subMessage != undefined
-            ) {
-                expected.result.subMessage.forEach(msg => {
-                    dialog.notify[expected.result.type](msg, {
-                        position: position,
-                        timeout: timeout
+            if (expected != undefined && typeof expected.result == "object") {
+                if (expected.result.subMessage != undefined) {
+                    expected.result.subMessage.forEach(msg => {
+                        dialog.notify[expected.result.type](msg, {
+                            position: position,
+                            timeout: timeout
+                        });
                     });
-                });
+                }
 
                 if (callagain != null) {
-                    //Clear the expected!
-                    if (callagain.hasOwnProperty("clear") && callagain.clear)
-                        callagain.store.commit("CLEAR_EXPECTED");
-
-                    //if the callback has own property called path so wee need to call something!
-                    if (callagain.hasOwnProperty("path")) {
-                        callagain.store.dispatch("fetchData", {
-                            clear: true,
-                            path: callagain.path,
-                            mutation: callagain.mutation,
-                            related: callagain.related
-                        });
-                    }
-
                     if (callagain.hasOwnProperty("router")) {
                         if (callagain.router.incase == expected.result.type) {
                             callagain.router.instance.push({
                                 name: callagain.router.to
                             });
                         }
+                    }
+
+                    //Clear the expected!
+                    if (
+                        callagain.hasOwnProperty("clear") &&
+                        callagain.clear &&
+                        expected.result.type != undefined
+                    ) {
+                        callagain.store.commit("CLEAR_EXPECTED");
+                    }
+
+                    //Execute a function
+                    if (
+                        callagain.hasOwnProperty("execute") &&
+                        callagain.execute.incase == expected.status
+                    )
+                        callagain.execute.func();
+
+                    //Execute function whatever
+                    if (
+                        callagain.hasOwnProperty("whatever") &&
+                        expected.status != "busy"
+                    ) {
+                        callagain.whatever.func();
                     }
                 }
             }

@@ -147,8 +147,14 @@
                     </v-list-item-icon>
                     <v-list-item-title>Commandes télé.</v-list-item-title>
                 </v-list-item>
-
-                <!-- Dashboard -->
+                <!-- Express delivery -->
+                <v-list-item :to="{ name: 'express-delivery' }">
+                    <v-list-item-icon>
+                        <v-icon>mdi-moped-electric</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Express livreur</v-list-item-title>
+                </v-list-item>
+                <!-- Profile -->
                 <v-subheader>Profile & Paramètres</v-subheader>
                 <v-list-item :to="{ name: 'restaurant-profile' }">
                     <v-list-item-icon>

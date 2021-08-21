@@ -7,6 +7,7 @@ let state = {
     dummies: [],
     deliveries: [],
     restaurants: [],
+    expresses: [],
     categories: [],
     variants: [],
     preorders: [],

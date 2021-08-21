@@ -181,11 +181,6 @@ export default {
     },
     data() {
         return {
-            initData: {
-                path: "/api/fetch/preorders",
-                mutation: "FETCH_PREORDERS",
-                related: "fetch-preorders"
-            },
             search: "",
             headers: [
                 { text: "#REF", value: "id" },
@@ -207,13 +202,17 @@ export default {
         },
         //* Is mobile
         isMobile() {
-            return this.$vuetify.breakpoint.xsOnly;
+            return this.$vuetify.breakpoint.mobile;
         }
     },
     methods: {
         //* Init
         init: function() {
-            this.$store.dispatch("fetchData", this.initData);
+            this.$store.dispatch("fetchData", {
+                path: `/api/fetch/preorders`,
+                mutation: `FETCH_PREORDERS`,
+                related: `fetch-preorders`
+            });
         },
         //* Parse to date
         parseToDate: function(date) {
@@ -273,9 +272,12 @@ export default {
                     {
                         store: this.$store,
                         clear: true,
-                        path: this.initData.path,
-                        mutation: this.initData.mutation,
-                        related: this.initData.path
+                        execute: {
+                            incase: "success",
+                            func: () => {
+                                this.init();
+                            }
+                        }
                     }
                 );
             }

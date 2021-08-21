@@ -34,6 +34,7 @@ import Menu from "./components/restaurant/Menu";
 import PhoneOrder from "./components/restaurant/PhoneOrder";
 import RestaurantProfile from "./components/restaurant/Profile";
 import DispatchPhoneOrder from "./components/restaurant/DispatchPhoneOrder";
+import ExpressDelivery from './components/restaurant/ExpressDelivery';
 
 Vue.use(VueRouter);
 
@@ -149,6 +150,12 @@ const restaurantRoutes = {
             name: "dispatch-order",
             component: DispatchPhoneOrder,
             meta: { guard: "restaurant" }
+        },
+        {
+            path: '/express-delivery',
+            name: 'express-delivery',
+            component:ExpressDelivery,
+            meta: {guard: 'restaurant'}
         }
     ]
 };
