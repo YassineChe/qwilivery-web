@@ -190,13 +190,15 @@ class RestaurantController extends Controller
                     //Grap notification content
                     $appSettings = AppSetting::select('express_title', 'express_body')->where('id', 1)->first();
 
-                    Larafirebase::withTitle($appSettings->express_title)
-                        ->withBody(guardData('restaurant')->name. ' '. $appSettings->express_body)
-                        // ->withImage('https://firebase.google.com/images/social.png')
-                        // ->withClickAction('admin/notifications')
-                        ->withClickAction('/expressClue')
-                        ->withPriority('high')
-                        ->sendNotification($tokens);
+                    if($appSettings)
+                        Larafirebase::withTitle($appSettings->express_title)
+                            ->withBody(guardData('restaurant')->name. ' '. $appSettings->express_body)
+                            // ->withImage('https://firebase.google.com/images/social.png')
+                            // ->withClickAction('admin/notifications')
+                            ->withClickAction('/expressClue')
+                            ->withPriority('high')
+                            ->sendNotification($tokens);
+                    
                     }
                 //Reponse a messages
                 return dataToResponse('success', 'Succès', ['Un livreur arrivera dans instants.'], 200);

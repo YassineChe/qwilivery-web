@@ -53,6 +53,7 @@ class OrderController extends Controller
                 //Grap notification details
                 $appSettings = AppSetting::select('order_title', 'order_body')->where('id', 1)->first();
 
+                if($appSettings)
                 Larafirebase::withTitle($appSettings->order_title)
                     ->withBody($appSettings->order_body)
                     // ->withImage('https://firebase.google.com/images/social.png')
