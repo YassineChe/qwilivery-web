@@ -59,6 +59,24 @@
                 no-data-text="Aucune commande trouvée"
                 no-results-text="Aucune commande trouvée"
             >
+                <!-- restaurant -->
+                <template v-slot:[`item.restaurant`]="{ item }">
+                    <v-tooltip right>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-avatar>
+                                <img
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    :src="
+                                        `/images/avatars/${item.restaurant.avatar}`
+                                    "
+                                    alt="John"
+                                />
+                            </v-avatar>
+                        </template>
+                        <span>{{ item.restaurant.name }}</span>
+                    </v-tooltip>
+                </template>
                 <!-- Orders -->
                 <template v-slot:[`item.id`]="{ item }">
                     {{ item.id }}
@@ -186,7 +204,7 @@ export default {
         return {
             search: "",
             headers: [
-                { text: "#REF", value: "id" },
+                { text: "Restaurant", value: "restaurant" },
                 { text: "Nom complet", value: "fullname" },
                 { text: "Téléphone", value: "phone_number" },
                 { text: "Adresse", value: "address" },
