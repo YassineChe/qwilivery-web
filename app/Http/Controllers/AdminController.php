@@ -7,6 +7,7 @@ use App\Models\Delivery;
 use App\Models\PreOrder;
 use App\Models\Admin;
 use App\Models\Restaurant;
+use App\Models\AppSetting;
 //Requests
 use Illuminate\Http\Request;
 use App\Http\Requests\DeliveryRequest;
@@ -86,6 +87,7 @@ class AdminController extends Controller
         }              
     }
 
+    //
     public function fetchRestaurants(){
         try{
             return Restaurant::select('id', 'name', 'avatar', \DB::raw("'restaurant' as type"))
@@ -97,4 +99,49 @@ class AdminController extends Controller
         }
     }
 
+    // App settings
+    public function fetchAppSettings(){
+        try{
+            return response(AppSetting::where('id', 1)->first(), 200);
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
+    //* Change order notification settings (for mobible)
+    public function chanegOrderSettings(Request $request){
+        try{
+            if(
+                AppSetting::where('id', 1)->update([
+                    'order_title' => $request->order_title, 
+                    'order_body' => $request->order_body
+                ])
+            )
+            return dataToResponse('success', 'Succès', ['Mis à jour avec succés'], 200);
+
+            return dataToResponse('error', 'Erreur', ['Veuillez d\'abord faire une mise à jour'], 422);
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
+    //* Change express notification settings (for mobible)
+    public function chanegExpressSettings(Request $request){
+        try{
+            if(
+                AppSetting::where('id', 1)->update([
+                    'express_title' => $request->express_title, 
+                    'express_body' => $request->express_body
+                ])
+            )
+            return dataToResponse('success', 'Succès', ['Mis à jour avec succés'], 200);
+
+            return dataToResponse('error', 'Erreur', ['Veuillez d\'abord faire une mise à jour'], 422);
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
 }

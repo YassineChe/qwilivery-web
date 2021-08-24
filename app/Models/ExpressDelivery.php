@@ -15,8 +15,16 @@ class ExpressDelivery extends Model
         return $value == null ? null : \Carbon\Carbon::parse($value)->diffForHumans();
     }
 
+    public function getCreatedAtAttribute($value){
+        return \Carbon\Carbon::parse($value)->format('Y-m-d H:i');
+    }
+
     //* Relationship delivery
     public function delivery(){
         return $this->belongsTo(Delivery::class);
+    }
+
+    public function restaurant(){
+        return $this->belongsTo(Restaurant::class);
     }
 }

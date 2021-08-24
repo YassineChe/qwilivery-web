@@ -54,9 +54,6 @@
             :headers="headers"
             :loading="isBusy('fetch-express-deliveries')"
         >
-            <template v-slot:[`item.created_at`]="{ item }">
-                {{ parseToDate(item.created_at) }}
-            </template>
             <!-- Delivery man -->
             <template v-slot:[`item.delivery`]="{ item }">
                 <v-avatar size="40" v-if="item.delivery != null">
@@ -104,6 +101,13 @@
                         </v-card>
                     </v-menu>
                 </v-avatar>
+                <v-chip color="warning" small v-else>En attente</v-chip>
+            </template>
+            <!-- Taken at date -->
+            <template v-slot:[`item.taken_at`]="{ item }">
+                <span
+                    v-text="item.taken_at == null ? '-' : item.taken_at"
+                ></span>
             </template>
         </v-data-table>
     </div>
@@ -125,8 +129,8 @@ export default {
         return {
             headers: [
                 { text: "Date de demande", value: "created_at" },
-                { text: "Confirmé", value: "taken_at" },
-                { text: "Livreur", value: "delivery" }
+                { text: "Livreur", value: "delivery" },
+                { text: "Confirmé", value: "taken_at" }
             ]
         };
     },

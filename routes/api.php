@@ -77,6 +77,11 @@ Route::middleware("auth:admin")->group(function () {
     Route::get('/fetch/reports', [ReportController::class, 'fetchReports']); // Fetch report list
     Route::delete('/delete/report/{report_id}', [ReportController::class, 'deleteReport']); // Delete report
 
+    //* App settings
+    Route::get('/fetch/app/settings', [AdminController::class, 'fetchAppSettings']);
+    Route::patch('/change/order/settings', [AdminController::class, 'chanegOrderSettings']);
+    Route::patch('/change/express/settings', [AdminController::class, 'chanegExpressSettings']);
+
     //* Chat stuff
     Route::post('/admin/send/message', [ChatController::class, 'sendMsgFromMsger']); //Message sent by admin from messenger
     Route::post('/admin/send/msg/out/msger', [ChatController::class, 'sendMsgOutMsger']); // Messsage sent by admin out messenger
@@ -97,6 +102,10 @@ Route::middleware("auth:delivery")->group(function () {
     Route::get('/fetch/inprogress/orders', [OrderController::class, 'fetchInprogressOrders']);
     Route::get('/fetch/delivered/orders', [OrderController::class, 'fetchDeliveredOrder']);
     Route::post('/delivered/order', [OrderController::class, 'deliveredOrder']); // This will set order as delivred
+    //* Express delivery
+    Route::get('/fetch/express/calls', [DeliveryController::class, 'fetchExpressCalls']);
+    Route::post('/take/express', [DeliveryController::class, 'takeExpress']);
+    Route::get('/fetch/express/teen/historic', [DeliveryController::class, 'teenHistoricExpress']);
     //* Chat stuff
     Route::post('/delivery/send/message', [ChatController::class, 'sendMsgFromMsgerDelivery']);
 

@@ -57,7 +57,7 @@
                 </template>
                 <v-card>
                     <v-list dense>
-                        <v-subheader>Porfile</v-subheader>
+                        <v-subheader>Porfile </v-subheader>
                         <v-list-item-group>
                             <!-- Profile -->
                             <v-list-item :to="{ name: 'admin-profile' }">
@@ -149,6 +149,12 @@
                     </v-list-item>
                     <!-- Settings -->
                     <v-subheader>Paramètres & Rapports</v-subheader>
+                    <v-list-item :to="{ name: 'admin-settings' }">
+                        <v-list-item-icon>
+                            <v-icon>mdi-cog</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Paramètres</v-list-item-title>
+                    </v-list-item>
                     <v-list-item :to="{ name: 'admin-profile' }">
                         <v-list-item-icon>
                             <v-icon>mdi-account-cog</v-icon>

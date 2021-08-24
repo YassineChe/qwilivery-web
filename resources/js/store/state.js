@@ -15,6 +15,7 @@ let state = {
     reports: [],
     chatflows: [],
     conversations: [],
+    settings: [],
     persons: [] // This for both employers & Employees (Used in search chat (start chat))
 };
 

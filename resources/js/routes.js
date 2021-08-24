@@ -15,6 +15,7 @@ import AdminHome from "./components/admin/Home";
 import Deliveries from "./components/admin/Deliveries";
 import Restaurants from "./components/admin/Restaurants";
 import AdminHistoric from "./components/admin/Historic";
+import AdminSettings from './components/admin/Settings';
 import AdminProfile from "./components/admin/Profile";
 import AdminReports from "./components/admin/Reports";
 import AdminMessenger from "./components/admin/Messenger";
@@ -90,6 +91,12 @@ const adminRoutes = {
             name: "historic",
             component: AdminHistoric,
             meta: { guard: "admin" }
+        },
+        {
+            path: '/settings',
+            name: 'admin-settings',
+            component: AdminSettings,
+            meta: {guard: 'admin'}
         },
         {
             path: "/profile",

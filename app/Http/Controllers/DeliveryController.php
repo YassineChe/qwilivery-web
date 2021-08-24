@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\DeliveryRequest;
 use App\Models\Delivery;
 use App\Models\PreOrder;
+use App\Models\ExpressDelivery;
 //Notifications
 use App\Notifications\NotifyAccountApproved;
 use App\Notifications\NotifyDeliveryAccount;
@@ -204,5 +205,66 @@ class DeliveryController extends Controller
         ]);
         
         return dataToResponse('success', 'Succès ', ['La modification a réussi'], 200);
+    }
+
+    //* Fetch express calls
+    public function fetchExpressCalls(){
+        try{
+            return response(
+                    ExpressDelivery::whereNull('delivery_id')
+                        ->whereNull('taken_at')
+                        ->with('restaurant')
+                        ->get()
+                , 200
+            );
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
+    //* Take express
+    public function takeExpress(Request $request){
+        try{
+
+            //Get the express
+            $express = ExpressDelivery::where('id', (int)$request->id)->whereNull('delivery_id')->first();
+
+            //Check the express
+            if ($express){
+                //Assign the express to delivery
+                $express->update([
+                    'delivery_id' => authIdFromGuard('delivery'),
+                    'taken_at'    => \Carbon\Carbon::now()
+                ]);
+
+                //Response to font
+                return dataToResponse('success', 'Succès', ['Vous êtes en charge maintenant 😀'], 200);
+            }            
+
+            //Incase something went wrong
+            return dataToResponse('error', 'Erreur ! ', ['Something went wrong!'], 422);
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
+    //* Teen historic
+    public function teenHistoricExpress(){
+        try{
+            return response(
+                ExpressDelivery::where('delivery_id', authIdFromGuard('delivery'))
+                    ->whereNotNull('taken_at')
+                    ->with('restaurant')
+                    ->orderBy('id', 'DESC')
+                    ->take(10)
+                    ->get()
+            , 200
+        );
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
     }
 }

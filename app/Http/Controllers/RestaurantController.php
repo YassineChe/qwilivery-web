@@ -8,6 +8,7 @@ use App\Http\Requests\RequestRestaurant;
 use App\Models\Restaurant;
 use App\Models\ExpressDelivery;
 use App\Models\DeviceToken;
+use App\Models\AppSetting;
 //Notifications
 use App\Notifications\NotifyAccountApproved;
 use App\Notifications\NotifyRestaurantAccount;
@@ -171,7 +172,6 @@ class RestaurantController extends Controller
     //* Call express delivery
     public function callExpressDelivery(){
         try{
-            return dataToResponse('success', 'Succès', ['Un livreur arrivera dans instants.'], 200);
             if(
                 ExpressDelivery::create(['restaurant_id' => authIdFromGuard('restaurant')])
             ){  
@@ -187,12 +187,16 @@ class RestaurantController extends Controller
                         array_push($tokens, $deliveryToken->token);
                     }
                     
-                    // Larafirebase::withTitle('Express livreur ⚡️')
-                    //     ->withBody(guardData('restaurant')->name. ' demande un livreur Express..')
-                    //     // ->withImage('https://firebase.google.com/images/social.png')
-                    //     // ->withClickAction('admin/notifications')
-                    //     ->withPriority('high')
-                    //     ->sendNotification($tokens);
+                    //Grap notification content
+                    $appSettings = AppSetting::select('express_title', 'express_body')->where('id', 1)->first();
+
+                    Larafirebase::withTitle($appSettings->express_title)
+                        ->withBody(guardData('restaurant')->name. ' '. $appSettings->express_body)
+                        // ->withImage('https://firebase.google.com/images/social.png')
+                        // ->withClickAction('admin/notifications')
+                        ->withClickAction('/expressClue')
+                        ->withPriority('high')
+                        ->sendNotification($tokens);
                     }
                 //Reponse a messages
                 return dataToResponse('success', 'Succès', ['Un livreur arrivera dans instants.'], 200);
@@ -208,7 +212,11 @@ class RestaurantController extends Controller
     //* Fetch express delivery calls
     public function fetchExpressDelivery(){
         try{
-            return response(ExpressDelivery::with('delivery')->get(), 200);
+            return response(ExpressDelivery::with('delivery')
+                ->where('restaurant_id', authIdFromGuard('restaurant'))
+                ->orderBy('id', 'DESC')->get()
+                , 200
+            );
         }
         catch(\Exception $e){
             handleLogs($e);

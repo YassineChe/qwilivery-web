@@ -64,6 +64,9 @@ let getters = {
     persons: state => {
         return state.persons;
     },
+    settings: state => {
+        return state.settings;
+    },
     //handle result
     callback: state => result => {
         return typeof result === "object"

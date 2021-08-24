@@ -7,6 +7,7 @@ use Kutia\Larafirebase\Facades\Larafirebase;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\PreOrder;
+use App\Models\AppSetting;
 //* Notifications
 use App\Events\NewOrder;
 use App\Models\DeviceToken;
@@ -49,10 +50,13 @@ class OrderController extends Controller
                     array_push($tokens, $deliveryToken->token);
                 }
                 
-                Larafirebase::withTitle('Nouvelle commande')
-                    ->withBody('Vous avez une nouvelle commande à livrer, appuyez sur pour plus d\'informations')
+                //Grap notification details
+                $appSettings = AppSetting::select('order_title', 'order_body')->where('id', 1)->first();
+
+                Larafirebase::withTitle($appSettings->order_title)
+                    ->withBody($appSettings->order_body)
                     // ->withImage('https://firebase.google.com/images/social.png')
-                    // ->withClickAction('admin/notifications')
+                    ->withClickAction('/clue')
                     ->withPriority('high')
                     ->sendNotification($tokens);
                 }

@@ -128,6 +128,10 @@ let mutations = {
     /************** PERSONS ************* */
     FETCH_PERSONS(state, persons) {
         return (state.persons = persons);
+    },
+     /************** SETTINGS ************* */
+     async FETCH_SETTINGS(state, settings) {
+        return (state.settings = settings);
     }
 };
 export default mutations;
