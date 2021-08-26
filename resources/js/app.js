@@ -39,6 +39,9 @@ Vue.use(VuetifyDialog, {
     }
 });
 
+
+alert(process.env.MIX_GOOGLE_MAPS_API);
+
 //* Google Map API
 import * as VueGoogleMaps from "vue2-google-maps";
 Vue.use(VueGoogleMaps, {
