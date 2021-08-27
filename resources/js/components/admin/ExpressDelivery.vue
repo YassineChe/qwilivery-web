@@ -5,7 +5,7 @@
                 <!-- HeadLine -->
                 <Headline
                     headline="Express livreur"
-                    subheadline="Historique de livraison express"
+                    subheadline="Demander un express livreur"
                     :headline-classes="[
                         'text-h5',
                         'primary--text',
@@ -97,6 +97,7 @@
                     v-text="item.taken_at == null ? '-' : item.taken_at"
                 ></span>
             </template>
+            <!-- Delete express -->
             <template v-slot:[`item.actions`]="{ item }">
                 <v-btn icon x-small @click="deleteExpress(item.id)">
                     <v-icon color="error">mdi-delete</v-icon>
@@ -109,9 +110,7 @@
 <script>
 //libs
 import { mapState } from "vuex";
-import moment from "moment";
-moment.locale("fr");
-//Component
+//Components
 import Headline from "../pieces/Headline";
 
 export default {
@@ -142,7 +141,7 @@ export default {
         //* Init
         init: function() {
             this.$store.dispatch("fetchData", {
-                path: `/api/admin/fetch/express/deliveries`,
+                path: `/api/fetch/express/calls`,
                 mutation: "EXPRESS_DELIVERIES",
                 related: `fetch-express-deliveries`
             });

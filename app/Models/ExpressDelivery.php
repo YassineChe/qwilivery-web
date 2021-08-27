@@ -16,7 +16,8 @@ class ExpressDelivery extends Model
     }
 
     public function getCreatedAtAttribute($value){
-        return \Carbon\Carbon::parse($value)->format('Y-m-d H:i');
+        return \Carbon\Carbon::parse($value)->diffForHumans();
+        // return \Carbon\Carbon::parse($value)->format('Y-m-d H:i');
     }
 
     //* Relationship delivery

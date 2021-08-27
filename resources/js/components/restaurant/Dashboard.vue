@@ -1,5 +1,5 @@
 <template>
-    <v-app :style="{ background: this.$vuetify.theme.themes.dark.background }">
+    <v-app :style="{ background: this.$vuetify.theme.themes.light.background }">
         <!-- Navbar -->
 
         <v-app-bar
@@ -184,23 +184,24 @@
         </v-navigation-drawer>
         <!-- Dashboard Container -->
         <v-main class="ma-10">
+            <!-- Bind routes here -->
             <router-view></router-view>
+            <!-- Footer -->
+            <v-footer padless height="50px" color="transparent">
+                <v-col class="text-center" cols="12">
+                    <small>
+                        <span>Qwilivery - Made</span>
+                        <a
+                            class="text-decoration-none"
+                            href="https://www.spoveup.com/"
+                            >by Spoveup
+                        </a>
+                        ❤️
+                        {{ new Date().getFullYear() }}
+                    </small>
+                </v-col>
+            </v-footer>
         </v-main>
-        <!-- Footer -->
-        <v-footer padless height="50px" color="transparent">
-            <v-col class="text-center" cols="12">
-                {{ new Date().getFullYear() }} —
-                <strong>
-                    <span>Qwilivery - Made</span>
-                    <a
-                        class="text-decoration-none"
-                        href="https://www.spoveup.com/"
-                        >by Spoveup
-                    </a>
-                    ❤️
-                </strong>
-            </v-col>
-        </v-footer>
     </v-app>
 </template>
 

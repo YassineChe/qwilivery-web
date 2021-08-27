@@ -1,5 +1,5 @@
 <template>
-    <v-app :style="{ background: this.$vuetify.theme.themes.dark.background }">
+    <v-app :style="{ background: this.$vuetify.theme.themes.light.background }">
         <!-- Navbar -->
 
         <v-app-bar
@@ -17,11 +17,15 @@
             <!-- The Spacer -->
             <v-spacer></v-spacer>
             <!-- <v-badge color="error" content="6" overlap class="mr-9">
-      <v-icon color="grey lighten-1" medium> mdi-message-outline</v-icon>
-    </v-badge>
-    <v-badge color="error" content="6" overlap class="mr-9">
-      <v-icon color="grey lighten-1" medium> mdi-bell-outline </v-icon>
-    </v-badge> -->
+                <v-icon color="grey lighten-1" medium>
+                    mdi-message-outline</v-icon
+                >
+            </v-badge>
+            <v-badge color="error" content="6" overlap class="mr-9">
+                <v-icon color="grey lighten-1" medium>
+                    mdi-bell-outline
+                </v-icon>
+            </v-badge> -->
             <!-- profil -->
             <v-menu
                 bottom
@@ -125,23 +129,64 @@
                 </v-list-item>
                 <!-- App -->
                 <v-subheader>App</v-subheader>
-                <v-list-item :to="{ name: 'delivery-orders' }">
-                    <v-list-item-icon>
-                        <v-icon>mdi-moped</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-title>
-                        Commandes
-                    </v-list-item-title>
-                </v-list-item>
-                <!-- Historic -->
-                <v-list-item :to="{ name: 'delivery-historic' }">
-                    <v-list-item-icon>
-                        <v-icon>mdi-history</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-title>
-                        Historique
-                    </v-list-item-title>
-                </v-list-item>
+
+                <v-list-group prepend-icon="mdi-moped-electric" no-action>
+                    <template v-slot:activator>
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                Commande
+                            </v-list-item-title>
+                        </v-list-item-content>
+                    </template>
+
+                    <v-list-item :to="{ name: 'delivery-orders' }">
+                        <v-list-item-title>
+                            Commandes
+                        </v-list-item-title>
+                        <v-list-item-icon>
+                            <v-icon>mdi-moped</v-icon>
+                        </v-list-item-icon>
+                    </v-list-item>
+
+                    <v-list-item :to="{ name: 'delivery-historic' }">
+                        <v-list-item-title>
+                            Historique
+                        </v-list-item-title>
+                        <v-list-item-icon>
+                            <v-icon>mdi-history</v-icon>
+                        </v-list-item-icon>
+                    </v-list-item>
+                </v-list-group>
+
+                <!-- Express delivery -->
+                <v-list-group prepend-icon="mdi-moped-electric" no-action>
+                    <template v-slot:activator>
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                Express livreur
+                            </v-list-item-title>
+                        </v-list-item-content>
+                    </template>
+
+                    <v-list-item link :to="{ name: 'waiting-express' }">
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                Express en attente
+                            </v-list-item-title>
+                        </v-list-item-content>
+                        <v-list-item-icon>
+                            <v-icon>mdi-flash</v-icon>
+                        </v-list-item-icon>
+                    </v-list-item>
+                    <v-list-item :to="{ name: 'list-twts' }">
+                        <v-list-item-content>
+                            <v-list-item-title>Historique</v-list-item-title>
+                        </v-list-item-content>
+                        <v-list-item-icon>
+                            <v-icon>mdi-history</v-icon>
+                        </v-list-item-icon>
+                    </v-list-item>
+                </v-list-group>
                 <!-- Chat -->
                 <v-list-item :to="{ name: 'delivery-messenger' }">
                     <v-list-item-icon>
@@ -152,13 +197,6 @@
                     </v-list-item-title>
                 </v-list-item>
                 <!-- Guide -->
-                <v-subheader>Plus</v-subheader>
-                <v-list-item :to="{ name: 'guide' }">
-                    <v-list-item-icon>
-                        <v-icon>mdi-cellphone-iphone</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-title>Guide app mobile</v-list-item-title>
-                </v-list-item>
                 <!-- Singout -->
                 <v-subheader>Profile & Paramètres</v-subheader>
                 <v-list-item :to="{ name: 'delivery-profile' }">
@@ -192,23 +230,24 @@
         </v-navigation-drawer>
         <!-- Dashboard Container -->
         <v-main class="ma-10">
+            <!-- Bind routes here -->
             <router-view></router-view>
+            <!-- Footer -->
+            <v-footer padless height="50px" color="transparent">
+                <v-col class="text-center" cols="12">
+                    <small>
+                        <span>Qwilivery - Made</span>
+                        <a
+                            class="text-decoration-none"
+                            href="https://www.spoveup.com/"
+                            >by Spoveup
+                        </a>
+                        ❤️
+                        {{ new Date().getFullYear() }}
+                    </small>
+                </v-col>
+            </v-footer>
         </v-main>
-        <!-- Footer -->
-        <v-footer padless height="50px" color="transparent">
-            <v-col class="text-center" cols="12">
-                {{ new Date().getFullYear() }} —
-                <strong>
-                    <span>Qwilivery - Made</span>
-                    <a
-                        class="text-decoration-none"
-                        href="https://www.spoveup.com/"
-                        >by Spoveup
-                    </a>
-                    ❤️
-                </strong>
-            </v-col>
-        </v-footer>
     </v-app>
 </template>
 

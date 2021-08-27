@@ -6,7 +6,6 @@ import Vue from "vue";
 import Login from "./components/clue/Login";
 import Register from "./components/clue/Register";
 import ChangePassword from "./components/clue/ChangePassword";
-import Guide from "./components/pieces/Guide";
 import NotFound from "./components/pieces/404";
 
 //* Admin.
@@ -28,6 +27,7 @@ import DeliveryProfile from "./components/delivery/Profile";
 import DeliveryHistoric from "./components/delivery/Historic";
 import DeliveryMessenger from "./components/delivery/Messenger";
 import DeliveryOrders from "./components/delivery/Orders";
+import WaitingExpress from './components/delivery/WaitingExpress'
 
 //* Restaurant
 import RestaurantHome from "./components/restaurant/Home";
@@ -202,12 +202,6 @@ const deliveryRoutes = {
             meta: { guard: "delivery" }
         },
         {
-            path: "/guide",
-            name: "guide",
-            component: Guide,
-            meta: { guard: "delivery" }
-        },
-        {
             path: "/messenger",
             name: "delivery-messenger",
             component: DeliveryMessenger,
@@ -218,7 +212,13 @@ const deliveryRoutes = {
             name: "delivery-orders",
             component: DeliveryOrders,
             meta: { guard: "delivery" }
-        }
+        },
+        {
+            path: "/waiting-express",
+            name: "waiting-express",
+            component: WaitingExpress,
+            meta: { guard: "delivery" }
+        },
     ]
 };
 

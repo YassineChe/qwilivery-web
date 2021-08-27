@@ -22,6 +22,9 @@ Broadcast::channel('new-message-sent-channel', function () {
 });
 
 Broadcast::channel('new-order-channel', function () {
-    \Log::error('new order');
+    return true;
+});
+
+Broadcast::channel('new-express-channel', function () {
     return true;
 });
