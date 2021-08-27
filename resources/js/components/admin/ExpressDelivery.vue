@@ -42,6 +42,25 @@
             :headers="headers"
             :loading="isBusy('fetch-express-deliveries')"
         >
+            <!-- Restaurant -->
+            <template v-slot:[`item.restaurant`]="{ item }">
+                <v-list-item>
+                    <v-list-item-avatar>
+                        <v-img
+                            :src="`/images/avatars/${item.restaurant.avatar}`"
+                        >
+                        </v-img>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                        <v-list-item-title
+                            v-html="item.restaurant.name"
+                        ></v-list-item-title>
+                        <v-list-item-subtitle
+                            v-html="item.restaurant.address"
+                        ></v-list-item-subtitle>
+                    </v-list-item-content>
+                </v-list-item>
+            </template>
             <!-- Delivery man -->
             <template v-slot:[`item.delivery`]="{ item }">
                 <v-avatar size="40" v-if="item.delivery != null">
@@ -120,6 +139,7 @@ export default {
     data() {
         return {
             headers: [
+                { text: "Restaurant", value: "restaurant" },
                 { text: "Date de demande", value: "created_at" },
                 { text: "Livreur", value: "delivery" },
                 { text: "Confirmé dans", value: "taken_at" },

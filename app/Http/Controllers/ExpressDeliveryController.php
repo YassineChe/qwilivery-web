@@ -11,7 +11,9 @@ class ExpressDeliveryController extends Controller
     public function fetchExpressDeliveriesAdmin(){
         try{
             return response(
-                ExpressDelivery::orderBy('id', 'DESC')->with('delivery')->get() 
+                ExpressDelivery::orderBy('id', 'DESC')
+                    ->with(['restaurant', 'delivery'])
+                    ->get() 
                 , 200
             );
         }
