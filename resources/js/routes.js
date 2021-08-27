@@ -26,8 +26,10 @@ import DeliveryDashboard from "./components/delivery/Dashboard";
 import DeliveryProfile from "./components/delivery/Profile";
 import DeliveryHistoric from "./components/delivery/Historic";
 import DeliveryMessenger from "./components/delivery/Messenger";
-import DeliveryOrders from "./components/delivery/Orders";
-import WaitingExpress from './components/delivery/WaitingExpress'
+import DeliveryWaitingOrders from './components/delivery/WaitingOrders';
+import DeliveryInprogressOrders from './components/delivery/InprogressOrders'
+import DeliveryWaitingExpress from './components/delivery/WaitingExpress'
+import DeliveryHistoricExpress from './components/delivery/HistoryExpress'
 
 //* Restaurant
 import RestaurantHome from "./components/restaurant/Home";
@@ -208,15 +210,27 @@ const deliveryRoutes = {
             meta: { guard: "delivery" }
         },
         {
-            path: "/orders",
-            name: "delivery-orders",
-            component: DeliveryOrders,
+            path: "/waiting-orders",
+            name: "waiting-orders",
+            component: DeliveryWaitingOrders,
+            meta: { guard: "delivery" }
+        },
+        {
+            path: "/inprogress-orders",
+            name: "inprogress-orders",
+            component: DeliveryInprogressOrders,
             meta: { guard: "delivery" }
         },
         {
             path: "/waiting-express",
             name: "waiting-express",
-            component: WaitingExpress,
+            component: DeliveryWaitingExpress,
+            meta: { guard: "delivery" }
+        },
+        {
+            path: "/history-express",
+            name: "history-express",
+            component: DeliveryHistoricExpress,
             meta: { guard: "delivery" }
         },
     ]

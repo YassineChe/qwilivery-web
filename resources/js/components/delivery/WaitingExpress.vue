@@ -9,7 +9,7 @@
                     :headline-classes="[
                         'text-h5',
                         'primary--text',
-                        'font-weight-black',
+                        'font-weight-bold',
                         'text-uppercase'
                     ]"
                 />
@@ -17,8 +17,27 @@
         </v-row>
         <!-- Data table -->
 
+        <!-- Buttons actions -->
+        <v-row class="mt-5">
+            <v-col align="right">
+                <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            v-bind="attrs"
+                            v-on="on"
+                            color="primary"
+                            @click="init()"
+                        >
+                            <v-icon>mdi-refresh</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Rafraîchir</span>
+                </v-tooltip>
+            </v-col>
+        </v-row>
+
         <v-data-table
-            class="mt-5 white"
+            class="mt-5"
             :items="expresses"
             :headers="headers"
             :loading="isBusy('fetch-express')"

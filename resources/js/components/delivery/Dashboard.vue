@@ -47,10 +47,11 @@
                             <v-flex align-self-center>
                                 <h4>
                                     {{ guard["last_name"] }}
+                                    {{ guard["first_name"] }}
                                 </h4>
                             </v-flex>
                             <v-flex align-self-center>
-                                {{ guard["first_name"] }}
+                                Livreur
                             </v-flex>
                         </v-layout>
                     </div>
@@ -139,12 +140,21 @@
                         </v-list-item-content>
                     </template>
 
-                    <v-list-item :to="{ name: 'delivery-orders' }">
+                    <v-list-item :to="{ name: 'waiting-orders' }">
                         <v-list-item-title>
-                            Commandes
+                            En attente
                         </v-list-item-title>
                         <v-list-item-icon>
                             <v-icon>mdi-moped</v-icon>
+                        </v-list-item-icon>
+                    </v-list-item>
+
+                    <v-list-item :to="{ name: 'inprogress-orders' }">
+                        <v-list-item-title>
+                            En cours
+                        </v-list-item-title>
+                        <v-list-item-icon>
+                            <v-icon>mdi-road-variant</v-icon>
                         </v-list-item-icon>
                     </v-list-item>
 
@@ -178,9 +188,11 @@
                             <v-icon>mdi-flash</v-icon>
                         </v-list-item-icon>
                     </v-list-item>
-                    <v-list-item :to="{ name: 'list-twts' }">
+                    <v-list-item :to="{ name: 'history-express' }">
                         <v-list-item-content>
-                            <v-list-item-title>Historique</v-list-item-title>
+                            <v-list-item-title
+                                >Historique Express</v-list-item-title
+                            >
                         </v-list-item-content>
                         <v-list-item-icon>
                             <v-icon>mdi-history</v-icon>
@@ -320,23 +332,45 @@ export default {
             cluster: "eu"
         });
 
-        //Subscribe to the channel we specified in our Adonis Application
-        let channel = pusher.subscribe("new-order-channel");
+        //Subscribe channels
+        let channels = [
+            "new-order-channel",
+            "new-express-channel"
+        ].map(channelName => pusher.subscribe(channelName));
 
-        channel.bind("new-order", data => {
-            this.$notification.show(
-                "Nouvelle commande",
-                {
-                    body:
-                        "Nouvelle commande à livrer! Cliquez pour voir les détails"
-                },
-                {
-                    onclick: function() {
-                        window.location.href = "/orders";
+        channels.forEach(channel => {
+            //New order
+            channel.bind("new-order", () => {
+                this.$notification.show(
+                    "Nouvelle commande",
+                    {
+                        body:
+                            "Nouvelle commande à livrer! Cliquez pour voir les détails"
+                    },
+                    {
+                        onclick: function() {
+                            window.location.href = "/orders";
+                        }
                     }
-                }
-            );
+                );
+            });
+            //New express
+            channel.bind("new-express", () => {
+                this.$notification.show(
+                    "Express livreur ⚡️",
+                    {
+                        body: "Un restaurant demande un livreur Express.."
+                    },
+                    {
+                        onclick: function() {
+                            window.location.href = "/waiting-express";
+                        }
+                    }
+                );
+            });
         });
+
+        channel.bind("new-order", data => {});
     }
 };
 </script>

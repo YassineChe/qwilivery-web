@@ -31,4 +31,8 @@ class newExpress implements ShouldBroadcastNow
     {
         return new Channel('new-express-channel');
     }
+
+    public function broadcastAs(){
+        return 'new-express';
+    }
 }

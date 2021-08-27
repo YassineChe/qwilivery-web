@@ -9,7 +9,7 @@
                     :headline-classes="[
                         'text-h5',
                         'primary--text',
-                        'font-weight-black',
+                        'font-weight-bold',
                         'text-uppercase'
                     ]"
                 />
@@ -122,7 +122,7 @@ export default {
             headers: [
                 { text: "Date de demande", value: "created_at" },
                 { text: "Livreur", value: "delivery" },
-                { text: "Confirmé", value: "taken_at" },
+                { text: "Confirmé dans", value: "taken_at" },
                 { text: "#", value: "actions" }
             ]
         };
@@ -141,7 +141,7 @@ export default {
         //* Init
         init: function() {
             this.$store.dispatch("fetchData", {
-                path: `/api/fetch/express/calls`,
+                path: `/api/admin/fetch/express/deliveries`,
                 mutation: "EXPRESS_DELIVERIES",
                 related: `fetch-express-deliveries`
             });

@@ -86,8 +86,25 @@ class ExpressDeliveryController extends Controller
                     ->orderBy('id', 'DESC')
                     ->take(10)
                     ->get()
-            , 200
-        );
+                , 200
+            );
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
+
+    //* Fetch global history for delivery
+    public function historicExpress(){
+        try{
+            return response(
+                ExpressDelivery::where('delivery_id', authIdFromGuard('delivery'))
+                    ->whereNotNull('taken_at')
+                    ->with('restaurant')
+                    ->orderBy('id', 'DESC')
+                    ->get()
+                , 200
+            );
         }
         catch(\Exception $e){
             handleLogs($e);

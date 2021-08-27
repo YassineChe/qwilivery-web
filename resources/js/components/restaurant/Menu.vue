@@ -9,7 +9,7 @@
                     :headline-classes="[
                         'text-h5',
                         'primary--text',
-                        'font-weight-black',
+                        'font-weight-bold',
                         'text-uppercase'
                     ]"
                 />

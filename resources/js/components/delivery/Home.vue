@@ -8,7 +8,7 @@
                     :headline-classes="[
                         'accent--text',
                         'display-1',
-                        'font-weight-black'
+                        'font-weight-bold'
                     ]"
                 >
                     <template #subheadline>
