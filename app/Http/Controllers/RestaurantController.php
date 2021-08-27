@@ -10,6 +10,7 @@ use App\Models\ExpressDelivery;
 use App\Models\DeviceToken;
 use App\Models\AppSetting;
 //Notifications
+use App\Events\NewExpress;
 use App\Notifications\NotifyAccountApproved;
 use App\Notifications\NotifyRestaurantAccount;
 use Kutia\Larafirebase\Facades\Larafirebase;
@@ -175,7 +176,8 @@ class RestaurantController extends Controller
             if(
                 ExpressDelivery::create(['restaurant_id' => authIdFromGuard('restaurant')])
             ){  
-
+                //Dispatch an notification for web 
+                event(new NewExpress());
                 //Get devices tokens
                 $tokenCollections = DeviceToken::select('token')->get();
                 // Push notification to deliveries
