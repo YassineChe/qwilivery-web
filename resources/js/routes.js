@@ -15,6 +15,7 @@ import AdminHome from "./components/admin/Home";
 import Deliveries from "./components/admin/Deliveries";
 import Restaurants from "./components/admin/Restaurants";
 import AdminHistoric from "./components/admin/Historic";
+import AdminExpressDelivery from './components/admin/ExpressDelivery'
 import AdminSettings from './components/admin/Settings';
 import AdminProfile from "./components/admin/Profile";
 import AdminReports from "./components/admin/Reports";
@@ -115,6 +116,12 @@ const adminRoutes = {
             name: "admin-messenger",
             component: AdminMessenger,
             meta: { guard: "admin" }
+        },
+        {
+            path: "/express-deliveries",
+            name: "admin-express-deliveries",
+            component: AdminExpressDelivery,
+            meta: {guard: "admin"}
         }
     ]
 };
@@ -161,7 +168,7 @@ const restaurantRoutes = {
         {
             path: '/express-delivery',
             name: 'express-delivery',
-            component:ExpressDelivery,
+            component: ExpressDelivery,
             meta: {guard: 'restaurant'}
         }
     ]

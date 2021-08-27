@@ -135,7 +135,16 @@
                             <v-icon>mdi-history</v-icon>
                         </v-list-item-icon>
                         <v-list-item-title>
-                            Historique
+                            Commandes Historique
+                        </v-list-item-title>
+                    </v-list-item>
+                    <!-- Express delivery -->
+                    <v-list-item :to="{ name: 'admin-express-deliveries' }">
+                        <v-list-item-icon>
+                            <v-icon>mdi-moped-electric</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>
+                            Express livreur
                         </v-list-item-title>
                     </v-list-item>
                     <!-- Chat -->

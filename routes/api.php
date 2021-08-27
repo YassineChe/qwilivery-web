@@ -14,6 +14,7 @@ use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\ExpressDeliveryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,12 +64,13 @@ Route::middleware("auth:admin")->group(function () {
     Route::get('/fetch/count/delivered', [StatisticController::class, 'countDelivered']); // How much delivered menu
     Route::get('/fetch/count/reports/unseen', [StatisticController::class, 'countReportsUnseen']); // How much delivered menu
 
-    //! Delete itttttttt
-    Route::get('/fetch/restaurant/and/deliveries', [AdminController::class, 'fetchRestaurantsAndDeliveries']);
-    
-    //* Historic stuff
+    //* Commande history
     Route::get('/fetch/historic', [OrderController::class, 'fetchHistoric']); //List of Historic orders
-    
+
+    //* Express delivery
+    Route::get('/admin/fetch/express/deliveries', [ExpressDeliveryController::class, 'fetchExpressDeliveriesAdmin']);
+    Route::delete('/admin/delete/express/delivery', [ExpressDeliveryController::class, 'deleteExpressDelivery']);
+
     //* Porfile stuff
     Route::post('/edit/admin/profile', [AdminController::class, 'editProfile']); // Edit profile
     Route::put('/edit/admin/security', [AdminController::class, 'editPassword']); // Edit password 

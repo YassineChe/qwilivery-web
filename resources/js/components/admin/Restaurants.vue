@@ -75,10 +75,7 @@
                 <!-- Logo -->
                 <template v-slot:[`item.logo`]="{ item }">
                     <v-avatar size="40">
-                        <img
-                            :src="`/images/avatars/${item.avatar}`"
-                            alt="John"
-                        />
+                        <img :src="`/images/avatars/${item.avatar}`" />
                     </v-avatar>
                 </template>
 
