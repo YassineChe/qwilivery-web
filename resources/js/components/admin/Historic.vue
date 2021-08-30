@@ -149,7 +149,7 @@
                                 <v-icon>mdi-moped</v-icon>
                             </v-btn>
                         </template>
-                        <span>Définir un livreur</span>
+                        <span>Assigner un livreur</span>
                     </v-tooltip>
                 </template>
                 <!-- Order Date -->

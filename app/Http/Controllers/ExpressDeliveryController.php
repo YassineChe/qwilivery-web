@@ -112,4 +112,30 @@ class ExpressDeliveryController extends Controller
             handleLogs($e);
         }
     }
+
+    //* Assign delivery to express
+    public function setDeliveryToExpress(Request $request){
+        try{ 
+            $express = ExpressDelivery::where('id', (int)$request->express_id)
+                            ->whereNull('delivery_id')
+                            ->whereNull('taken_at')
+                            ->first();
+
+            if ($express){
+                if(
+                    $express->update([
+                        'delivery_id' => (int)$request->delivery_id,
+                        'taken_at'    => \Carbon\Carbon::now()
+                    ])
+                )
+                return dataToResponse('success', 'Succès', ['Express a été affecté au livreur'], 200);
+            }
+
+
+            return dataToResponse('error', 'Erreur', ['Something went wrong, Please try again'], 422);
+        }
+        catch(\Exception $e){
+            handleLogs($e);
+        }
+    }
 }

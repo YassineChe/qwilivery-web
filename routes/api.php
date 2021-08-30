@@ -70,6 +70,7 @@ Route::middleware("auth:admin")->group(function () {
     //* Express delivery
     Route::get('/admin/fetch/express/deliveries', [ExpressDeliveryController::class, 'fetchExpressDeliveriesAdmin']);
     Route::delete('/admin/delete/express/delivery', [ExpressDeliveryController::class, 'deleteExpressDelivery']);
+    Route::post('/admin/set/delivery/express', [ExpressDeliveryController::class, 'setDeliveryToExpress']);
 
     //* Porfile stuff
     Route::post('/edit/admin/profile', [AdminController::class, 'editProfile']); // Edit profile

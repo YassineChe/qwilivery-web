@@ -108,7 +108,21 @@
                         </v-card>
                     </v-menu>
                 </v-avatar>
-                <v-chip color="warning" small v-else>En attente</v-chip>
+                <v-tooltip top v-else>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-chip
+                            color="warning"
+                            small
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="setDeliveryToExpress(item.id)"
+                        >
+                            <v-icon left small>mdi-moped-electric</v-icon>
+                            En attente
+                        </v-chip>
+                    </template>
+                    <span>Assigner un livreur</span>
+                </v-tooltip>
             </template>
             <!-- Taken at date -->
             <template v-slot:[`item.taken_at`]="{ item }">
@@ -131,6 +145,7 @@
 import { mapState } from "vuex";
 //Components
 import Headline from "../pieces/Headline";
+import SetDeliveryToExpress from "../pieces/SetDeliveryToExpress";
 
 export default {
     components: {
@@ -166,7 +181,7 @@ export default {
                 related: `fetch-express-deliveries`
             });
         },
-        //Delete express
+        //* elete express
         deleteExpress: function(express_id) {
             this.$store.dispatch("deleteData", {
                 path: `/api/admin/delete/express/delivery`,
@@ -183,6 +198,11 @@ export default {
             } catch (error) {
                 return false;
             }
+        },
+        setDeliveryToExpress: function(express_id) {
+            this.$dialog.show(SetDeliveryToExpress, {
+                expressId: express_id
+            });
         }
     },
     watch: {
@@ -209,6 +229,23 @@ export default {
                 this.$callback.handler(
                     this.$dialog,
                     this.$store.getters.expected("delete-express"),
+                    {
+                        store: this.$store,
+                        clear: true,
+                        execute: {
+                            incase: "success",
+                            func: () => {
+                                this.init();
+                            }
+                        }
+                    }
+                );
+            }
+
+            {
+                this.$callback.handler(
+                    this.$dialog,
+                    this.$store.getters.expected("assign-delivery"),
                     {
                         store: this.$store,
                         clear: true,
