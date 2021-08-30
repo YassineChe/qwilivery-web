@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ExpressDelivery;
+use App\Models\DeviceToken;
+use Kutia\Larafirebase\Facades\Larafirebase;
 
 class ExpressDeliveryController extends Controller
 {
@@ -127,8 +129,22 @@ class ExpressDeliveryController extends Controller
                         'delivery_id' => (int)$request->delivery_id,
                         'taken_at'    => \Carbon\Carbon::now()
                     ])
-                )
-                return dataToResponse('success', 'Succès', ['Express a été affecté au livreur'], 200);
+                ){
+
+                    $deliveryDeviceToken = DeviceToken::where('delivery_id', (int)$request->delivery_id)->first();
+                    //If exist push notification to delivery
+                    if ($deliveryDeviceToken){
+                        Larafirebase::withTitle('Express affecté à vous par Qwilivery')
+                        ->withBody('Allez dans les historiques d\'Express pour plus d\'informations')
+                        // ->withImage('https://firebase.google.com/images/social.png')
+                        // ->withClickAction('admin/notifications')
+                        ->withClickAction('/expressClue')
+                        ->withPriority('high')
+                        ->sendNotification([$deliveryDeviceToken->token]);
+                    }
+
+                    return dataToResponse('success', 'Succès', ['Express a été affecté au livreur'], 200);
+                }
             }
 
 
