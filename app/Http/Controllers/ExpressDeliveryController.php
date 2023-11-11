@@ -15,6 +15,7 @@ class ExpressDeliveryController extends Controller
             return response(
                 ExpressDelivery::orderBy('id', 'DESC')
                     ->with(['restaurant', 'delivery'])
+                    ->whereNull('archived_at')
                     ->get() 
                 , 200
             );
