@@ -13,15 +13,15 @@ class CreateChatflowsTable extends Migration
      */
     public function up()
     {
-        Schema::create('chatflows', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('conversation_id')->references('id')->on('converstions');
-            $table->enum('from', ['delivery', 'restaurant', 'admin']);
-            $table->enum('to', ['delivery', 'restaurant', 'admin']);
-            $table->text('message');
-            $table->timestamp('seen_at')->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('chatflows', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('conversation_id')->references('id')->on('converstions');
+        //     $table->enum('from', ['delivery', 'restaurant', 'admin']);
+        //     $table->enum('to', ['delivery', 'restaurant', 'admin']);
+        //     $table->text('message');
+        //     $table->timestamp('seen_at')->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**
