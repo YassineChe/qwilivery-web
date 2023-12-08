@@ -33,7 +33,7 @@ class DeliveryRequest extends FormRequest
             'email'      => "required|email|unique:admins|unique:deliveries|unique:restaurants,email,{$this->request->get('id')}",
             'phone_number' => "required|regex:/[0-9]{10}/|unique:deliveries|unique:restaurants,phone_number,{$this->request->get('id')}",
             'experience'   => 'required|numeric',
-            'permit'       => 'required|mimes:png,jpg,jpeg|max:1024"',
+            'permit' => 'required|mimes:png,jpg,jpeg|max:1024',
         ];
     }
 }
