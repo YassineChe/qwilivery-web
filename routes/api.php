@@ -15,6 +15,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\ExpressDeliveryController;
+use App\Http\Controllers\TestNotification;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,8 @@ use App\Http\Controllers\ExpressDeliveryController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::get('testme', [TestNotification::class, 'index']);
 
 //? Auth api routes
 Route::post('/login/delivery', [AuthController::class, 'deliveryLogin']);
@@ -74,7 +77,7 @@ Route::middleware("auth:admin")->group(function () {
 
     //* Porfile stuff
     Route::post('/edit/admin/profile', [AdminController::class, 'editProfile']); // Edit profile
-    Route::put('/edit/admin/security', [AdminController::class, 'editPassword']); // Edit password 
+    Route::put('/edit/admin/security', [AdminController::class, 'editPassword']); // Edit password
 
     //* Reports stuff
     Route::get('/fetch/reports', [ReportController::class, 'fetchReports']); // Fetch report list
@@ -112,7 +115,6 @@ Route::middleware("auth:delivery")->group(function () {
     Route::get('/fetch/express/history', [ExpressDeliveryController::class, 'historicExpress']);
     //* Chat stuff
     Route::post('/delivery/send/message', [ChatController::class, 'sendMsgFromMsgerDelivery']);
-
 });
 
 //? Restaurant api routes
@@ -132,7 +134,7 @@ Route::middleware("auth:restaurant")->group(function () {
     Route::post('/add/order', [OrderController::class, 'addOrder']);
     //* Porfile stuff
     Route::post('/edit/restaurant/profile', [RestaurantController::class, 'editProfile']); // Edit profile
-    Route::put('/edit/restaurant/security', [RestaurantController::class, 'editPassword']); // Edit password 
+    Route::put('/edit/restaurant/security', [RestaurantController::class, 'editPassword']); // Edit password
     //Statistics
     Route::get('/fetch/count/restaurant/categories', [StatisticController::class, 'countCategoriesByRestaurant']);
     Route::get('/fetch/count/restaurant/preorder', [StatisticController::class, 'countPreOrdersByRestaurant']);
@@ -143,7 +145,7 @@ Route::middleware("auth:restaurant")->group(function () {
 });
 
 //? Common api routes between (Restaurant, Admin)
-Route::middleware('auth:restaurant,admin')->group(function(){
+Route::middleware('auth:restaurant,admin')->group(function () {
     Route::delete('/delete/order/{order_id}', [OrderController::class, 'deleteOrder']); // Delete order by restraunt will leave tracebility for admin
 });
 
@@ -162,8 +164,7 @@ Route::middleware("auth:admin,delivery,restaurant")->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     //* This will check brodcast auth
-    Route::post('/broadcasting/auth', function(Request $request){
+    Route::post('/broadcasting/auth', function (Request $request) {
         return \Broadcast::auth($request);
     });
-
 });
