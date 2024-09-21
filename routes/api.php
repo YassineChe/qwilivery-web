@@ -15,7 +15,6 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\ExpressDeliveryController;
-use App\Http\Controllers\TestNotification;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,8 +26,6 @@ use App\Http\Controllers\TestNotification;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::get('testme', [TestNotification::class, 'index']);
 
 //? Auth api routes
 Route::post('/login/delivery', [AuthController::class, 'deliveryLogin']);

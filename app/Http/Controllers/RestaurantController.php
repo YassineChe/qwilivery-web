@@ -12,10 +12,12 @@ use App\Events\NewExpressDelivery;
 use App\Notifications\NotifyAccountApproved;
 use App\Notifications\NotifyRestaurantAccount;
 use GGInnovative\Larafirebase\Facades\Larafirebase;
-
+use App\Traits\NotifyTrait;
 
 class RestaurantController extends Controller
 {
+    use NotifyTrait;
+
     //* Fetch Restaurants
     public function fetchRestaurants()
     {
@@ -199,10 +201,7 @@ class RestaurantController extends Controller
                     if ($appSettings) {
                         foreach ($tokens as $token) {
                             logger('hheeeereee --------------');
-                            Larafirebase::withTitle($appSettings->express_title)
-                                ->withBody(guardData('restaurant')->name . ' ' . $appSettings->express_body)
-                                ->withToken($token)
-                                ->sendNotification();
+                            $this->sendFcmNotification($token, $appSettings->express_title, guardData('restaurant')->name . ' ' . $appSettings->express_body);
                         }
                     }
                 }
