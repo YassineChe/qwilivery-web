@@ -4,39 +4,38 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\RequestRestaurant;
-//Models
 use App\Models\Restaurant;
 use App\Models\ExpressDelivery;
 use App\Models\DeviceToken;
 use App\Models\AppSetting;
-//Notifications
 use App\Events\NewExpressDelivery;
 use App\Notifications\NotifyAccountApproved;
 use App\Notifications\NotifyRestaurantAccount;
-use Kutia\Larafirebase\Facades\Larafirebase;
+use GGInnovative\Larafirebase\Facades\Larafirebase;
 
 
 class RestaurantController extends Controller
 {
     //* Fetch Restaurants
-    public function fetchRestaurants(){
+    public function fetchRestaurants()
+    {
         return
             response(
                 Restaurant::orderBy('id', 'DESC')->get(),
                 200
             );
     }
-
-    //* Add Restaurant. 
-    public function addRestaurant(RequestRestaurant $request){
+    //* Add Restaurant
+    public function addRestaurant(RequestRestaurant $request)
+    {
         try {
-            //Generate random password
-            $generetedPassword = \Str::random(6);
-            //Store data
-            $restaurant = Restaurant::Create([
+            // Generate random password
+            $generatedPassword = \Str::random(6);
+            // Store restaurant data
+            $restaurant = Restaurant::create([
                 'name'         => $request->name,
                 'email'        => $request->email,
-                'password'     => \Hash::make($generetedPassword),
+                'password'     => \Hash::make($generatedPassword),
                 'phone_number' => $request->phone_number,
                 'address'      => $request->address,
                 'rate'         => $request->rate,
@@ -44,18 +43,23 @@ class RestaurantController extends Controller
                 'lng'          => $request->lng,
             ]);
 
-            //Notify Restau
-            if ($restaurant)
-                $restaurant->notify(new NotifyRestaurantAccount(["password" => $generetedPassword, "email" => $request->email]));
+            // Notify the restaurant
+            if ($restaurant) {
+                $restaurant->notify(new NotifyRestaurantAccount([
+                    "password" => $generatedPassword,
+                    "email"    => $request->email,
+                ]));
+            }
 
-            return dataToResponse('success', 'Succès ', ['Un E-mail a été envoyé au restaurant avec les informations d\'identification 👍'], 200);
+            return dataToResponse('success', 'Succès', ['Un E-mail a été envoyé au restaurant avec les informations d\'identification 👍'], 200);
         } catch (\Exception $e) {
             handleLogs($e);
         }
     }
 
     //* Edit Restaurant
-    public function editRestaurant(RequestRestaurant $request){
+    public function editRestaurant(RequestRestaurant $request)
+    {
         if (
             Restaurant::where('id', (int)$request->id)->update([
                 'name'         => $request->name,
@@ -71,7 +75,8 @@ class RestaurantController extends Controller
     }
 
     //* Delete Restaurant
-    public function deleteRestaurant(Request $request){
+    public function deleteRestaurant(Request $request)
+    {
         try {
             $restaurant = Restaurant::where('id', $request->restaurant_id)->first();
             if ($restaurant) {
@@ -84,7 +89,8 @@ class RestaurantController extends Controller
     }
 
     //* Block Restaurant
-    public function blockRestaurant(Request $request){
+    public function blockRestaurant(Request $request)
+    {
         try {
             if (Restaurant::where('id', $request->restaurant_id)->update(['blocked_at' => \Carbon\Carbon::now()]))
                 return dataToResponse('success', 'Succès ', ['Bloquer avec succès ❌'], 200);
@@ -94,7 +100,8 @@ class RestaurantController extends Controller
     }
 
     //* unBlock Restaurant
-    public function unblockRestaurant(Request $request){
+    public function unblockRestaurant(Request $request)
+    {
         try {
             if (Restaurant::where('id', $request->restaurant_id)->update(['blocked_at' => null]))
                 return dataToResponse('success', 'Succès ', ['Débloquer avec succès ✅'], 200);
@@ -104,32 +111,33 @@ class RestaurantController extends Controller
     }
 
     //* Edit password
-    public function editPassword(Request $request){
-    try{
+    public function editPassword(Request $request)
+    {
+        try {
             $restaurant = Restaurant::where('id', authIdFromGuard('restaurant'))->first();
-            if ($restaurant){
-                if (\Hash::check($request->old, $restaurant->makeVisible(['password'])->password)){
-                    if ($request->new == $request->cfm){
+            if ($restaurant) {
+                if (\Hash::check($request->old, $restaurant->makeVisible(['password'])->password)) {
+                    if ($request->new == $request->cfm) {
                         $restaurant->update(['password' => \Hash::make($request->new)]);
                         return dataToResponse('success', 'Succès ', ['Mot de passe a été changé avec succès'], 200);
                     }
                 }
                 return dataToResponse('error', 'Erreur ', ['L\'ancien mot de passe ne correspond pas'], 422);
             }
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             handleLogs($e);
         }
     }
 
     //* Approuve delivery man
-    public function approveRestaurant(Request $request){
+    public function approveRestaurant(Request $request)
+    {
         try {
             $restaurant = Restaurant::where('id', $request->restaurant_id)->first();
             if ($restaurant->update(['approved_at' => \Carbon\Carbon::now()])) {
-                try{
+                try {
                     $restaurant->notify(new NotifyAccountApproved($restaurant->name));
-                }
-                catch(\Exception $e){
+                } catch (\Exception $e) {
                     handleLogs($e);
                 }
                 return dataToResponse('success', 'Succès ', ['Approuvé avec succès'], 200);
@@ -142,17 +150,17 @@ class RestaurantController extends Controller
 
 
     //* Edit Profile Information
-    public function editProfile(Request $request){
-        try{
+    public function editProfile(Request $request)
+    {
+        try {
             //Avatar handler
-            if (\Auth::guard('restaurant')->user()->avatar != $request->avatar){
+            if (\Auth::guard('restaurant')->user()->avatar != $request->avatar) {
                 $avatar =  storeUploaded(public_path() . '/images/avatars', $request->logo);
-            }
-            else{
+            } else {
                 $avatar = \Auth::guard('restaurant')->user()->avatar;
             }
-            
-            if(
+
+            if (
                 Restaurant::where('id', authIdFromGuard('restaurant'))->update([
                     'name'         => $request->name,
                     'phone_number' => $request->phone_number,
@@ -163,66 +171,60 @@ class RestaurantController extends Controller
                     'avatar'       => $avatar
                 ])
             )
-            return dataToResponse('success', 'Succès ', ['Mise à jour du profil réussie'], 200);
-        }
-        catch(\Exception $e){
+                return dataToResponse('success', 'Succès ', ['Mise à jour du profil réussie'], 200);
+        } catch (\Exception $e) {
             handleLogs($e);
         }
     }
-    
-    //* Call express delivery
-    public function callExpressDelivery(){
-        try{
-            if(
-                ExpressDelivery::create(['restaurant_id' => authIdFromGuard('restaurant')])
-            ){  
-                //Dispatch an notification for web 
-                event(new NewExpressDelivery());
-                //Get devices tokens
-                $tokenCollections = DeviceToken::select('token')->get();
-                // Push notification to deliveries
-                if ($tokenCollections){
 
+    //* Call express delivery
+    public function callExpressDelivery()
+    {
+        try {
+            if (ExpressDelivery::create(['restaurant_id' => authIdFromGuard('restaurant')])) {
+                // Dispatch a notification for web
+                event(new NewExpressDelivery());
+
+                // Get device tokens
+                $tokenCollections = DeviceToken::select('token')->get();
+                if ($tokenCollections) {
                     $tokens = [];
-    
                     foreach ($tokenCollections as $deliveryToken) {
-                        array_push($tokens, $deliveryToken->token);
+                        $tokens[] = $deliveryToken->token;
                     }
-                    
-                    //Grap notification content
+
+                    // Get notification content
                     $appSettings = AppSetting::select('express_title', 'express_body')->where('id', 1)->first();
 
-                    if($appSettings)
-                        Larafirebase::withTitle($appSettings->express_title)
-                            ->withBody(guardData('restaurant')->name. ' '. $appSettings->express_body)
-                            // ->withImage('https://firebase.google.com/images/social.png')
-                            // ->withClickAction('admin/notifications')
-                            ->withClickAction('/expressClue')
-                            ->withPriority('high')
+                    if ($appSettings) {
+                        Larafirebase::setTitle($appSettings->express_title)
+                            ->setBody(guardData('restaurant')->name . ' ' . $appSettings->express_body)
+                            ->setClickAction('/expressClue')
+                            ->setPriority('high')
                             ->sendNotification($tokens);
-                    
                     }
-                //Reponse a messages
+                }
+
                 return dataToResponse('success', 'Succès', ['Un livreur arrivera dans instants.'], 200);
             }
 
-            return dataToResponse('error', 'Erreur ! ', ['Something went wrong!'], 422);
-        }
-        catch(\Exception $e){
+            return dataToResponse('error', 'Erreur', ['Something went wrong!'], 422);
+        } catch (\Exception $e) {
             handleLogs($e);
         }
     }
 
     //* Fetch express delivery calls
-    public function fetchExpressDelivery(){
-        try{
-            return response(ExpressDelivery::with('delivery')
-                ->where('restaurant_id', authIdFromGuard('restaurant'))
-                ->orderBy('id', 'DESC')->get()
-                , 200
+    public function fetchExpressDelivery()
+    {
+        try {
+            return response(
+                ExpressDelivery::with('delivery')
+                    ->where('restaurant_id', authIdFromGuard('restaurant'))
+                    ->orderBy('id', 'DESC')->get(),
+                200
             );
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             handleLogs($e);
         }
     }
