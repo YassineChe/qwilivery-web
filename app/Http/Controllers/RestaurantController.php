@@ -58,42 +58,20 @@ class RestaurantController extends Controller
     }
 
     //* Edit Restaurant
-    public function callExpressDelivery()
+    public function editRestaurant(RequestRestaurant $request)
     {
-        try {
-            if (ExpressDelivery::create(['restaurant_id' => authIdFromGuard('restaurant')])) {
-                // Dispatch a notification for web
-                event(new NewExpressDelivery());
-
-                // Get device tokens
-                $tokenCollections = DeviceToken::select('token')->get();
-                if ($tokenCollections) {
-                    $tokens = [];
-                    foreach ($tokenCollections as $deliveryToken) {
-                        $tokens[] = $deliveryToken->token;
-                    }
-
-                    // Get notification content
-                    $appSettings = AppSetting::select('express_title', 'express_body')->where('id', 1)->first();
-
-                    if ($appSettings) {
-                        // Use GGInnovative\Larafirebase to send the notification
-                        Larafirebase::fromArray([
-                            'title'    => $appSettings->express_title,
-                            'body'     => guardData('restaurant')->name . ' ' . $appSettings->express_body,
-                            'click_action' => '/expressClue',
-                            'priority' => 'high',
-                        ])->send($tokens);
-                    }
-                }
-
-                return dataToResponse('success', 'Succès', ['Un livreur arrivera dans instants.'], 200);
-            }
-
-            return dataToResponse('error', 'Erreur', ['Something went wrong!'], 422);
-        } catch (\Exception $e) {
-            handleLogs($e);
-        }
+        if (
+            Restaurant::where('id', (int)$request->id)->update([
+                'name'         => $request->name,
+                'email'        => $request->email,
+                'phone_number' => $request->phone_number,
+                'address' => $request->address,
+                'rate'    => $request->rate,
+                'lat'     => $request->lat,
+                'lng'     => $request->lng,
+            ])
+        )
+            return dataToResponse('success', 'Succès ', ['Modifié avec succès 👍'], 200);
     }
 
     //* Delete Restaurant
@@ -219,11 +197,13 @@ class RestaurantController extends Controller
                     $appSettings = AppSetting::select('express_title', 'express_body')->where('id', 1)->first();
 
                     if ($appSettings) {
-                        Larafirebase::setTitle($appSettings->express_title)
-                            ->setBody(guardData('restaurant')->name . ' ' . $appSettings->express_body)
-                            ->setClickAction('/expressClue')
-                            ->setPriority('high')
-                            ->sendNotification($tokens);
+                        // Use GGInnovative\Larafirebase to send the notification
+                        Larafirebase::fromArray([
+                            'title'    => $appSettings->express_title,
+                            'body'     => guardData('restaurant')->name . ' ' . $appSettings->express_body,
+                            'click_action' => '/expressClue',
+                            'priority' => 'high',
+                        ])->send($tokens);
                     }
                 }
 
@@ -235,6 +215,7 @@ class RestaurantController extends Controller
             handleLogs($e);
         }
     }
+
 
     //* Fetch express delivery calls
     public function fetchExpressDelivery()
