@@ -202,7 +202,7 @@ class RestaurantController extends Controller
                             logger($token);
                             Larafirebase::withTitle($appSettings->express_title)
                                 ->withBody(guardData('restaurant')->name . ' ' . $appSettings->express_body)
-                                ->withClickAction('/expressClue')
+                                // ->withClickAction('/expressClue')
                                 ->withPriority('high')
                                 ->withToken($token)  // send to a specific token
                                 ->sendNotification();
