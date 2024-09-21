@@ -203,7 +203,7 @@ class RestaurantController extends Controller
                             Larafirebase::withTitle($appSettings->express_title)
                                 ->withBody(guardData('restaurant')->name . ' ' . $appSettings->express_body)
                                 // ->withClickAction('/expressClue')
-                                ->withPriority('high')
+                                // ->withPriority('high')
                                 ->withToken($token)  // send to a specific token
                                 ->sendNotification();
                         }
