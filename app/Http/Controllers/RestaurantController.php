@@ -197,14 +197,11 @@ class RestaurantController extends Controller
                     $appSettings = AppSetting::select('express_title', 'express_body')->where('id', 1)->first();
 
                     if ($appSettings) {
-                        // Use GGInnovative\Larafirebase to send the notification
                         foreach ($tokens as $token) {
-                            logger($token);
+                            logger('hheeeereee --------------');
                             Larafirebase::withTitle($appSettings->express_title)
                                 ->withBody(guardData('restaurant')->name . ' ' . $appSettings->express_body)
-                                // ->withClickAction('/expressClue')
-                                // ->withPriority('high')
-                                ->withToken($token)  // send to a specific token
+                                ->withToken($token)
                                 ->sendNotification();
                         }
                     }
