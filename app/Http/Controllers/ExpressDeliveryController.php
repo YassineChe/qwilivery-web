@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ExpressDelivery;
 use App\Models\DeviceToken;
-use GGInnovative\Larafirebase\Facades\Larafirebase;
+use App\Traits\NotifyTrait;
 
 class ExpressDeliveryController extends Controller
 {
+    use NotifyTrait;
+
     //* Fetch express deliveries for admin
     public function fetchExpressDeliveriesAdmin()
     {
@@ -131,11 +133,7 @@ class ExpressDeliveryController extends Controller
                     $deliveryDeviceToken = DeviceToken::where('delivery_id', (int)$request->delivery_id)->first();
                     // If token exists, push notification to delivery
                     if ($deliveryDeviceToken) {
-                        Larafirebase::withTitle('Express affecté à vous par Qwilivery')
-                            ->withBody('Allez dans les historiques d\'Express pour plus d\'informations')
-                            ->withClickAction('/expressClue')
-                            ->withPriority('high')
-                            ->sendNotification([$deliveryDeviceToken->token]);
+                        $this->sendFcmNotification($deliveryDeviceToken->token, 'Express affecté à vous par Qwilivery', guardData('restaurant')->name . ' ' . 'Allez dans les historiques d\'Express pour plus d\'informations');
                     }
 
                     return dataToResponse('success', 'Succès', ['Express a été affecté au livreur'], 200);

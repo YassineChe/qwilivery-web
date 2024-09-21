@@ -11,7 +11,6 @@ use App\Models\AppSetting;
 use App\Events\NewExpressDelivery;
 use App\Notifications\NotifyAccountApproved;
 use App\Notifications\NotifyRestaurantAccount;
-use GGInnovative\Larafirebase\Facades\Larafirebase;
 use App\Traits\NotifyTrait;
 
 class RestaurantController extends Controller
@@ -200,7 +199,6 @@ class RestaurantController extends Controller
 
                     if ($appSettings) {
                         foreach ($tokens as $token) {
-                            logger('hheeeereee --------------');
                             $this->sendFcmNotification($token, $appSettings->express_title, guardData('restaurant')->name . ' ' . $appSettings->express_body);
                         }
                     }

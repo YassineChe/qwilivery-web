@@ -7,11 +7,13 @@ use App\Models\Order;
 use App\Models\PreOrder;
 use App\Models\AppSetting;
 use App\Models\DeviceToken;
-use GGInnovative\Larafirebase\Facades\Larafirebase;
 use App\Events\NewOrder;
+use App\Traits\NotifyTrait;
 
 class OrderController extends Controller
 {
+    use NotifyTrait;
+
     public function addOrder(Request $request)
     {
         try {
@@ -45,12 +47,9 @@ class OrderController extends Controller
                 $appSettings = AppSetting::select('order_title', 'order_body')->where('id', 1)->first();
 
                 if ($appSettings && !empty($tokenCollections)) {
-                    // Send notification using gg-innovative/larafirebase
-                    Larafirebase::withTitle($appSettings->order_title)
-                        ->withBody($appSettings->order_body)
-                        ->withClickAction('/clue')
-                        ->withPriority('high')
-                        ->sendNotification($tokenCollections);
+                    foreach ($tokenCollections as $token) {
+                        $this->sendFcmNotification($token, $appSettings->order_title, guardData('restaurant')->name . ' ' . $appSettings->order_body);
+                    }
                 }
             }
 
