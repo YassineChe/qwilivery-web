@@ -40,8 +40,8 @@ class RestaurantController extends Controller
                 'phone_number' => $request->phone_number,
                 'address'      => $request->address,
                 'rate'         => $request->rate,
-                'lat'          => $request->lat,
-                'lng'          => $request->lng,
+                // 'lat'          => $request->lat,
+                // 'lng'          => $request->lng,
             ]);
 
             // Notify the restaurant

@@ -2918,7 +2918,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
   },
   mounted: function mounted() {
     var _this3 = this;
-    var pusher = new Pusher("308f11cf9024bad51789", {
+    var pusher = new Pusher("", {
       cluster: "eu"
     });
 
@@ -4102,7 +4102,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
   this.$notification.requestPermission();
 }), "mounted", function mounted() {
   var _this = this;
-  var pusher = new Pusher("308f11cf9024bad51789", {
+  var pusher = new Pusher("", {
     cluster: "eu"
   });
 
@@ -4705,7 +4705,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
   },
   mounted: function mounted() {
     var _this3 = this;
-    var pusher = new Pusher("308f11cf9024bad51789", {
+    var pusher = new Pusher("", {
       cluster: "eu"
     });
 
@@ -4968,7 +4968,7 @@ moment__WEBPACK_IMPORTED_MODULE_2___default().locale("fr");
   },
   mounted: function mounted() {
     var _this2 = this;
-    var pusher = new Pusher("308f11cf9024bad51789", {
+    var pusher = new Pusher("", {
       cluster: "eu"
     });
 
@@ -13975,32 +13975,7 @@ var render = function render() {
               })];
             }
           }], null, true)
-        })], 1), _vm._v(" "), _c("v-col", {
-          attrs: {
-            cols: "12"
-          }
-        }, [_c("GmapMap", {
-          staticStyle: {
-            width: "100%",
-            height: "200px"
-          },
-          attrs: {
-            center: _vm.focusHere,
-            zoom: 10,
-            "map-type-id": "terrain"
-          }
-        }, [_c("GmapMarker", {
-          attrs: {
-            position: _vm.focusHere,
-            clickable: true,
-            draggable: true
-          },
-          on: {
-            drag: _vm.updateCoordinates
-          }
-        })], 1), _vm._v(" "), _c("small", {
-          staticClass: "error--text"
-        }, [_vm._v("\n                    * Veuillez positionner le marqueur sur l'adresse exacte.\n                ")])], 1)], 1)], 1)];
+        })], 1)], 1)], 1)];
       }
     }])
   });
@@ -17030,6 +17005,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_native_notification__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vue-native-notification */ "./node_modules/vue-native-notification/index.js");
 /* harmony import */ var _apis_Auth__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./apis/Auth */ "./resources/js/apis/Auth.js");
 /* harmony import */ var _apis_Callback__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./apis/Callback */ "./resources/js/apis/Callback.js");
+/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js")["default"]);
 
@@ -17067,7 +17043,7 @@ vue__WEBPACK_IMPORTED_MODULE_6__["default"].use(vuetify_dialog__WEBPACK_IMPORTED
 
 vue__WEBPACK_IMPORTED_MODULE_6__["default"].use(vue2_google_maps__WEBPACK_IMPORTED_MODULE_9__, {
   load: {
-    key: "AIzaSyB9qQXCipHr71mNHCkDymugm_0P0CnnDiM",
+    key: process.env.MIX_GOOGLE_MAPS_API,
     libraries: "places"
   }
 });
@@ -17142,8 +17118,8 @@ window.axios.defaults.withCredentials = true;
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: "pusher",
-  key: "308f11cf9024bad51789",
-  cluster: "eu",
+  key: "",
+  cluster: "mt1",
   forceTLS: true,
   authorizer: function authorizer(channel, options) {
     return {
